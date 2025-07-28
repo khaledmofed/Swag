@@ -1,0 +1,1233 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Font Imports */
+@font-face {
+  font-family: "Legquinne-Regular";
+  src: url("/fonts/Legquinne-Regular.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Legquinne-light";
+  src: url("/fonts/Legquinne-light.otf") format("opentype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sukar-Black-Font";
+  src: url("/fonts/Sukar Black Font.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Sukar-Regular";
+  src: url("/fonts/Sukar Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sukar-Bold";
+  src: url("/fonts/Sukar Bold.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "Sukar";
+  src: url("/fonts/Sukar Regular.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Sukar";
+  src: url("/fonts/Sukar Bold.ttf") format("truetype");
+  font-weight: bold;
+  font-style: normal;
+}
+
+/* Base reset and styles */
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+}
+
+/* Responsive utilities */
+.container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.25rem;
+  padding-right: 1.25rem;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+
+  /* تحسين التابز على التابلت */
+  .collections-tabs-mobile {
+    gap: 0.75rem !important;
+  }
+
+  .collections-tabs-mobile button {
+    font-size: 1rem !important;
+    padding: 0.75rem 1rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+}
+
+@media (min-width: 1024px) {
+  .container {
+    padding-left: 4rem;
+    padding-right: 4rem;
+  }
+
+  /* تحسين التابز على الديسكتوب */
+  .collections-tabs-mobile {
+    gap: 1rem !important;
+  }
+
+  .collections-tabs-mobile button {
+    font-size: 1.125rem !important;
+    padding: 1rem 1.5rem !important;
+    margin-bottom: 1rem !important;
+  }
+}
+
+@media (min-width: 1280px) {
+  .container {
+    padding-left: 5rem;
+    padding-right: 5rem;
+  }
+}
+
+@media (min-width: 1536px) {
+  .container {
+    padding-left: 6rem;
+    padding-right: 6rem;
+  }
+}
+
+html {
+  line-height: 1.5;
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+  -moz-tab-size: 4;
+  tab-size: 4;
+  font-family: "Legquinne-light", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+  font-feature-settings: normal;
+  font-variation-settings: normal;
+}
+
+/* Arabic font for RTL content */
+html[dir="rtl"] {
+  font-family: "Sukar-Regular", "Legquinne-light", system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    sans-serif;
+}
+
+body {
+  margin: 0;
+  line-height: inherit;
+  max-width: 100vw;
+  overflow-x: hidden;
+  @apply bg-white dark:bg-secondary-600 text-gray-900 dark:text-slate-100;
+  transition: background-color 0.3s ease, color 0.3s ease;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Light mode background */
+body:not(.dark) {
+  /* background: url("/images/background-image.png") no-repeat center center fixed; */
+  background-size: cover;
+}
+
+/* Dark mode background with noise texture */
+body.dark {
+  background: url("/images/noise-texture.svg") repeat,
+    radial-gradient(
+      circle at 20% 80%,
+      rgba(120, 119, 198, 0.2) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 80% 20%,
+      rgba(255, 119, 198, 0.1) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      circle at 40% 40%,
+      rgba(120, 119, 198, 0.05) 0%,
+      transparent 50%
+    ),
+    linear-gradient(
+      135deg,
+      #0a0a0a 0%,
+      #1a1a1a 25%,
+      #2d2d2d 50%,
+      #1a1a1a 75%,
+      #0a0a0a 100%
+    );
+  background-size: 200px 200px, 800px 800px, 600px 600px, 400px 400px, 100% 100%;
+  background-blend-mode: overlay, normal, normal, normal, normal;
+  position: relative;
+}
+
+/* Additional texture overlay for enhanced grain effect */
+body.dark::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: -1;
+  background: radial-gradient(
+      circle at 25% 25%,
+      rgba(255, 255, 255, 0.02) 1px,
+      transparent 1px
+    ),
+    radial-gradient(
+      circle at 75% 75%,
+      rgba(255, 255, 255, 0.02) 1px,
+      transparent 1px
+    );
+  background-size: 4px 4px, 6px 6px;
+  opacity: 0.6;
+}
+
+/* Remove default button styles */
+button {
+  font-family: inherit;
+  font-size: 100%;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+  margin: 0;
+  padding: 0;
+  background-color: transparent;
+  background-image: none;
+  /* border: 0; */
+  cursor: pointer;
+}
+
+/* Remove default link styles */
+a {
+  color: inherit;
+  text-decoration: inherit;
+}
+
+/* Custom scrollbar for dark mode */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-gray-100 dark:bg-secondary-700;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-secondary-600 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400 dark:bg-secondary-500;
+}
+
+/* Focus styles */
+:focus-visible {
+  @apply outline-2 outline-blue-500 dark:outline-blue-400 outline-offset-2;
+}
+
+@layer base {
+  :root {
+    --background: 0 0% 100%;
+    --foreground: 0 0% 3.9%;
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 3.9%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 3.9%;
+    --primary: 0 0% 9%;
+    --primary-foreground: 0 0% 98%;
+    --secondary: 0 0% 96.1%;
+    --secondary-foreground: 0 0% 9%;
+    --muted: 0 0% 96.1%;
+    --muted-foreground: 0 0% 45.1%;
+    --accent: 0 0% 96.1%;
+    --accent-foreground: 0 0% 9%;
+    --destructive: 0 84.2% 60.2%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 89.8%;
+    --input: 0 0% 89.8%;
+    --ring: 0 0% 3.9%;
+    --chart-1: 12 76% 61%;
+    --chart-2: 173 58% 39%;
+    --chart-3: 197 37% 24%;
+    --chart-4: 43 74% 66%;
+    --chart-5: 27 87% 67%;
+    --radius: 0.5rem;
+  }
+  .dark {
+    --background: 0 0% 3.9%;
+    --foreground: 0 0% 98%;
+    --card: 0 0% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --popover: 0 0% 3.9%;
+    --popover-foreground: 0 0% 98%;
+    --primary: 0 0% 98%;
+    --primary-foreground: 0 0% 9%;
+    --secondary: 0 0% 14.9%;
+    --secondary-foreground: 0 0% 98%;
+    --muted: 0 0% 14.9%;
+    --muted-foreground: 0 0% 63.9%;
+    --accent: 0 0% 14.9%;
+    --accent-foreground: 0 0% 98%;
+    --destructive: 0 62.8% 30.6%;
+    --destructive-foreground: 0 0% 98%;
+    --border: 0 0% 14.9%;
+    --input: 0 0% 14.9%;
+    --ring: 0 0% 83.1%;
+    --chart-1: 220 70% 50%;
+    --chart-2: 160 60% 45%;
+    --chart-3: 30 80% 55%;
+    --chart-4: 280 65% 60%;
+    --chart-5: 340 75% 55%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}
+
+.container {
+  max-width: 88%;
+  margin: 0 auto;
+}
+
+/* Font utility classes for language-specific fonts */
+.font-en {
+  font-family: "Legquinne-Regular", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
+}
+
+.font-ar {
+  font-family: "Sukar Black Font", "Legquinne-Regular", system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    sans-serif;
+}
+
+/* Marquee Animation for Promotional Banner */
+:root {
+  --marquee-speed: 15s; /* Default speed - adjust this value to control speed */
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+@keyframes marquee-rtl {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(0%);
+  }
+}
+
+.marquee {
+  animation: marquee var(--marquee-speed) linear infinite;
+}
+
+.marquee-rtl {
+  animation: marquee-rtl var(--marquee-speed) linear infinite;
+}
+
+/* Speed control classes */
+.marquee-slow {
+  --marquee-speed: 60s;
+}
+
+.marquee-normal {
+  --marquee-speed: 15s;
+}
+
+.marquee-fast {
+  --marquee-speed: 8s;
+}
+
+.marquee-very-fast {
+  --marquee-speed: 5s;
+}
+
+/* Pause animation on hover */
+.marquee-container:hover .marquee,
+.marquee-container:hover .marquee-rtl {
+  animation-play-state: paused;
+}
+
+.sukar {
+  font-family: "Sukar-Regular", "Legquinne-Regular", system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    sans-serif;
+  font-weight: 300;
+}
+
+/* Splash Screen Animations */
+@keyframes splash-fade-out {
+  0% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.1);
+  }
+}
+
+@keyframes splash-logo-fade {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) translateY(20px);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.05) translateY(-5px);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+@keyframes splash-ring-pulse {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.3;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.1;
+  }
+  100% {
+    transform: scale(0.8);
+    opacity: 0.3;
+  }
+}
+
+.splash-logo-animate {
+  animation: splash-logo-fade 1.5s ease-out;
+}
+
+.splash-ring {
+  animation: splash-ring-pulse 3s ease-in-out infinite;
+}
+
+.splash-fade-out {
+  animation: splash-fade-out 1s ease-in-out forwards;
+}
+
+/* Animation delay utilities for splash screen */
+.splash-delay-150 {
+  animation-delay: 150ms;
+}
+
+.splash-delay-300 {
+  animation-delay: 300ms;
+}
+
+.splash-delay-500 {
+  animation-delay: 500ms;
+}
+
+.splash-delay-1000 {
+  animation-delay: 1s;
+}
+
+.font-body {
+  font-family: "Sukar-Regular", "Legquinne-Regular", system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    sans-serif;
+}
+.font-title {
+  font-family: "Legquinne-light", "Sukar Regular", system-ui, -apple-system,
+    BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",
+    sans-serif;
+}
+.inlineblock {
+  width: 100% !important;
+}
+
+/* Noise texture utility classes */
+.noise-texture {
+  position: relative;
+}
+
+.noise-texture::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: url("/images/noise-texture.svg") repeat;
+  background-size: 200px 200px;
+  opacity: 0.3;
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* Dark mode specific noise overlay */
+.dark .noise-overlay {
+  background: url("/images/noise-texture.svg") repeat,
+    linear-gradient(
+      135deg,
+      rgba(10, 10, 10, 0.9) 0%,
+      rgba(26, 26, 26, 0.8) 50%,
+      rgba(10, 10, 10, 0.9) 100%
+    );
+  background-size: 150px 150px, 100% 100%;
+  background-blend-mode: overlay;
+}
+.overflowXHidden {
+  overflow-x: hidden !important;
+}
+.gap-20 {
+  gap: 5rem !important;
+}
+.bg-gray-650 {
+  background-color: #607a76 !important;
+}
+.border-color-dark {
+  border-color: #383838;
+}
+.dark\:border-color-dark:is(.dark *) {
+  border-color: #383838;
+}
+.md\:text-6xl.heroSectionLeftTitle {
+  padding-right: 5rem;
+  font-size: 72px;
+}
+.heroSectionLeftText {
+  letter-spacing: 1px;
+  padding-right: 1rem;
+}
+.iconeBehind {
+  transform: rotate(-45deg);
+}
+.dark .invert-dark {
+  filter: invert(1);
+}
+:focus-visible {
+  outline-offset: 0px;
+  outline-width: 1px;
+  outline-color: #d0d0d0;
+}
+:focus-visible:is(.dark *) {
+  outline-color: #899791;
+}
+.z-35 {
+  z-index: 35;
+}
+html[dir="rtl"] .md\:text-6xl.heroSectionLeftTitle {
+  padding-left: 5rem;
+  padding-right: 0;
+  font-size: 72px;
+}
+html[dir="rtl"] .heroSectionLeftText {
+  letter-spacing: 1px;
+  padding-right: 0rem;
+  padding-left: 1rem;
+}
+
+/* Responsive Design Utilities */
+
+/* Mobile-first approach */
+@media (max-width: 639px) {
+  .container {
+    max-width: 100%;
+  }
+  span.fontMobile.text-2xl {
+    font-size: 16px;
+    font-family: Sukar, Legquinne-light, system-ui, sans-serif;
+  }
+  .relative.flex.flex-col.justify-end.overflow-hidden.bg-gradient-to-b.from-\[\#f5f7f7\].to-\[\#c7d6d6\].dark\:from-gray-800.dark\:to-gray-900.h-\[360px\].md\:h-\[360px\].px-6.pt-8.pb-4 {
+    height: 240px;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+  }
+  .mobile-collections-section .heroSectionLeftTitle {
+    padding-right: 0rem;
+    padding-left: 0rem;
+    font-size: 35px;
+  }
+  .mobile-collections-section {
+    padding-left: calc(6% + 1rem);
+    padding-right: calc(6% + 1rem);
+  }
+
+  /* تحسين container padding على الموبايل */
+  .container {
+    padding-left: 1.5rem !important;
+    padding-right: 1.5rem !important;
+  }
+
+  /* تحسين عرض التابز على الموبايل */
+  .collections-tabs-mobile {
+    gap: 0.5rem !important;
+    padding-bottom: 1rem !important;
+  }
+
+  .collections-tabs-mobile button {
+    font-size: 0.875rem !important;
+    padding: 0.5rem 0.75rem !important;
+    margin-bottom: 0.5rem !important;
+    border-radius: 0.375rem !important;
+    background-color: rgba(0, 0, 0, 0.05) !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .collections-tabs-mobile button:hover {
+    background-color: rgba(0, 0, 0, 0.1) !important;
+  }
+
+  .collections-tabs-mobile button.active {
+    background-color: rgba(96, 122, 118, 0.1) !important;
+    border-bottom: 2px solid #607a76 !important;
+    font-weight: 600 !important;
+  }
+
+  /* تحسينات للوضع المظلم */
+  .dark .collections-tabs-mobile button {
+    background-color: rgba(255, 255, 255, 0.05) !important;
+  }
+
+  .dark .collections-tabs-mobile button:hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+  }
+
+  .dark .collections-tabs-mobile button.active {
+    background-color: rgba(96, 122, 118, 0.2) !important;
+  }
+  .categories-mobile {
+    font-family: Sukar, Legquinne-light, system-ui, sans-serif;
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    gap: 7px 15px !important;
+  }
+  .ContainerMobile .col-mobile {
+    padding-bottom: 10px;
+  }
+  .mobile-logo {
+    padding-top: 12px;
+    margin-bottom: -5px;
+  }
+  .mobile-logo img.mobile-logo-image {
+    width: 100px;
+    height: auto;
+  }
+  .mobile-only {
+    display: block;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+
+  .tablet-only {
+    display: none;
+  }
+}
+
+@media (min-width: 640px) and (max-width: 1023px) {
+  .mobile-only {
+    display: none;
+  }
+
+  .desktop-only {
+    display: none;
+  }
+
+  .tablet-only {
+    display: block;
+  }
+}
+
+@media (min-width: 1024px) {
+  .mobile-only {
+    display: none;
+  }
+
+  .desktop-only {
+    display: block;
+  }
+
+  .tablet-only {
+    display: none;
+  }
+}
+
+/* Responsive text utilities */
+.text-responsive-xs {
+  font-size: 0.75rem;
+}
+
+.text-responsive-sm {
+  font-size: 0.875rem;
+}
+
+.text-responsive-base {
+  font-size: 1rem;
+}
+
+.text-responsive-lg {
+  font-size: 1.125rem;
+}
+
+.text-responsive-xl {
+  font-size: 1.25rem;
+}
+
+.text-responsive-2xl {
+  font-size: 1.5rem;
+}
+
+.text-responsive-3xl {
+  font-size: 1.875rem;
+}
+
+.text-responsive-4xl {
+  font-size: 2.25rem;
+}
+
+.text-responsive-5xl {
+  font-size: 3rem;
+}
+
+.text-responsive-6xl {
+  font-size: 3.75rem;
+}
+
+@media (min-width: 640px) {
+  .text-responsive-xs {
+    font-size: 0.875rem;
+  }
+
+  .text-responsive-sm {
+    font-size: 1rem;
+  }
+
+  .text-responsive-base {
+    font-size: 1.125rem;
+  }
+
+  .text-responsive-lg {
+    font-size: 1.25rem;
+  }
+
+  .text-responsive-xl {
+    font-size: 1.5rem;
+  }
+
+  .text-responsive-2xl {
+    font-size: 1.875rem;
+  }
+
+  .text-responsive-3xl {
+    font-size: 2.25rem;
+  }
+
+  .text-responsive-4xl {
+    font-size: 3rem;
+  }
+
+  .text-responsive-5xl {
+    font-size: 3.75rem;
+  }
+
+  .text-responsive-6xl {
+    font-size: 4.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .text-responsive-xs {
+    font-size: 1rem;
+  }
+
+  .text-responsive-sm {
+    font-size: 1.125rem;
+  }
+
+  .text-responsive-base {
+    font-size: 1.25rem;
+  }
+
+  .text-responsive-lg {
+    font-size: 1.5rem;
+  }
+
+  .text-responsive-xl {
+    font-size: 1.875rem;
+  }
+
+  .text-responsive-2xl {
+    font-size: 2.25rem;
+  }
+
+  .text-responsive-3xl {
+    font-size: 3rem;
+  }
+
+  .text-responsive-4xl {
+    font-size: 3.75rem;
+  }
+
+  .text-responsive-5xl {
+    font-size: 4.5rem;
+  }
+
+  .text-responsive-6xl {
+    font-size: 6rem;
+  }
+}
+
+/* Responsive spacing utilities */
+.space-responsive-xs {
+  gap: 0.5rem;
+}
+
+.space-responsive-sm {
+  gap: 1rem;
+}
+
+.space-responsive-md {
+  gap: 1.5rem;
+}
+
+.space-responsive-lg {
+  gap: 2rem;
+}
+
+.space-responsive-xl {
+  gap: 3rem;
+}
+
+@media (min-width: 640px) {
+  .space-responsive-xs {
+    gap: 0.75rem;
+  }
+
+  .space-responsive-sm {
+    gap: 1.25rem;
+  }
+
+  .space-responsive-md {
+    gap: 2rem;
+  }
+
+  .space-responsive-lg {
+    gap: 3rem;
+  }
+
+  .space-responsive-xl {
+    gap: 4rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .space-responsive-xs {
+    gap: 1rem;
+  }
+
+  .space-responsive-sm {
+    gap: 1.5rem;
+  }
+
+  .space-responsive-md {
+    gap: 2.5rem;
+  }
+
+  .space-responsive-lg {
+    gap: 4rem;
+  }
+
+  .space-responsive-xl {
+    gap: 6rem;
+  }
+}
+
+/* Responsive padding utilities */
+.p-responsive-xs {
+  padding: 0.5rem;
+}
+
+.p-responsive-sm {
+  padding: 1rem;
+}
+
+.p-responsive-md {
+  padding: 1.5rem;
+}
+
+.p-responsive-lg {
+  padding: 2rem;
+}
+
+.p-responsive-xl {
+  padding: 3rem;
+}
+
+@media (min-width: 640px) {
+  .p-responsive-xs {
+    padding: 0.75rem;
+  }
+
+  .p-responsive-sm {
+    padding: 1.25rem;
+  }
+
+  .p-responsive-md {
+    padding: 2rem;
+  }
+
+  .p-responsive-lg {
+    padding: 3rem;
+  }
+
+  .p-responsive-xl {
+    padding: 4rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .p-responsive-xs {
+    padding: 1rem;
+  }
+
+  .p-responsive-sm {
+    padding: 1.5rem;
+  }
+
+  .p-responsive-md {
+    padding: 2.5rem;
+  }
+
+  .p-responsive-lg {
+    padding: 4rem;
+  }
+
+  .p-responsive-xl {
+    padding: 6rem;
+  }
+}
+
+/* Responsive margin utilities */
+.m-responsive-xs {
+  margin: 0.5rem;
+}
+
+.m-responsive-sm {
+  margin: 1rem;
+}
+
+.m-responsive-md {
+  margin: 1.5rem;
+}
+
+.m-responsive-lg {
+  margin: 2rem;
+}
+
+.m-responsive-xl {
+  margin: 3rem;
+}
+
+@media (min-width: 640px) {
+  .m-responsive-xs {
+    margin: 0.75rem;
+  }
+
+  .m-responsive-sm {
+    margin: 1.25rem;
+  }
+
+  .m-responsive-md {
+    margin: 2rem;
+  }
+
+  .m-responsive-lg {
+    margin: 3rem;
+  }
+
+  .m-responsive-xl {
+    margin: 4rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .m-responsive-xs {
+    margin: 1rem;
+  }
+
+  .m-responsive-sm {
+    margin: 1.5rem;
+  }
+
+  .m-responsive-md {
+    margin: 2.5rem;
+  }
+
+  .m-responsive-lg {
+    margin: 4rem;
+  }
+
+  .m-responsive-xl {
+    margin: 6rem;
+  }
+}
+
+/* Responsive grid utilities */
+.grid-responsive-1 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.grid-responsive-2 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.grid-responsive-3 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+.grid-responsive-4 {
+  grid-template-columns: repeat(1, minmax(0, 1fr));
+}
+
+@media (min-width: 640px) {
+  .grid-responsive-2 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .grid-responsive-3 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .grid-responsive-4 {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .grid-responsive-3 {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .grid-responsive-4 {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* Responsive flex utilities */
+.flex-responsive-col {
+  flex-direction: column;
+}
+
+.flex-responsive-row {
+  flex-direction: column;
+}
+
+@media (min-width: 640px) {
+  .flex-responsive-row {
+    flex-direction: row;
+  }
+}
+
+/* Responsive visibility utilities */
+.hidden-mobile {
+  display: none;
+}
+
+.hidden-tablet {
+  display: block;
+}
+
+.hidden-desktop {
+  display: block;
+}
+
+@media (min-width: 640px) {
+  .hidden-mobile {
+    display: block;
+  }
+
+  .hidden-tablet {
+    display: none;
+  }
+}
+
+@media (min-width: 1024px) {
+  .hidden-tablet {
+    display: block;
+  }
+
+  .hidden-desktop {
+    display: none;
+  }
+}
+
+/* Touch-friendly button sizes */
+.btn-touch {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0.75rem 1rem;
+}
+
+@media (min-width: 640px) {
+  .btn-touch {
+    min-height: 40px;
+    min-width: 40px;
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+/* Responsive image utilities */
+.img-responsive {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.img-responsive-square {
+  aspect-ratio: 1;
+  object-fit: cover;
+}
+
+.img-responsive-16-9 {
+  aspect-ratio: 16/9;
+  object-fit: cover;
+}
+
+.img-responsive-4-3 {
+  aspect-ratio: 4/3;
+  object-fit: cover;
+}
+
+/* Responsive aspect ratios */
+.aspect-square {
+  aspect-ratio: 1;
+}
+
+.aspect-video {
+  aspect-ratio: 16/9;
+}
+
+.aspect-photo {
+  aspect-ratio: 4/3;
+}
+
+/* Responsive typography scale */
+.text-scale-xs {
+  font-size: clamp(0.75rem, 2vw, 0.875rem);
+}
+
+.text-scale-sm {
+  font-size: clamp(0.875rem, 2.5vw, 1rem);
+}
+
+.text-scale-base {
+  font-size: clamp(1rem, 3vw, 1.125rem);
+}
+
+.text-scale-lg {
+  font-size: clamp(1.125rem, 3.5vw, 1.25rem);
+}
+
+.text-scale-xl {
+  font-size: clamp(1.25rem, 4vw, 1.5rem);
+}
+
+.text-scale-2xl {
+  font-size: clamp(1.5rem, 5vw, 1.875rem);
+}
+
+.text-scale-3xl {
+  font-size: clamp(1.875rem, 6vw, 2.25rem);
+}
+
+.text-scale-4xl {
+  font-size: clamp(2.25rem, 7vw, 3rem);
+}
+
+.text-scale-5xl {
+  font-size: clamp(3rem, 8vw, 3.75rem);
+}
+
+.text-scale-6xl {
+  font-size: clamp(3.75rem, 10vw, 4.5rem);
+}
+
+/* Responsive line heights */
+.leading-responsive-tight {
+  line-height: 1.1;
+}
+
+.leading-responsive-normal {
+  line-height: 1.4;
+}
+
+.leading-responsive-relaxed {
+  line-height: 1.6;
+}
+
+@media (min-width: 640px) {
+  .leading-responsive-tight {
+    line-height: 1.2;
+  }
+
+  .leading-responsive-normal {
+    line-height: 1.5;
+  }
+
+  .leading-responsive-relaxed {
+    line-height: 1.7;
+  }
+}
+
+@media (min-width: 1024px) {
+  .leading-responsive-tight {
+    line-height: 1.3;
+  }
+
+  .leading-responsive-normal {
+    line-height: 1.6;
+  }
+
+  .leading-responsive-relaxed {
+    line-height: 1.8;
+  }
+}

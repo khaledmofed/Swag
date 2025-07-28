@@ -1,0 +1,610 @@
+{
+	"info": {
+		"_postman_id": "adaa8b01-fed2-4df7-8c8b-1207bc51dd21",
+		"name": "Swag",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "3366899",
+		"_collection_link": "https://lively-rocket-706440.postman.co/workspace/My-Workspace~23d06be8-3c3d-47d5-876e-8baadacca425/collection/3366899-adaa8b01-fed2-4df7-8c8b-1207bc51dd21?action=share&source=collection_link&creator=3366899"
+	},
+	"item": [
+		{
+			"name": "Website",
+			"item": [
+				{
+					"name": "index",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/api/site/index"
+					},
+					"response": []
+				},
+				{
+					"name": "services",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/api/site/services"
+					},
+					"response": []
+				},
+				{
+					"name": "Service Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/api/site/service/1"
+					},
+					"response": []
+				},
+				{
+					"name": "Blogs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/api/site/blogs"
+					},
+					"response": []
+				},
+				{
+					"name": "Blog Details",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": "{{url}}/api/site/blog/2"
+					},
+					"response": []
+				},
+				{
+					"name": "Contact us",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/api/site/contactus?name=qweqwe&email=234234@gmail.com&phone=234&message=234234",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"site",
+								"contactus"
+							],
+							"query": [
+								{
+									"key": "name",
+									"value": "qweqwe"
+								},
+								{
+									"key": "email",
+									"value": "234234@gmail.com"
+								},
+								{
+									"key": "phone",
+									"value": "234"
+								},
+								{
+									"key": "message",
+									"value": "234234"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Store",
+			"item": [
+				{
+					"name": "Auth",
+					"item": [
+						{
+							"name": "Send OTP",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/store/auth/send-otp?phone=123456789",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"store",
+										"auth",
+										"send-otp"
+									],
+									"query": [
+										{
+											"key": "phone",
+											"value": "123456789"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Re-Send OTP",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/store/auth/resend-otp?phone=123456789",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"store",
+										"auth",
+										"resend-otp"
+									],
+									"query": [
+										{
+											"key": "phone",
+											"value": "123456789"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "verify-otp",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/store/auth/verify-otp?phone=123456789&otp=1111",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"store",
+										"auth",
+										"verify-otp"
+									],
+									"query": [
+										{
+											"key": "phone",
+											"value": "123456789"
+										},
+										{
+											"key": "otp",
+											"value": "1111"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Complete Registeration",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "2|TBVOkLvqGLGVEjxWCWedTZRlIq40WQwvsLpOwADh8cd9ce16"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/store/auth/complete-registration?first_name=Mohamed&last_name=Danaf&email=moh@gmail.com&gender=Male&relationship_status=Single&birth_day=28&birth_month=10&account_type=Individual&registration_number&company_name",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"store",
+										"auth",
+										"complete-registration"
+									],
+									"query": [
+										{
+											"key": "first_name",
+											"value": "Mohamed"
+										},
+										{
+											"key": "last_name",
+											"value": "Danaf"
+										},
+										{
+											"key": "email",
+											"value": "moh@gmail.com"
+										},
+										{
+											"key": "gender",
+											"value": "Male"
+										},
+										{
+											"key": "relationship_status",
+											"value": "Single"
+										},
+										{
+											"key": "birth_day",
+											"value": "28"
+										},
+										{
+											"key": "birth_month",
+											"value": "10"
+										},
+										{
+											"key": "account_type",
+											"value": "Individual",
+											"description": "Individual', 'Establishment"
+										},
+										{
+											"key": "registration_number",
+											"value": null
+										},
+										{
+											"key": "company_name",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Store",
+					"item": [
+						{
+							"name": "Home page",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}/api/store/home"
+							},
+							"response": []
+						},
+						{
+							"name": "Search",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/store/search?name&category&price_from&price_to&karat&gender&metal&name&order=price&orderby=asc",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"store",
+										"search"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": null
+										},
+										{
+											"key": "category",
+											"value": null
+										},
+										{
+											"key": "price_from",
+											"value": null
+										},
+										{
+											"key": "price_to",
+											"value": null
+										},
+										{
+											"key": "karat",
+											"value": null,
+											"description": "24,22,21,18"
+										},
+										{
+											"key": "gender",
+											"value": null,
+											"description": "male, female, children"
+										},
+										{
+											"key": "metal",
+											"value": null,
+											"description": "gold, silver, platinum"
+										},
+										{
+											"key": "name",
+											"value": null
+										},
+										{
+											"key": "order",
+											"value": "price",
+											"description": "price, created_at, rate"
+										},
+										{
+											"key": "orderby",
+											"value": "asc",
+											"description": "asc, desc"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Last Products",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/store/last-products?name&category&price_from&price_to&karat&gender&metal",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"store",
+										"last-products"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": null
+										},
+										{
+											"key": "category",
+											"value": null
+										},
+										{
+											"key": "price_from",
+											"value": null
+										},
+										{
+											"key": "price_to",
+											"value": null
+										},
+										{
+											"key": "karat",
+											"value": null,
+											"description": "24,22,21,18"
+										},
+										{
+											"key": "gender",
+											"value": null,
+											"description": "male, female, children"
+										},
+										{
+											"key": "metal",
+											"value": null,
+											"description": "gold, silver, platinum"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "products-by-cat",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}/api/store/products-by-cat/1"
+							},
+							"response": []
+						},
+						{
+							"name": "Product Details",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}/api/store/product/1"
+							},
+							"response": []
+						},
+						{
+							"name": "Add/Delete Favourite",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{token}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/store/favourite?product_id=1",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"store",
+										"favourite"
+									],
+									"query": [
+										{
+											"key": "product_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "cart",
+					"item": [
+						{
+							"name": "Add to cart",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{token}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/store/add-to-cart?product_id=1&quantity=1",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"store",
+										"add-to-cart"
+									],
+									"query": [
+										{
+											"key": "product_id",
+											"value": "1"
+										},
+										{
+											"key": "quantity",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add to cart Copy",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{token}}"
+									}
+								},
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "{{url}}/api/store/remove-from-cart?product_id=1",
+									"host": [
+										"{{url}}"
+									],
+									"path": [
+										"api",
+										"store",
+										"remove-from-cart"
+									],
+									"query": [
+										{
+											"key": "product_id",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "My Cart",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{token}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}/api/store/my-cart"
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User",
+					"item": [
+						{
+							"name": "my-favourite",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{token}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}/api/store/my-favourite"
+							},
+							"response": []
+						},
+						{
+							"name": "my Profile",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{token}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}/api/store/profile"
+							},
+							"response": []
+						},
+						{
+							"name": "my_orders",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": {
+										"token": "{{token}}"
+									}
+								},
+								"method": "GET",
+								"header": [],
+								"url": "{{url}}/api/store/my-orders"
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

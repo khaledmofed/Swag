@@ -1,0 +1,1527 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SWAG E-Commerce System Flow & APIs Documentation</title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Cairo", "Inter", sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 40px 20px;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      }
+
+      .header h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        font-weight: 300;
+      }
+
+      .section {
+        background: white;
+        margin-bottom: 30px;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      }
+
+      .section h2 {
+        color: #2c3e50;
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 3px solid #3498db;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .section h3 {
+        color: #34495e;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 25px 0 15px 0;
+        padding-left: 20px;
+        border-left: 4px solid #e74c3c;
+      }
+
+      .flow-diagram {
+        background: #f8f9fa;
+        border: 2px solid #e9ecef;
+        border-radius: 10px;
+        padding: 20px;
+        margin: 20px 0;
+        font-family: "Courier New", monospace;
+        font-size: 0.9rem;
+        line-height: 1.4;
+        overflow-x: auto;
+        white-space: pre;
+      }
+
+      .api-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 25px;
+        border-radius: 10px;
+        margin: 20px 0;
+      }
+
+      .api-section h4 {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+        color: #fff;
+      }
+
+      .api-endpoint {
+        background: rgba(255, 255, 255, 0.1);
+        padding: 15px;
+        border-radius: 8px;
+        margin: 10px 0;
+        border-left: 4px solid #f39c12;
+      }
+
+      .api-endpoint strong {
+        color: #f39c12;
+        font-weight: 600;
+      }
+
+      .database-schema {
+        background: #2c3e50;
+        color: #ecf0f1;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px 0;
+        font-family: "Courier New", monospace;
+        font-size: 0.85rem;
+        overflow-x: auto;
+      }
+
+      .phase-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      .phase-card {
+        background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+        color: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .phase-card h4 {
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+        text-align: center;
+      }
+
+      .task-list {
+        list-style: none;
+      }
+
+      .task-list li {
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .task-list li:last-child {
+        border-bottom: none;
+      }
+
+      .status-completed {
+        color: #00b894;
+        font-weight: bold;
+      }
+
+      .status-pending {
+        color: #fdcb6e;
+        font-weight: bold;
+      }
+
+      .tech-stack {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      .tech-category {
+        background: #ecf0f1;
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #3498db;
+      }
+
+      .tech-category h4 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+        font-size: 1.2rem;
+      }
+
+      .tech-list {
+        list-style: none;
+      }
+
+      .tech-list li {
+        padding: 5px 0;
+        color: #34495e;
+      }
+
+      .checklist {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        margin: 20px 0;
+      }
+
+      .checklist h4 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+      }
+
+      .checklist ul {
+        list-style: none;
+      }
+
+      .checklist li {
+        padding: 8px 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .checklist li::before {
+        content: "☐";
+        color: #3498db;
+        font-weight: bold;
+      }
+
+      /* SEO Styles */
+      .seo-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      .seo-card {
+        padding: 25px;
+        border-radius: 15px;
+        color: white;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .seo-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .seo-card.primary {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      }
+
+      .seo-card.secondary {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+      }
+
+      .seo-card.tertiary {
+        background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+      }
+
+      .seo-card.quaternary {
+        background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%);
+      }
+
+      .seo-card h4 {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+        color: white;
+      }
+
+      .seo-list {
+        list-style: none;
+      }
+
+      .seo-list li {
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        font-size: 0.9rem;
+      }
+
+      .seo-list li:last-child {
+        border-bottom: none;
+      }
+
+      .keywords-section {
+        margin: 20px 0;
+      }
+
+      .keyword-category {
+        margin-bottom: 25px;
+      }
+
+      .keyword-category h4 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+        font-size: 1.2rem;
+      }
+
+      .keyword-tags {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+      }
+
+      .keyword-tag {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 8px 15px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 500;
+        transition: transform 0.3s ease;
+      }
+
+      .keyword-tag:hover {
+        transform: scale(1.05);
+      }
+
+      .seo-implementation {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      .implementation-phase {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #3498db;
+      }
+
+      .implementation-phase h4 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+      }
+
+      .implementation-list {
+        list-style: none;
+      }
+
+      .implementation-list li {
+        padding: 6px 0;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 0.9rem;
+      }
+
+      .seo-monitoring {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      .monitoring-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      .monitoring-card h4 {
+        margin-bottom: 15px;
+        font-size: 1.1rem;
+      }
+
+      .monitoring-card ul {
+        list-style: none;
+      }
+
+      .monitoring-card li {
+        padding: 5px 0;
+        font-size: 0.9rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+      }
+
+      .monitoring-card li:last-child {
+        border-bottom: none;
+      }
+
+      .navigation {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+      }
+
+      .navigation ul {
+        list-style: none;
+      }
+
+      .navigation li {
+        margin: 5px 0;
+      }
+
+      .navigation a {
+        color: #3498db;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color 0.3s ease;
+      }
+
+      .navigation a:hover {
+        color: #2980b9;
+      }
+
+      .highlight {
+        background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 600;
+      }
+
+      .emoji {
+        font-size: 1.5rem;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 10px;
+        }
+
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .section {
+          padding: 20px;
+        }
+
+        .section h2 {
+          font-size: 1.5rem;
+        }
+
+        .navigation {
+          position: static;
+          margin-bottom: 20px;
+        }
+
+        .phase-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .tech-stack {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .toc {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 25px;
+        border-radius: 15px;
+        margin-bottom: 30px;
+      }
+
+      .toc h3 {
+        margin-bottom: 15px;
+        text-align: center;
+      }
+
+      .toc ul {
+        list-style: none;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 10px;
+      }
+
+      .toc li {
+        padding: 8px 15px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        transition: background 0.3s ease;
+      }
+
+      .toc li:hover {
+        background: rgba(255, 255, 255, 0.2);
+      }
+
+      .toc a {
+        color: white;
+        text-decoration: none;
+        font-weight: 500;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <h1>🛍️ SWAG E-Commerce System</h1>
+        <p>مخطط شامل لعمليات متجر المجوهرات والمعادن الثمينة</p>
+        <p>Comprehensive Flow Diagram for Jewelry & Bullion Trading Platform</p>
+      </div>
+
+      <!-- Table of Contents -->
+      <div class="toc">
+        <h3>📋 محتويات المخطط</h3>
+        <ul>
+          <li><a href="#overview">نظرة عامة على النظام</a></li>
+          <li><a href="#authentication">سير عملية تسجيل الدخول</a></li>
+          <li><a href="#operations">العمليات الأساسية للمتجر</a></li>
+          <li><a href="#apis">الـ APIs المطلوبة</a></li>
+          <li><a href="#database">هيكل قاعدة البيانات</a></li>
+          <li><a href="#state">إدارة الحالة</a></li>
+          <li><a href="#components">هيكل المكونات</a></li>
+          <li><a href="#phases">مراحل التطوير</a></li>
+          <li><a href="#seo">استراتيجية SEO</a></li>
+          <li><a href="#tech">المكدس التقني</a></li>
+          <li><a href="#checklist">قائمة التحقق</a></li>
+        </ul>
+      </div>
+
+      <!-- Navigation -->
+      <div class="navigation">
+        <h4>🔗 التنقل السريع</h4>
+        <ul>
+          <li><a href="#overview">نظرة عامة</a></li>
+          <li><a href="#authentication">المصادقة</a></li>
+          <li><a href="#operations">العمليات</a></li>
+          <li><a href="#apis">APIs</a></li>
+          <li><a href="#database">قاعدة البيانات</a></li>
+          <li><a href="#seo">SEO</a></li>
+          <li><a href="#phases">مراحل التطوير</a></li>
+        </ul>
+      </div>
+
+      <!-- System Overview -->
+      <div class="section" id="overview">
+        <h2><span class="emoji">📊</span> نظرة عامة على النظام</h2>
+        <div class="flow-diagram">
+          ┌─────────────────────────────────────────────────────────────────────────────┐
+          │ SWAG E-COMMERCE SYSTEM │ │ متجر المجوهرات والمعادن الثمينة │
+          └─────────────────────────────────────────────────────────────────────────────┘
+          ┌─────────────────┐ ┌─────────────────┐ ┌─────────────────┐ │ FRONTEND
+          │ │ BACKEND API │ │ EXTERNAL │ │ (Next.js) │◄──►│ (Laravel) │◄──►│
+          SERVICES │ └─────────────────┘ └─────────────────┘ └─────────────────┘
+        </div>
+        <p>
+          نظام متكامل لمتجر إلكتروني متخصص في المجوهرات والمعادن الثمينة، يدعم
+          اللغتين العربية والإنجليزية مع واجهة مستخدم متقدمة ونظام مصادقة آمن.
+        </p>
+      </div>
+
+      <!-- Authentication Flow -->
+      <div class="section" id="authentication">
+        <h2><span class="emoji">🔐</span> سير عملية تسجيل الدخول</h2>
+
+        <h3>1. عملية تسجيل الدخول عبر OTP</h3>
+        <div class="flow-diagram">
+          ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ │ User
+          │───►│ Frontend │───►│ Backend │───►│ SMS │ │ Enters │ │ Login │ │ API
+          │ │ Service │ │ Phone │ │ Form │ │ /auth/ │ │ (Twilio) │ │ Number │ │
+          │ │ send-otp │ │ │ └─────────────┘ └─────────────┘ └─────────────┘
+          └─────────────┘
+        </div>
+
+        <h3>2. التحقق من كود OTP</h3>
+        <div class="flow-diagram">
+          ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ │ User
+          │───►│ Frontend │───►│ Backend │───►│ Database │ │ Enters │ │ OTP │ │
+          API │ │ Verify │ │ OTP │ │ Form │ │ /auth/ │ │ OTP & │ │ Code │ │ │ │
+          verify │ │ Create │ └─────────────┘ └─────────────┘ └─────────────┘ │
+          Session │
+        </div>
+
+        <h3>3. تسجيل حساب جديد</h3>
+        <div class="flow-diagram">
+          ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ │ User
+          │───►│ Frontend │───►│ Backend │───►│ Database │ │ Fills │ │ Register
+          │ │ API │ │ Create │ │ Form │ │ Form │ │ /auth/ │ │ User │ │ Data │ │
+          │ │ register │ │ Account │ └─────────────┘ └─────────────┘
+          └─────────────┘ └─────────────┘
+        </div>
+      </div>
+
+      <!-- E-Commerce Operations -->
+      <div class="section" id="operations">
+        <h2><span class="emoji">🛍️</span> العمليات الأساسية للمتجر</h2>
+
+        <h3>1. تصفح المنتجات</h3>
+        <div class="flow-diagram">
+          ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ │ User
+          │───►│ Frontend │───►│ Backend │───►│ Database │ │ Browses │ │
+          Category │ │ API │ │ Products │ │ Categories │ │ Page │ │ /products │
+          │ Table │ └─────────────┘ └─────────────┘ └─────────────┘
+          └─────────────┘
+        </div>
+
+        <h3>2. البحث والفلترة</h3>
+        <div class="flow-diagram">
+          ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ │ User
+          │───►│ Frontend │───►│ Backend │───►│ Database │ │ Searches │ │ Search
+          │ │ API │ │ Products │ │ & Filters │ │ Form │ │ /products │ │ Table │
+          └─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘
+        </div>
+
+        <h3>3. عمليات السلة</h3>
+        <div class="flow-diagram">
+          ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ │ User
+          │───►│ Frontend │───►│ Backend │───►│ Database │ │ Adds to │ │ Cart │
+          │ API │ │ Cart │ │ Cart │ │ Store │ │ /cart/ │ │ Table │
+          └─────────────┘ └─────────────┘ └─────────────┘ └─────────────┘
+        </div>
+
+        <h3>4. عملية الشراء</h3>
+        <div class="flow-diagram">
+          ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ │ User
+          │───►│ Frontend │───►│ Backend │───►│ Database │ │ Proceeds │ │
+          Checkout │ │ API │ │ Orders │ │ to Checkout│ │ Form │ │ /orders/ │ │
+          Table │ └─────────────┘ └─────────────┘ └─────────────┘
+          └─────────────┘
+        </div>
+      </div>
+
+      <!-- Required APIs -->
+      <div class="section" id="apis">
+        <h2><span class="emoji">📡</span> الـ APIs المطلوبة</h2>
+
+        <div class="api-section">
+          <h4>🔐 Authentication APIs</h4>
+          <div class="api-endpoint">
+            <strong>POST /api/v1/auth/send-otp</strong><br />
+            Input: { phone: string }<br />
+            Output: { success: boolean, message: string }<br />
+            Description: إرسال كود OTP إلى رقم الجوال
+          </div>
+          <div class="api-endpoint">
+            <strong>POST /api/v1/auth/verify-otp</strong><br />
+            Input: { phone: string, otp: string }<br />
+            Output: { success: boolean, token: string, user: User }<br />
+            Description: التحقق من كود OTP وإنشاء جلسة
+          </div>
+          <div class="api-endpoint">
+            <strong>POST /api/v1/auth/register</strong><br />
+            Input: { firstName, lastName, email, phone, ... }<br />
+            Output: { success: boolean, user: User }<br />
+            Description: تسجيل حساب جديد
+          </div>
+        </div>
+
+        <div class="api-section">
+          <h4>🛍️ Product APIs</h4>
+          <div class="api-endpoint">
+            <strong>GET /api/v1/categories</strong><br />
+            Input: { active_only?: boolean }<br />
+            Output: { items: Category[], pagination: Pagination }<br />
+            Description: جلب جميع الفئات
+          </div>
+          <div class="api-endpoint">
+            <strong>GET /api/v1/products</strong><br />
+            Input: { page, per_page, category, search, filters }<br />
+            Output: { items: Product[], pagination: Pagination }<br />
+            Description: جلب المنتجات مع الفلترة والترتيب
+          </div>
+        </div>
+
+        <div class="api-section">
+          <h4>🛒 Cart APIs</h4>
+          <div class="api-endpoint">
+            <strong>GET /api/v1/cart</strong><br />
+            Input: { token: string }<br />
+            Output: { items: CartItem[], total: number }<br />
+            Description: جلب محتويات السلة
+          </div>
+          <div class="api-endpoint">
+            <strong>POST /api/v1/cart/add</strong><br />
+            Input: { token: string, product_id: number, quantity: number }<br />
+            Output: { success: boolean, cart: Cart }<br />
+            Description: إضافة منتج إلى السلة
+          </div>
+        </div>
+
+        <div class="api-section">
+          <h4>💳 Order APIs</h4>
+          <div class="api-endpoint">
+            <strong>POST /api/v1/orders/create</strong><br />
+            Input: { token, items, shipping_address, payment_method,
+            total_amount }<br />
+            Output: { success: boolean, order: Order }<br />
+            Description: إنشاء طلب جديد
+          </div>
+        </div>
+
+        <div class="api-section">
+          <h4>🔍 SEO APIs</h4>
+          <div class="api-endpoint">
+            <strong>GET /api/v1/seo/sitemap</strong><br />
+            Input: { format?: 'xml' | 'json' }<br />
+            Output: { urls: SitemapUrl[], lastmod: string }<br />
+            Description: إنشاء خريطة الموقع ديناميكياً
+          </div>
+          <div class="api-endpoint">
+            <strong>GET /api/v1/seo/robots</strong><br />
+            Input: {}<br />
+            Output: { content: string }<br />
+            Description: إنشاء ملف robots.txt ديناميكياً
+          </div>
+          <div class="api-endpoint">
+            <strong>POST /api/v1/seo/structured-data</strong><br />
+            Input: { type: string, data: object }<br />
+            Output: { success: boolean, schema: string }<br />
+            Description: إنشاء بيانات منظمة JSON-LD
+          </div>
+          <div class="api-endpoint">
+            <strong>GET /api/v1/seo/meta-tags</strong><br />
+            Input: { page: string, locale?: string }<br />
+            Output: { title: string, description: string, keywords: string[]
+            }<br />
+            Description: جلب العلامات الوصفية للصفحة
+          </div>
+          <div class="api-endpoint">
+            <strong>POST /api/v1/seo/analytics</strong><br />
+            Input: { event: string, data: object }<br />
+            Output: { success: boolean }<br />
+            Description: تتبع أحداث SEO وتحليلات الموقع
+          </div>
+        </div>
+
+        <div class="api-section">
+          <h4>📊 Market Insights APIs</h4>
+          <div class="api-endpoint">
+            <strong>GET /api/v1/market-insights/prices</strong><br />
+            Input: { symbols?: string[] }<br />
+            Output: { prices: PriceData[] }<br />
+            Description: جلب أسعار المعادن الثمينة
+          </div>
+          <div class="api-endpoint">
+            <strong>GET /api/v1/market-insights/news</strong><br />
+            Input: { category?: string, limit?: number }<br />
+            Output: { news: NewsItem[] }<br />
+            Description: جلب أخبار السوق
+          </div>
+          <div class="api-endpoint">
+            <strong>GET /api/v1/market-insights/calendar</strong><br />
+            Input: { date?: string }<br />
+            Output: { events: CalendarEvent[] }<br />
+            Description: جلب الأحداث الاقتصادية
+          </div>
+        </div>
+      </div>
+
+      <!-- Database Schema -->
+      <div class="section" id="database">
+        <h2><span class="emoji">🗄️</span> هيكل قاعدة البيانات</h2>
+
+        <h3>Users Table</h3>
+        <div class="database-schema">
+          CREATE TABLE users ( id BIGINT PRIMARY KEY AUTO_INCREMENT, first_name
+          VARCHAR(100) NOT NULL, last_name VARCHAR(100) NOT NULL, email
+          VARCHAR(255) UNIQUE NOT NULL, phone VARCHAR(20) UNIQUE NOT NULL,
+          gender ENUM('male', 'female') NULL, relationship ENUM('single',
+          'married') NULL, birthday_month VARCHAR(20) NULL, birthday_day
+          VARCHAR(2) NULL, account_type ENUM('person', 'establishment') NULL,
+          registration_number VARCHAR(50) NULL, company_name VARCHAR(255) NULL,
+          email_verified_at TIMESTAMP NULL, phone_verified_at TIMESTAMP NULL,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP
+          DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP );
+        </div>
+
+        <h3>Products Table</h3>
+        <div class="database-schema">
+          CREATE TABLE products ( id BIGINT PRIMARY KEY AUTO_INCREMENT, title
+          VARCHAR(255) NOT NULL, slug VARCHAR(255) UNIQUE NOT NULL, description
+          TEXT NULL, price DECIMAL(10,2) NOT NULL, sale_price DECIMAL(10,2)
+          NULL, category_id BIGINT NOT NULL, karat ENUM('18K', '21K', '22K',
+          '24K') NULL, weight DECIMAL(8,3) NULL, images JSON NULL, is_new
+          BOOLEAN DEFAULT FALSE, is_featured BOOLEAN DEFAULT FALSE, is_active
+          BOOLEAN DEFAULT TRUE, stock_quantity INT DEFAULT 0, created_at
+          TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT
+          CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, FOREIGN KEY
+          (category_id) REFERENCES categories(id) );
+        </div>
+
+        <h3>Orders Table</h3>
+        <div class="database-schema">
+          CREATE TABLE orders ( id BIGINT PRIMARY KEY AUTO_INCREMENT, user_id
+          BIGINT NOT NULL, order_number VARCHAR(50) UNIQUE NOT NULL, status
+          ENUM('pending', 'confirmed', 'processing', 'shipped', 'delivered',
+          'cancelled') DEFAULT 'pending', total_amount DECIMAL(10,2) NOT NULL,
+          shipping_address JSON NOT NULL, payment_method VARCHAR(50) NOT NULL,
+          payment_status ENUM('pending', 'paid', 'failed') DEFAULT 'pending',
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP
+          DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, FOREIGN KEY
+          (user_id) REFERENCES users(id) );
+        </div>
+
+        <h3>SEO Tables</h3>
+        <div class="database-schema">
+          CREATE TABLE seo_meta_tags ( id BIGINT PRIMARY KEY AUTO_INCREMENT,
+          page_slug VARCHAR(255) UNIQUE NOT NULL, locale VARCHAR(5) NOT NULL,
+          title VARCHAR(255) NOT NULL, description TEXT NOT NULL, keywords TEXT
+          NULL, og_title VARCHAR(255) NULL, og_description TEXT NULL, og_image
+          VARCHAR(255) NULL, canonical_url VARCHAR(255) NULL, created_at
+          TIMESTAMP DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT
+          CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ); CREATE TABLE
+          seo_structured_data ( id BIGINT PRIMARY KEY AUTO_INCREMENT, page_slug
+          VARCHAR(255) NOT NULL, data_type VARCHAR(50) NOT NULL, schema_data
+          JSON NOT NULL, is_active BOOLEAN DEFAULT TRUE, created_at TIMESTAMP
+          DEFAULT CURRENT_TIMESTAMP, updated_at TIMESTAMP DEFAULT
+          CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP ); CREATE TABLE
+          seo_analytics ( id BIGINT PRIMARY KEY AUTO_INCREMENT, event_type
+          VARCHAR(50) NOT NULL, page_url VARCHAR(255) NOT NULL, user_agent TEXT
+          NULL, ip_address VARCHAR(45) NULL, referrer VARCHAR(255) NULL,
+          event_data JSON NULL, created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+          );
+        </div>
+      </div>
+
+      <!-- State Management -->
+      <div class="section" id="state">
+        <h2><span class="emoji">🔄</span> إدارة الحالة</h2>
+        <div class="flow-diagram">
+          ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ │ User
+          │───►│ Component │───►│ Store │───►│ API │ │ Action │ │ (React) │ │
+          (Zustand) │ │ (Axios) │ └─────────────┘ └─────────────┘
+          └─────────────┘ └─────────────┘ │ │ │ │ ▼ ▼ ▼ ▼ ┌─────────────┐
+          ┌─────────────┐ ┌─────────────┐ ┌─────────────┐ │ UI │◄───│ Component
+          │◄───│ Store │◄───│ Backend │ │ Updates │ │ Re-render │ │ State │ │
+          Response │ └─────────────┘ └─────────────┘ └─────────────┘
+          └─────────────┘
+        </div>
+
+        <h3>Stores المستخدمة:</h3>
+        <ul>
+          <li>
+            <span class="highlight">useLanguageStore</span> - إدارة اللغة
+            والاتجاه
+          </li>
+          <li><span class="highlight">useThemeStore</span> - إدارة الثيم</li>
+          <li><span class="highlight">useUserStore</span> - بيانات المستخدم</li>
+          <li><span class="highlight">useCategoriesStore</span> - الفئات</li>
+          <li><span class="highlight">useProductsStore</span> - المنتجات</li>
+          <li><span class="highlight">useCartStore</span> - السلة</li>
+          <li><span class="highlight">useFavoritesStore</span> - المفضلة</li>
+          <li><span class="highlight">useOrdersStore</span> - الطلبات</li>
+        </ul>
+      </div>
+
+      <!-- Frontend Components -->
+      <div class="section" id="components">
+        <h2><span class="emoji">📱</span> هيكل مكونات الواجهة</h2>
+
+        <h3>الصفحات الرئيسية:</h3>
+        <ul>
+          <li><span class="highlight">/[locale]/</span> - الصفحة الرئيسية</li>
+          <li><span class="highlight">/[locale]/login</span> - تسجيل الدخول</li>
+          <li>
+            <span class="highlight">/[locale]/register</span> - تسجيل حساب جديد
+          </li>
+          <li><span class="highlight">/[locale]/store</span> - المتجر</li>
+          <li>
+            <span class="highlight">/[locale]/category/[slug]</span> - فئة
+            المنتجات
+          </li>
+          <li>
+            <span class="highlight">/[locale]/products/[slug]</span> - تفاصيل
+            المنتج
+          </li>
+          <li><span class="highlight">/[locale]/search</span> - البحث</li>
+          <li><span class="highlight">/[locale]/cart</span> - السلة</li>
+          <li><span class="highlight">/[locale]/favorites</span> - المفضلة</li>
+          <li><span class="highlight">/[locale]/orders</span> - الطلبات</li>
+        </ul>
+
+        <h3>المكونات المشتركة:</h3>
+        <ul>
+          <li>
+            <span class="highlight">Layout/</span> - Header, Footer, Sidebar,
+            MainLayout
+          </li>
+          <li>
+            <span class="highlight">Common/</span> - ProductCard, CategoryCard,
+            Button, Input, Modal
+          </li>
+          <li>
+            <span class="highlight">HomePage/</span> - HeroBanner,
+            FeaturedProducts, LatestBlogs
+          </li>
+          <li>
+            <span class="highlight">Store/</span> - ProductGrid, ProductFilter,
+            ProductSort
+          </li>
+          <li>
+            <span class="highlight">MarketInsights/</span> - LivePrices,
+            MarketNews, EconomicCalendar
+          </li>
+        </ul>
+      </div>
+
+      <!-- Development Phases -->
+      <div class="section" id="phases">
+        <h2><span class="emoji">🚀</span> مراحل التطوير</h2>
+
+        <div class="phase-grid">
+          <div class="phase-card">
+            <h4>المرحلة الأولى: المصادقة الأساسية</h4>
+            <ul class="task-list">
+              <li>
+                <span class="status-completed">✅</span> Login/Register UI
+                Components
+              </li>
+              <li>
+                <span class="status-pending">🔄</span> Backend Authentication
+                APIs
+              </li>
+              <li>
+                <span class="status-pending">🔄</span> OTP SMS Integration
+              </li>
+              <li>
+                <span class="status-pending">🔄</span> JWT Token Management
+              </li>
+              <li>
+                <span class="status-pending">🔄</span> User Profile Management
+              </li>
+            </ul>
+          </div>
+
+          <div class="phase-card">
+            <h4>المرحلة الثانية: إدارة المنتجات</h4>
+            <ul class="task-list">
+              <li>
+                <span class="status-completed">✅</span> Categories API &
+                Frontend
+              </li>
+              <li>
+                <span class="status-pending">🔄</span> Products API & Frontend
+              </li>
+              <li>
+                <span class="status-pending">🔄</span> Product Search &
+                Filtering
+              </li>
+              <li>
+                <span class="status-pending">🔄</span> Product Details Page
+              </li>
+              <li><span class="status-pending">🔄</span> Image Management</li>
+            </ul>
+          </div>
+
+          <div class="phase-card">
+            <h4>المرحلة الثالثة: ميزات التسوق</h4>
+            <ul class="task-list">
+              <li>
+                <span class="status-pending">🔄</span> Cart Management (Frontend
+                + Backend)
+              </li>
+              <li><span class="status-pending">🔄</span> Favorites/Wishlist</li>
+              <li>
+                <span class="status-pending">🔄</span> Product Reviews & Ratings
+              </li>
+              <li><span class="status-pending">🔄</span> Stock Management</li>
+              <li><span class="status-pending">🔄</span> Price Management</li>
+            </ul>
+          </div>
+
+          <div class="phase-card">
+            <h4>المرحلة الرابعة: الشراء والطلبات</h4>
+            <ul class="task-list">
+              <li><span class="status-pending">🔄</span> Checkout Process</li>
+              <li>
+                <span class="status-pending">🔄</span> Payment Integration
+              </li>
+              <li><span class="status-pending">🔄</span> Order Management</li>
+              <li><span class="status-pending">🔄</span> Order Tracking</li>
+              <li>
+                <span class="status-pending">🔄</span> Email Notifications
+              </li>
+            </ul>
+          </div>
+
+          <div class="phase-card">
+            <h4>المرحلة الخامسة: الميزات المتقدمة</h4>
+            <ul class="task-list">
+              <li>
+                <span class="status-pending">🔄</span> Market Insights
+                Integration
+              </li>
+              <li><span class="status-pending">🔄</span> Live Price Updates</li>
+              <li><span class="status-pending">🔄</span> Advanced Search</li>
+              <li><span class="status-pending">🔄</span> Recommendations</li>
+              <li>
+                <span class="status-pending">🔄</span> Analytics & Reporting
+              </li>
+            </ul>
+          </div>
+
+          <div class="phase-card">
+            <h4>المرحلة السادسة: SEO & Marketing</h4>
+            <ul class="task-list">
+              <li>
+                <span class="status-pending">🔄</span> Technical SEO
+                Implementation
+              </li>
+              <li>
+                <span class="status-pending">🔄</span> Content SEO Optimization
+              </li>
+              <li>
+                <span class="status-pending">🔄</span> E-commerce SEO Features
+              </li>
+              <li><span class="status-pending">🔄</span> Local SEO Setup</li>
+              <li>
+                <span class="status-pending">🔄</span> SEO Analytics &
+                Monitoring
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Technical Stack -->
+      <div class="section" id="tech">
+        <h2><span class="emoji">🔧</span> المكدس التقني</h2>
+
+        <div class="tech-stack">
+          <div class="tech-category">
+            <h4>Frontend</h4>
+            <ul class="tech-list">
+              <li><strong>Framework:</strong> Next.js 15 (React 19)</li>
+              <li><strong>Language:</strong> TypeScript</li>
+              <li><strong>Styling:</strong> Tailwind CSS + RTL Support</li>
+              <li><strong>State Management:</strong> Zustand</li>
+              <li><strong>HTTP Client:</strong> Axios</li>
+              <li><strong>Internationalization:</strong> i18next</li>
+              <li>
+                <strong>UI Components:</strong> Radix UI + Custom Components
+              </li>
+            </ul>
+          </div>
+
+          <div class="tech-category">
+            <h4>Backend</h4>
+            <ul class="tech-list">
+              <li><strong>Framework:</strong> Laravel 11</li>
+              <li><strong>Language:</strong> PHP 8.2+</li>
+              <li><strong>Database:</strong> MySQL 8.0</li>
+              <li><strong>Authentication:</strong> JWT + SMS OTP</li>
+              <li><strong>File Storage:</strong> AWS S3 / Local Storage</li>
+              <li><strong>Queue System:</strong> Redis + Laravel Queue</li>
+              <li><strong>Caching:</strong> Redis</li>
+            </ul>
+          </div>
+
+          <div class="tech-category">
+            <h4>External Services</h4>
+            <ul class="tech-list">
+              <li><strong>SMS Service:</strong> Twilio / AWS SNS</li>
+              <li><strong>Payment Gateway:</strong> Stripe / PayPal</li>
+              <li><strong>Market Data:</strong> TradingView API</li>
+              <li><strong>Email Service:</strong> SendGrid / AWS SES</li>
+              <li><strong>CDN:</strong> Cloudflare / AWS CloudFront</li>
+            </ul>
+          </div>
+
+          <div class="tech-category">
+            <h4>SEO & Analytics</h4>
+            <ul class="tech-list">
+              <li><strong>SEO Tools:</strong> Google Search Console</li>
+              <li><strong>Analytics:</strong> Google Analytics 4</li>
+              <li><strong>Rank Tracking:</strong> SEMrush / Ahrefs</li>
+              <li><strong>Schema Markup:</strong> JSON-LD Generator</li>
+              <li><strong>Performance:</strong> Google PageSpeed Insights</li>
+              <li><strong>Local SEO:</strong> Google My Business</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- SEO Strategy -->
+      <div class="section" id="seo">
+        <h2>
+          <span class="emoji">🔍</span> استراتيجية تحسين محركات البحث (SEO)
+        </h2>
+
+        <h3>🎯 SEO Strategy Overview</h3>
+        <p>
+          استراتيجية شاملة لتحسين ظهور الموقع في محركات البحث وتحقيق أعلى ترتيب
+          ممكن للكلمات المفتاحية المستهدفة في مجال المجوهرات والمعادن الثمينة.
+        </p>
+
+        <div class="seo-grid">
+          <div class="seo-card primary">
+            <h4>📊 Technical SEO</h4>
+            <ul class="seo-list">
+              <li>
+                <strong>Core Web Vitals:</strong> LCP, FID, CLS Optimization
+              </li>
+              <li>
+                <strong>Mobile-First:</strong> Responsive Design & Mobile
+                Optimization
+              </li>
+              <li>
+                <strong>Page Speed:</strong> Image Optimization & Code
+                Minification
+              </li>
+              <li><strong>SSL Certificate:</strong> HTTPS Implementation</li>
+              <li><strong>XML Sitemap:</strong> Dynamic Sitemap Generation</li>
+              <li><strong>Robots.txt:</strong> Search Engine Crawling Rules</li>
+              <li><strong>Structured Data:</strong> JSON-LD Schema Markup</li>
+              <li>
+                <strong>Canonical URLs:</strong> Duplicate Content Prevention
+              </li>
+            </ul>
+          </div>
+
+          <div class="seo-card secondary">
+            <h4>📝 Content SEO</h4>
+            <ul class="seo-list">
+              <li>
+                <strong>Keyword Research:</strong> Arabic & English Keywords
+              </li>
+              <li><strong>Meta Tags:</strong> Title, Description, Keywords</li>
+              <li><strong>Header Tags:</strong> H1, H2, H3 Hierarchy</li>
+              <li>
+                <strong>Content Optimization:</strong> Natural Keyword
+                Integration
+              </li>
+              <li>
+                <strong>Internal Linking:</strong> Strategic Link Structure
+              </li>
+              <li><strong>Alt Text:</strong> Image Optimization</li>
+              <li><strong>URL Structure:</strong> SEO-Friendly URLs</li>
+              <li>
+                <strong>Content Localization:</strong> Arabic/English Content
+              </li>
+            </ul>
+          </div>
+
+          <div class="seo-card tertiary">
+            <h4>🛍️ E-Commerce SEO</h4>
+            <ul class="seo-list">
+              <li>
+                <strong>Product Schema:</strong> Rich Snippets for Products
+              </li>
+              <li>
+                <strong>Category Pages:</strong> Optimized Category Structure
+              </li>
+              <li>
+                <strong>Product Reviews:</strong> Review Schema Implementation
+              </li>
+              <li>
+                <strong>Price Schema:</strong> Price & Availability Markup
+              </li>
+              <li>
+                <strong>Breadcrumbs:</strong> Navigation & SEO Enhancement
+              </li>
+              <li>
+                <strong>Filter URLs:</strong> SEO-Friendly Filter Parameters
+              </li>
+              <li>
+                <strong>Product Images:</strong> Optimized Product Photography
+              </li>
+              <li>
+                <strong>Stock Status:</strong> Real-time Availability Updates
+              </li>
+            </ul>
+          </div>
+
+          <div class="seo-card quaternary">
+            <h4>🌍 Local SEO</h4>
+            <ul class="seo-list">
+              <li>
+                <strong>Google My Business:</strong> Business Profile
+                Optimization
+              </li>
+              <li><strong>Local Keywords:</strong> Location-Based Targeting</li>
+              <li><strong>Local Schema:</strong> Local Business Markup</li>
+              <li>
+                <strong>Reviews Management:</strong> Customer Reviews Strategy
+              </li>
+              <li>
+                <strong>Local Citations:</strong> Business Directory Listings
+              </li>
+              <li><strong>Local Content:</strong> Location-Specific Content</li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>🎯 Target Keywords Strategy</h3>
+        <div class="keywords-section">
+          <div class="keyword-category">
+            <h4>🔑 Primary Keywords (Arabic)</h4>
+            <div class="keyword-tags">
+              <span class="keyword-tag">مجوهرات ذهب</span>
+              <span class="keyword-tag">خواتم ذهب</span>
+              <span class="keyword-tag">أساور ذهب</span>
+              <span class="keyword-tag">سلاسل ذهب</span>
+              <span class="keyword-tag">أقراط ذهب</span>
+              <span class="keyword-tag">سبائك ذهب</span>
+              <span class="keyword-tag">عملات ذهب</span>
+              <span class="keyword-tag">مجوهرات فضة</span>
+              <span class="keyword-tag">مجوهرات ألماس</span>
+              <span class="keyword-tag">متجر مجوهرات</span>
+            </div>
+          </div>
+
+          <div class="keyword-category">
+            <h4>🔑 Primary Keywords (English)</h4>
+            <div class="keyword-tags">
+              <span class="keyword-tag">gold jewelry</span>
+              <span class="keyword-tag">gold rings</span>
+              <span class="keyword-tag">gold bracelets</span>
+              <span class="keyword-tag">gold necklaces</span>
+              <span class="keyword-tag">gold earrings</span>
+              <span class="keyword-tag">gold bullion</span>
+              <span class="keyword-tag">gold coins</span>
+              <span class="keyword-tag">silver jewelry</span>
+              <span class="keyword-tag">diamond jewelry</span>
+              <span class="keyword-tag">jewelry store</span>
+            </div>
+          </div>
+
+          <div class="keyword-category">
+            <h4>🎯 Long-tail Keywords</h4>
+            <div class="keyword-tags">
+              <span class="keyword-tag">خواتم خطوبة ذهب عيار 21</span>
+              <span class="keyword-tag">أساور ذهب نسائية عيار 18</span>
+              <span class="keyword-tag">سلاسل ذهب رجالية عيار 24</span>
+              <span class="keyword-tag">أقراط ألماس طبيعي</span>
+              <span class="keyword-tag">سبائك ذهب للاستثمار</span>
+              <span class="keyword-tag">عملات ذهب قديمة</span>
+            </div>
+          </div>
+        </div>
+
+        <h3>📊 SEO Implementation Plan</h3>
+        <div class="seo-implementation">
+          <div class="implementation-phase">
+            <h4>Phase 1: Technical Foundation</h4>
+            <ul class="implementation-list">
+              <li>
+                <span class="status-pending">🔄</span> SSL Certificate
+                Installation
+              </li>
+              <li>
+                <span class="status-pending">🔄</span> XML Sitemap Generation
+              </li>
+              <li>
+                <span class="status-pending">🔄</span> Robots.txt Configuration
+              </li>
+              <li>
+                <span class="status-pending">🔄</span> Core Web Vitals
+                Optimization
+              </li>
+              <li>
+                <span class="status-pending">🔄</span> Mobile Responsiveness
+              </li>
+            </ul>
+          </div>
+
+          <div class="implementation-phase">
+            <h4>Phase 2: Content Optimization</h4>
+            <ul class="implementation-list">
+              <li>
+                <span class="status-pending">🔄</span> Meta Tags Implementation
+              </li>
+              <li>
+                <span class="status-pending">🔄</span> Structured Data Markup
+              </li>
+              <li>
+                <span class="status-pending">🔄</span> Content Localization
+              </li>
+              <li>
+                <span class="status-pending">🔄</span> Internal Linking Strategy
+              </li>
+              <li><span class="status-pending">🔄</span> Image Optimization</li>
+            </ul>
+          </div>
+
+          <div class="implementation-phase">
+            <h4>Phase 3: E-Commerce Specific</h4>
+            <ul class="implementation-list">
+              <li>
+                <span class="status-pending">🔄</span> Product Schema
+                Implementation
+              </li>
+              <li>
+                <span class="status-pending">🔄</span> Category Page
+                Optimization
+              </li>
+              <li>
+                <span class="status-pending">🔄</span> Review System Integration
+              </li>
+              <li>
+                <span class="status-pending">🔄</span> Price & Availability
+                Schema
+              </li>
+              <li>
+                <span class="status-pending">🔄</span> Breadcrumb Navigation
+              </li>
+            </ul>
+          </div>
+
+          <div class="implementation-phase">
+            <h4>Phase 4: Local SEO</h4>
+            <ul class="implementation-list">
+              <li>
+                <span class="status-pending">🔄</span> Google My Business Setup
+              </li>
+              <li>
+                <span class="status-pending">🔄</span> Local Schema Markup
+              </li>
+              <li>
+                <span class="status-pending">🔄</span> Local Citations Building
+              </li>
+              <li>
+                <span class="status-pending">🔄</span> Customer Reviews Strategy
+              </li>
+              <li>
+                <span class="status-pending">🔄</span> Local Content Creation
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <h3>📈 SEO Monitoring & Analytics</h3>
+        <div class="seo-monitoring">
+          <div class="monitoring-card">
+            <h4>🔍 Search Console</h4>
+            <ul>
+              <li>Keyword Performance Tracking</li>
+              <li>Click-through Rate Analysis</li>
+              <li>Indexing Status Monitoring</li>
+              <li>Mobile Usability Reports</li>
+              <li>Core Web Vitals Monitoring</li>
+            </ul>
+          </div>
+
+          <div class="monitoring-card">
+            <h4>📊 Analytics Tools</h4>
+            <ul>
+              <li>Google Analytics 4 Setup</li>
+              <li>E-commerce Tracking</li>
+              <li>Conversion Funnel Analysis</li>
+              <li>User Behavior Tracking</li>
+              <li>Traffic Source Analysis</li>
+            </ul>
+          </div>
+
+          <div class="monitoring-card">
+            <h4>🎯 Rank Tracking</h4>
+            <ul>
+              <li>Keyword Position Monitoring</li>
+              <li>Competitor Analysis</li>
+              <li>Local Search Rankings</li>
+              <li>Featured Snippets Tracking</li>
+              <li>Voice Search Optimization</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Implementation Checklist -->
+      <div class="section" id="checklist">
+        <h2><span class="emoji">📋</span> قائمة التحقق من التنفيذ</h2>
+
+        <div class="checklist">
+          <h4>Authentication System</h4>
+          <ul>
+            <li>Backend Authentication APIs</li>
+            <li>SMS OTP Integration</li>
+            <li>JWT Token Management</li>
+            <li>User Profile APIs</li>
+            <li>Password Reset Flow</li>
+          </ul>
+        </div>
+
+        <div class="checklist">
+          <h4>Product Management</h4>
+          <ul>
+            <li>Categories CRUD APIs</li>
+            <li>Products CRUD APIs</li>
+            <li>Image Upload & Management</li>
+            <li>Product Search & Filtering</li>
+            <li>Product Reviews System</li>
+          </ul>
+        </div>
+
+        <div class="checklist">
+          <h4>Shopping Cart</h4>
+          <ul>
+            <li>Cart Management APIs</li>
+            <li>Cart Persistence</li>
+            <li>Cart Synchronization</li>
+            <li>Cart Validation</li>
+            <li>Cart Abandonment Recovery</li>
+          </ul>
+        </div>
+
+        <div class="checklist">
+          <h4>Checkout Process</h4>
+          <ul>
+            <li>Checkout Flow APIs</li>
+            <li>Payment Gateway Integration</li>
+            <li>Order Management</li>
+            <li>Order Confirmation</li>
+            <li>Order Tracking</li>
+          </ul>
+        </div>
+
+        <div class="checklist">
+          <h4>SEO & Marketing</h4>
+          <ul>
+            <li>Technical SEO Implementation</li>
+            <li>Content SEO Optimization</li>
+            <li>E-commerce SEO Features</li>
+            <li>Local SEO Setup</li>
+            <li>Analytics & Monitoring</li>
+          </ul>
+        </div>
+
+        <div class="checklist">
+          <h4>User Experience</h4>
+          <ul>
+            <li>Responsive Design</li>
+            <li>RTL/LTR Support</li>
+            <li>Dark/Light Theme</li>
+            <li>Loading States</li>
+            <li>Error Handling</li>
+          </ul>
+        </div>
+
+        <div class="checklist">
+          <h4>Performance & Security</h4>
+          <ul>
+            <li>API Rate Limiting</li>
+            <li>Input Validation</li>
+            <li>SQL Injection Prevention</li>
+            <li>XSS Protection</li>
+            <li>CSRF Protection</li>
+          </ul>
+        </div>
+      </div>
+
+      <!-- Footer -->
+      <div class="section">
+        <h2><span class="emoji">📝</span> ملاحظات ختامية</h2>
+        <p>
+          هذا المخطط يخدم كدليل شامل لفريق تطوير نظام SWAG E-Commerce. يحدد جميع
+          العمليات الرئيسية والـ APIs وأولويات التنفيذ لبناء منصة قوية لتجارة
+          المجوهرات والمعادن الثمينة.
+        </p>
+        <p>
+          <strong
+            >This document serves as a comprehensive guide for the SWAG
+            E-Commerce system development team. It outlines all major
+            operations, APIs, and implementation priorities for building a
+            robust jewelry and bullion trading platform.</strong
+          >
+        </p>
+      </div>
+    </div>
+
+    <script>
+      // Smooth scrolling for navigation links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }
+        });
+      });
+
+      // Add scroll effect to sections
+      const sections = document.querySelectorAll(".section");
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px",
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = "1";
+            entry.target.style.transform = "translateY(0)";
+          }
+        });
+      }, observerOptions);
+
+      sections.forEach((section) => {
+        section.style.opacity = "0";
+        section.style.transform = "translateY(20px)";
+        section.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+        observer.observe(section);
+      });
+
+      // Add hover effects to phase cards
+      document.querySelectorAll(".phase-card").forEach((card) => {
+        card.addEventListener("mouseenter", function () {
+          this.style.transform = "scale(1.02)";
+        });
+
+        card.addEventListener("mouseleave", function () {
+          this.style.transform = "scale(1)";
+        });
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      بروبوزال تطوير متجر إلكتروني للجملة | Wholesale E-Commerce Proposal
+    </title>
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700;800;900&display=swap");
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Cairo", "Inter", sans-serif;
+        line-height: 1.6;
+        color: #333;
+        background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+        min-height: 100vh;
+      }
+
+      .container {
+        max-width: 1400px;
+        margin: 0 auto;
+        padding: 20px;
+      }
+
+      .header {
+        text-align: center;
+        margin-bottom: 40px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 40px 20px;
+        border-radius: 20px;
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+      }
+
+      .header h1 {
+        font-size: 3rem;
+        font-weight: 800;
+        margin-bottom: 10px;
+        text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+      }
+
+      .header p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        font-weight: 300;
+      }
+
+      .project-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .info-card {
+        background: white;
+        padding: 25px;
+        border-radius: 15px;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .info-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .info-card h3 {
+        color: #2c3e50;
+        margin-bottom: 10px;
+        font-size: 1.3rem;
+      }
+
+      .info-card .value {
+        font-size: 2rem;
+        font-weight: 700;
+        color: #667eea;
+      }
+
+      .section {
+        background: white;
+        margin-bottom: 30px;
+        border-radius: 15px;
+        padding: 30px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+      }
+
+      .section:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+      }
+
+      .section h2 {
+        color: #2c3e50;
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 3px solid #3498db;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+      }
+
+      .section h3 {
+        color: #34495e;
+        font-size: 1.5rem;
+        font-weight: 600;
+        margin: 25px 0 15px 0;
+        padding-left: 20px;
+        border-left: 4px solid #e74c3c;
+      }
+
+      .features-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      .feature-card {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease;
+      }
+
+      .feature-card:hover {
+        transform: scale(1.02);
+      }
+
+      .feature-card h4 {
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+        text-align: center;
+      }
+
+      .feature-list {
+        list-style: none;
+      }
+
+      .feature-list li {
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .feature-list li:last-child {
+        border-bottom: none;
+      }
+
+      .feature-list li::before {
+        content: "✅";
+        font-weight: bold;
+      }
+
+      .tech-stack {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      .tech-category {
+        background: #ecf0f1;
+        padding: 20px;
+        border-radius: 10px;
+        border-left: 4px solid #3498db;
+      }
+
+      .tech-category h4 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+        font-size: 1.2rem;
+      }
+
+      .tech-list {
+        list-style: none;
+      }
+
+      .tech-list li {
+        padding: 5px 0;
+        color: #34495e;
+      }
+
+      .timeline {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      .timeline-card {
+        background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+        color: white;
+        padding: 25px;
+        border-radius: 15px;
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+      }
+
+      .timeline-card h4 {
+        font-size: 1.4rem;
+        margin-bottom: 15px;
+        text-align: center;
+      }
+
+      .timeline-list {
+        list-style: none;
+      }
+
+      .timeline-list li {
+        padding: 8px 0;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        display: flex;
+        align-items: center;
+        gap: 10px;
+      }
+
+      .timeline-list li:last-child {
+        border-bottom: none;
+      }
+
+      .timeline-list li::before {
+        content: "📅";
+        font-weight: bold;
+      }
+
+      .pricing-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      .pricing-card {
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 15px;
+        border-left: 4px solid #3498db;
+        text-align: center;
+      }
+
+      .pricing-card h4 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+        font-size: 1.3rem;
+      }
+
+      .pricing-amount {
+        font-size: 2.5rem;
+        font-weight: 700;
+        color: #667eea;
+        margin-bottom: 10px;
+      }
+
+      .pricing-list {
+        list-style: none;
+        text-align: right;
+      }
+
+      .pricing-list li {
+        padding: 5px 0;
+        color: #34495e;
+      }
+
+      .pricing-list li::before {
+        content: "✓";
+        color: #27ae60;
+        font-weight: bold;
+        margin-left: 10px;
+      }
+
+      .deliverables {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 25px;
+        border-radius: 15px;
+        margin: 20px 0;
+      }
+
+      .deliverables h4 {
+        font-size: 1.3rem;
+        margin-bottom: 15px;
+        text-align: center;
+      }
+
+      .deliverables-list {
+        list-style: none;
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 15px;
+      }
+
+      .deliverables-list li {
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        text-align: center;
+      }
+
+      .why-choose-us {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        gap: 20px;
+        margin: 20px 0;
+      }
+
+      .advantage-card {
+        background: #ecf0f1;
+        padding: 25px;
+        border-radius: 15px;
+        text-align: center;
+        transition: transform 0.3s ease;
+      }
+
+      .advantage-card:hover {
+        transform: translateY(-5px);
+      }
+
+      .advantage-card h4 {
+        color: #2c3e50;
+        margin-bottom: 15px;
+        font-size: 1.3rem;
+      }
+
+      .advantage-card p {
+        color: #34495e;
+        line-height: 1.6;
+      }
+
+      .cta-section {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        padding: 40px;
+        border-radius: 20px;
+        text-align: center;
+        margin: 30px 0;
+      }
+
+      .cta-section h3 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+      }
+
+      .cta-section p {
+        font-size: 1.2rem;
+        margin-bottom: 30px;
+        opacity: 0.9;
+      }
+
+      .contact-info {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+        gap: 20px;
+        margin-top: 30px;
+      }
+
+      .contact-item {
+        text-align: center;
+        padding: 20px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+      }
+
+      .contact-item h5 {
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+      }
+
+      .highlight {
+        background: linear-gradient(120deg, #a8edea 0%, #fed6e3 100%);
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 600;
+      }
+
+      .emoji {
+        font-size: 1.5rem;
+      }
+
+      .navigation {
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: white;
+        padding: 15px;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+      }
+
+      .navigation ul {
+        list-style: none;
+      }
+
+      .navigation li {
+        margin: 5px 0;
+      }
+
+      .navigation a {
+        color: #3498db;
+        text-decoration: none;
+        font-size: 0.9rem;
+        transition: color 0.3s ease;
+      }
+
+      .navigation a:hover {
+        color: #2980b9;
+      }
+
+      @media (max-width: 768px) {
+        .container {
+          padding: 10px;
+        }
+
+        .header h1 {
+          font-size: 2rem;
+        }
+
+        .section {
+          padding: 20px;
+        }
+
+        .section h2 {
+          font-size: 1.5rem;
+        }
+
+        .navigation {
+          position: static;
+          margin-bottom: 20px;
+        }
+
+        .features-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .tech-stack {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <div class="header">
+        <h1>🛍️ بروبوزال متجر الجملة الإلكتروني</h1>
+        <p>Wholesale E-Commerce Platform Development Proposal</p>
+        <p>منصة متكاملة لبيع البضائع بالجملة مع أحدث التقنيات</p>
+      </div>
+
+      <!-- Navigation -->
+      <div class="navigation">
+        <h4>🔗 التنقل السريع</h4>
+        <ul>
+          <li><a href="#overview">نظرة عامة</a></li>
+          <li><a href="#features">الميزات</a></li>
+          <li><a href="#tech">التقنيات</a></li>
+          <li><a href="#timeline">الجدول الزمني</a></li>
+          <li><a href="#deliverables">التسليمات</a></li>
+        </ul>
+      </div>
+
+      <!-- Project Info -->
+      <div class="project-info">
+        <div class="info-card">
+          <h3>الميزانية</h3>
+          <div class="value">2,500$</div>
+        </div>
+        <div class="info-card">
+          <h3>المدة الزمنية</h3>
+          <div class="value">8 أسابيع</div>
+        </div>
+        <div class="info-card">
+          <h3>نوع المشروع</h3>
+          <div class="value">متجر بيع بالجملة</div>
+        </div>
+        <div class="info-card">
+          <h3>التقنيات</h3>
+          <div class="value">React + Next.js</div>
+        </div>
+      </div>
+
+      <!-- Overview -->
+      <div class="section" id="overview">
+        <h2><span class="emoji">📊</span> نظرة عامة على المشروع</h2>
+        <p>
+          نقدم لكم حلاً متكاملاً لتطوير واجهة مستخدم احترافية لبيع البضائع
+          بالجملة، مصممة بأحدث تقنيات Frontend ومراعية لاحتياجات التجارة
+          الإلكترونية الحديثة. سنقوم بتطوير الواجهة وربطها مع APIs المقدمة من
+          فريق الباك اند.
+        </p>
+
+        <h3>🎯 أهداف المشروع</h3>
+        <ul>
+          <li>إنشاء واجهة مستخدم احترافية ومتجاوبة لعرض المنتجات بالجملة</li>
+          <li>تصميم نظام إدارة واجهات متكامل للمنتجات والتصنيفات</li>
+          <li>تحسين تجربة المستخدم وزيادة معدلات التحويل</li>
+          <li>تحسين ظهور الموقع في محركات البحث (SEO)</li>
+          <li>دعم اللغات المتعددة والتصميم المتجاوب</li>
+          <li>ربط الواجهة مع APIs المقدمة من فريق الباك اند</li>
+        </ul>
+      </div>
+
+      <!-- Features -->
+      <div class="section" id="features">
+        <h2><span class="emoji">✨</span> الميزات المقدمة</h2>
+
+        <div class="features-grid">
+          <div class="feature-card">
+            <h4>🎨 تصميم UX/UI احترافي</h4>
+            <ul class="feature-list">
+              <li>تصميم على Figma أو Adobe XD</li>
+              <li>تصميم واجهة مستخدم بديهية</li>
+              <li>تصميم متجاوب لجميع الأجهزة</li>
+              <li>ألوان وخطوط احترافية</li>
+              <li>تجربة مستخدم سلسة</li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <h4>🛍️ نظام إدارة المنتجات</h4>
+            <ul class="feature-list">
+              <li>عرض المنتجات مع صور عالية الجودة</li>
+              <li>تصنيفات وفئات منظمة</li>
+              <li>نظام بحث متقدم</li>
+              <li>فلترة وترتيب المنتجات</li>
+              <li>إدارة المخزون</li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <h4>🛒 نظام الطلبات والسلة</h4>
+            <ul class="feature-list">
+              <li>سلة تسوق ذكية</li>
+              <li>نظام طلبات متكامل</li>
+              <li>تتبع حالة الطلبات</li>
+              <li>إدارة المفضلة</li>
+              <li>حساب الشحن التلقائي</li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <h4>👥 نظام المستخدمين</h4>
+            <ul class="feature-list">
+              <li>تسجيل دخول وإنشاء حساب</li>
+              <li>ملفات شخصية للمستخدمين</li>
+              <li>نظام صلاحيات متقدم</li>
+              <li>إدارة العناوين</li>
+              <li>نظام إشعارات</li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <h4>📊 واجهات الإدارة</h4>
+            <ul class="feature-list">
+              <li>واجهة إدارة المنتجات</li>
+              <li>واجهة إدارة التصنيفات</li>
+              <li>واجهة إدارة المحتوى</li>
+              <li>واجهة إعدادات الموقع</li>
+              <li>ربط مع APIs الإدارية</li>
+            </ul>
+          </div>
+
+          <div class="feature-card">
+            <h4>🔗 ربط APIs</h4>
+            <ul class="feature-list">
+              <li>ربط مع APIs المنتجات</li>
+              <li>ربط مع APIs المستخدمين</li>
+              <li>ربط مع APIs الطلبات</li>
+              <li>ربط مع APIs الدفع</li>
+              <li>إدارة حالة الاتصال</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Technical Stack -->
+      <div class="section" id="tech">
+        <h2><span class="emoji">🔧</span> التقنيات المستخدمة</h2>
+
+        <div class="tech-stack">
+          <div class="tech-category">
+            <h4>Frontend</h4>
+            <ul class="tech-list">
+              <li><strong>Framework:</strong> React 18 + Next.js 15</li>
+              <li><strong>Language:</strong> TypeScript</li>
+              <li><strong>Styling:</strong> Tailwind CSS</li>
+              <li><strong>State Management:</strong> Redux</li>
+              <li><strong>HTTP Client:</strong> Axios</li>
+              <li><strong>UI Components:</strong> Radix UI</li>
+            </ul>
+          </div>
+
+          <div class="tech-category">
+            <h4>API Integration</h4>
+            <ul class="tech-list">
+              <li><strong>HTTP Client:</strong> Axios</li>
+              <li><strong>API Management:</strong> React Query</li>
+              <li><strong>Authentication:</strong> JWT Integration</li>
+              <li><strong>Error Handling:</strong> API Error Management</li>
+              <li><strong>Loading States:</strong> Skeleton Loading</li>
+              <li><strong>Offline Support:</strong> Service Workers</li>
+            </ul>
+          </div>
+
+          <div class="tech-category">
+            <h4>SEO & Performance</h4>
+            <ul class="tech-list">
+              <li><strong>SEO:</strong> Next.js SEO</li>
+              <li><strong>Performance:</strong> Core Web Vitals</li>
+              <li><strong>Analytics:</strong> Google Analytics</li>
+              <li><strong>Search Console:</strong> Google Search Console</li>
+              <li><strong>Structured Data:</strong> JSON-LD</li>
+              <li><strong>Sitemap:</strong> XML Sitemap</li>
+            </ul>
+          </div>
+
+          <div class="tech-category">
+            <h4>Internationalization</h4>
+            <ul class="tech-list">
+              <li><strong>i18n:</strong> i18next</li>
+              <li><strong>Languages:</strong> Arabic + English</li>
+              <li><strong>RTL Support:</strong> Full RTL Layout</li>
+              <li><strong>Localization:</strong> Date, Currency, Numbers</li>
+              <li><strong>Content:</strong> Professional Translation</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Timeline -->
+      <div class="section" id="timeline">
+        <h2><span class="emoji">📅</span> الجدول الزمني (8 أسابيع)</h2>
+
+        <div class="timeline">
+          <div class="timeline-card">
+            <h4>الأسبوع 1-2</h4>
+            <ul class="timeline-list">
+              <li>تحليل المتطلبات التفصيلي</li>
+              <li>تصميم UX/UI على Figma/XD</li>
+            </ul>
+          </div>
+
+          <div class="timeline-card">
+            <h4>الأسبوع 3-4</h4>
+            <ul class="timeline-list">
+              <li>تطوير المكونات الأساسية</li>
+              <li>صفحات المنتجات والتصنيفات</li>
+              <li>نظام المستخدمين والسلة</li>
+              <li>التصميم المتجاوب</li>
+              <li>اختبار الواجهات</li>
+            </ul>
+          </div>
+
+          <div class="timeline-card">
+            <h4>الأسبوع 5-6</h4>
+            <ul class="timeline-list">
+              <li>تطوير واجهات الإدارة</li>
+              <li>ربط مع APIs المقدمة</li>
+              <li>اختبار الوظائف الأساسية</li>
+              <li>إعداد نظام المصادقة</li>
+              <li>اختبار التكامل</li>
+            </ul>
+          </div>
+
+          <div class="timeline-card">
+            <h4>الأسبوع 7-8</h4>
+            <ul class="timeline-list">
+              <li>تطبيق استراتيجية SEO</li>
+              <li>ترجمة المحتوى</li>
+              <li>اختبار شامل</li>
+              <li>تحسين الأداء</li>
+              <li>التدريب والدعم</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- Deliverables -->
+      <div class="section" id="deliverables">
+        <h2><span class="emoji">📦</span> التسليمات والضمانات</h2>
+
+        <div class="deliverables">
+          <h4>✅ ما يشمله البروبوزال</h4>
+          <ul class="deliverables-list">
+            <li>كود Frontend كامل</li>
+            <li>تصميم Figma/XD</li>
+            <li>وثائق تقنية</li>
+            <li>دليل المستخدم</li>
+            <li>دليل الإدارة</li>
+            <li>ضمان 3 أشهر</li>
+            <li>دعم فني لمدة شهر</li>
+            <li>تدريب على الاستخدام</li>
+          </ul>
+        </div>
+
+        <h3>🛡️ الضمانات المقدمة</h3>
+        <ul>
+          <li><strong>ضمان الكود:</strong> 3 أشهر على جميع الوظائف</li>
+          <li><strong>إصلاح الأخطاء:</strong> مجاناً خلال فترة الضمان</li>
+          <li><strong>الدعم الفني:</strong> لمدة شهر بعد التسليم</li>
+          <li><strong>التدريب:</strong> تدريب على استخدام الواجهات</li>
+          <li><strong>التحديثات:</strong> تحديثات الواجهة مجانية</li>
+          <li><strong>دعم التكامل:</strong> مساعدة في ربط APIs</li>
+        </ul>
+      </div>
+
+      <!-- Footer -->
+      <div class="section">
+        <h2><span class="emoji">📝</span> الخطوات التالية</h2>
+        <ol>
+          <li>
+            <strong>مراجعة البروبوزال:</strong> التأكد من الميزات والتفاصيل
+          </li>
+          <li><strong>توقيع العقد:</strong> 40% مقدم</li>
+          <li><strong>بدء العمل:</strong> حسب الخطة المتفق عليها</li>
+          <li><strong>متابعة التقدم:</strong> اجتماعات أسبوعية</li>
+          <li><strong>بعد 3 أسابيع:</strong> دفع 30%</li>
+          <li><strong>التسليم النهائي:</strong> ودفع 30% المتبقي</li>
+        </ol>
+
+        <p
+          style="
+            margin-top: 20px;
+            text-align: center;
+            font-weight: 600;
+            color: #667eea;
+          "
+        >
+          ننتظر تواصلكم لبدء هذا المشروع المثير! 🎉
+        </p>
+      </div>
+    </div>
+
+    <script>
+      // Smooth scrolling for navigation links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({
+              behavior: "smooth",
+              block: "start",
+            });
+          }
+        });
+      });
+
+      // Add scroll effect to sections
+      const sections = document.querySelectorAll(".section");
+      const observerOptions = {
+        threshold: 0.1,
+        rootMargin: "0px 0px -50px 0px",
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.style.opacity = "1";
+            entry.target.style.transform = "translateY(0)";
+          }
+        });
+      }, observerOptions);
+
+      sections.forEach((section) => {
+        section.style.opacity = "0";
+        section.style.transform = "translateY(20px)";
+        section.style.transition = "opacity 0.6s ease, transform 0.6s ease";
+        observer.observe(section);
+      });
+
+      // Add hover effects to cards
+      document
+        .querySelectorAll(".feature-card, .timeline-card, .advantage-card")
+        .forEach((card) => {
+          card.addEventListener("mouseenter", function () {
+            this.style.transform = "scale(1.02)";
+          });
+
+          card.addEventListener("mouseleave", function () {
+            this.style.transform = "scale(1)";
+          });
+        });
+    </script>
+  </body>
+</html>

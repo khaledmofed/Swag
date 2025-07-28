@@ -1,0 +1,12 @@
+# *
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /_next/
+Disallow: /admin/
+
+# Host
+Host: https://swag-jewelry.com
+
+# Sitemaps
+Sitemap: https://swag-jewelry.com/sitemap.xml
