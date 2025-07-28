@@ -440,8 +440,8 @@ export const ar = {
   error: {
     loading_categories: "خطأ في تحميل الفئات",
   },
-  // Store
-  store: {
+  // Store (Updated)
+  store_updated: {
     hero_title: "اكتشف جمال المجوهرات الفاخرة",
     hero_desc: "مجموعة حصرية من المجوهرات المصممة بعناية لتناسب ذوقك الفريد",
     hero_button: "تسوق الآن",
@@ -452,19 +452,19 @@ export const ar = {
     why_3: "شحن مجاني مؤمن",
     why_4: "خيارات التتبع والتبديل وإعادة البيع",
   },
-  // Contact
-  contact_us_banner: {
+  // Contact (Updated)
+  contact_us_banner_updated: {
     text: "هل تحتاج مساعدة؟ تواصل معنا الآن",
   },
-  // Live Market Insights
-  live_market_insights: {
+  // Live Market Insights (Updated)
+  live_market_insights_updated: {
     gold_price_region24: "ذهب 24",
     gold_price_region21: "ذهب 21",
     goldsounces: "ذهب",
     silversounces: "فضة",
   },
-  // Latest News
-  latest_news: {
+  // Latest News (Updated)
+  latest_news_updated: {
     tabs: {
       breaking: "أخبار عاجلة",
       currencies: "العملات",
@@ -472,8 +472,8 @@ export const ar = {
       stocks: "الأسهم",
     },
   },
-  // Discover
-  discover: {
+  // Discover (Updated)
+  discover_updated: {
     title: "اكتشف أفضل المجوهرات",
     company_story:
       "قصة شركتنا هي قصة شغف بالجمال والتميز. منذ تأسيسنا، كنا ملتزمين بتقديم أعلى مستويات الجودة والخدمة لعملائنا الكرام.",

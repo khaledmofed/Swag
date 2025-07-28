@@ -89,12 +89,12 @@ export default function RegisterPage() {
                 lastName: form.lastName,
                 email: form.email,
                 gender: form.gender,
-                relationship: form.relationship,
-                birthdayMonth: form.birthdayMonth,
-                birthdayDay: form.birthdayDay,
+                relationshipStatus: form.relationship || "",
+                birthMonth: form.birthdayMonth,
+                birthDay: parseInt(form.birthdayDay) || 0,
                 accountType: form.accountType,
-                registration: form.registrationNumber,
-                company: form.companyName,
+                registrationNumber: form.registrationNumber,
+                companyName: form.companyName,
               });
             }}
           >

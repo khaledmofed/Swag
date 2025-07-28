@@ -3,7 +3,7 @@ import { useSearchParams } from "next/navigation";
 import { MainLayout } from "@/components/layout/MainLayout";
 import { PromoBanner } from "@/components/homePage/PromoBanner";
 import { EnchantingSummerCollectionSection } from "../store/EnchantingSummerCollectionSection";
-import { useState } from "react";
+import { useState, Suspense } from "react";
 import { Icon } from "@/components/common/Icon";
 import Link from "next/link";
 import { useLanguageStore } from "@/stores";
@@ -96,9 +96,10 @@ const demoProducts = [
     image: "/images/collections/necklace1.png",
   },
 ];
-const sidebarLinks = [{ label: t("search.share_jewelry"), href: "#" }];
-export default function SearchPage() {
+
+function SearchContent() {
   const { t } = useTranslation();
+  const sidebarLinks = [{ label: t("search.share_jewelry"), href: "#" }];
   const searchParams = useSearchParams();
   const query = searchParams.get("query") || "";
   const { isRTL } = useLanguageStore();
@@ -261,5 +262,31 @@ export default function SearchPage() {
         onApply={() => setSortOpen(false)}
       />
     </MainLayout>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <Suspense fallback={
+      <MainLayout>
+        <div className="container mx-auto px-4 sm:px-6 lg:px-0 py-10">
+          <div className="animate-pulse">
+            <div className="h-8 bg-gray-200 rounded mb-2 w-1/3"></div>
+            <div className="h-6 bg-gray-200 rounded mb-8 w-1/2"></div>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+              {[...Array(8)].map((_, i) => (
+                <div key={i} className="animate-pulse">
+                  <div className="bg-gray-200 h-64 rounded mb-2"></div>
+                  <div className="bg-gray-200 h-4 rounded mb-1"></div>
+                  <div className="bg-gray-200 h-4 rounded w-1/2"></div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </MainLayout>
+    }>
+      <SearchContent />
+    </Suspense>
   );
 }

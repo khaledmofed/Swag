@@ -442,8 +442,8 @@ For questions about our privacy practices, please contact us.`,
   error: {
     loading_categories: "Error loading categories",
   },
-  // Store
-  store: {
+  // Store (Updated)
+  store_updated: {
     hero_title: "Discover the Beauty of Luxury Jewelry",
     hero_desc:
       "An exclusive collection of jewelry carefully designed to match your unique taste",
@@ -455,19 +455,19 @@ For questions about our privacy practices, please contact us.`,
     why_3: "Free Insured Shipping",
     why_4: "Track-In, Trade-Up, and Resale Options",
   },
-  // Contact
-  contact_us_banner: {
+  // Contact (Updated)
+  contact_us_banner_updated: {
     text: "Need help? Contact us now",
   },
-  // Live Market Insights
-  live_market_insights: {
+  // Live Market Insights (Updated)
+  live_market_insights_updated: {
     gold_price_region24: "GOLD 24",
     gold_price_region21: "GOLD 21",
     goldsounces: "GOLD",
     silversounces: "SILVER",
   },
-  // Latest News
-  latest_news: {
+  // Latest News (Updated)
+  latest_news_updated: {
     tabs: {
       breaking: "Breaking News",
       currencies: "Currencies",
@@ -475,8 +475,8 @@ For questions about our privacy practices, please contact us.`,
       stocks: "Stocks",
     },
   },
-  // Discover
-  discover: {
+  // Discover (Updated)
+  discover_updated: {
     title: "Discover the Best Jewelry",
     company_story:
       "Our company story is one of passion for beauty and excellence. Since our founding, we have been committed to providing the highest levels of quality and service to our valued customers.",

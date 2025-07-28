@@ -1,48 +1,47 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import BreakingNews from "./BreakingNews"
-import CurrenciesNews from "./CurrenciesNews"
-import CommoditiesNews from "./CommoditiesNews"
-import StockMarketsNews from "./StockMarketsNews"
-import { useTranslation } from "react-i18next"
-import { useLiveMarketInsights } from "@/hooks"
-import { useLanguageStore } from "@/stores"
+import { useState } from "react";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import BreakingNews from "./BreakingNews";
+import CurrenciesNews from "./CurrenciesNews";
+import CommoditiesNews from "./CommoditiesNews";
+import StockMarketsNews from "./StockMarketsNews";
+import { useTranslation } from "react-i18next";
+import { useLiveMarketInsights } from "@/hooks";
+import { useLanguageStore } from "@/stores";
 
 const LatestNews = () => {
-  const [activeTab, setActiveTab] = useState("breaking")
-  const { t } = useTranslation()
-  const {isRTL} = useLanguageStore()
-  const { data } = useLiveMarketInsights()
+  const [activeTab, setActiveTab] = useState("breaking");
+  const { t } = useTranslation();
+  const { isRTL } = useLanguageStore();
+  const { data } = useLiveMarketInsights();
 
-
-  const news = data?.news
+  const news = data?.news;
   const handleTabChange = (tab: string) => {
-    setActiveTab(tab)
-  }
+    setActiveTab(tab);
+  };
   const tabs = [
     {
       value: "breaking",
       label: t("latest_news.tabs.breaking"),
-      content: <BreakingNews />
+      content: <BreakingNews />,
     },
     {
       value: "currencies",
       label: t("latest_news.tabs.currencies"),
-      content: <CurrenciesNews />
+      content: <CurrenciesNews />,
     },
     {
       value: "commodities",
       label: t("latest_news.tabs.commodities"),
-      content: <CommoditiesNews />
+      content: <CommoditiesNews />,
     },
     {
       value: "stocks",
       label: t("latest_news.tabs.stocks"),
-      content: <StockMarketsNews />
-    }
-  ]
+      content: <StockMarketsNews />,
+    },
+  ];
 
   return (
     <div className=" mx-auto container md:max-w-[70%]">
@@ -76,7 +75,7 @@ const LatestNews = () => {
         ))}
       </Tabs>
     </div>
-  )
-}
+  );
+};
 
-export default LatestNews
+export default LatestNews;

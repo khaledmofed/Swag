@@ -1,12 +1,12 @@
-"use client"
+"use client";
 
-import { useRef } from "react"
-import { useLivePricesSocket } from "@/hooks/api/useLivePricesSocket"
-import { cn } from "@/lib/utils"
-import { ArrowUpRight, ArrowDownRight } from "lucide-react"
-import { useMarketPrices } from "@/hooks"
-import { useTranslation } from "react-i18next"
-import Icon from "../common/Icon"
+import { useRef } from "react";
+import { useLivePricesSocket } from "@/hooks/api/useLivePricesSocket";
+import { cn } from "@/lib/utils";
+import { ArrowUpRight, ArrowDownRight } from "lucide-react";
+import { useMarketPrices } from "@/hooks";
+import { useTranslation } from "react-i18next";
+import Icon from "../common/Icon";
 
 // Loading skeleton component
 function LivePriceWidgetSkeleton() {
@@ -31,56 +31,57 @@ function LivePriceWidgetSkeleton() {
         </div>
       ))}
     </div>
-  )
+  );
 }
 
 const sortedKeys = [
   "gold-price-region24", // GOLD 24
   "gold-price-region21", // GOLD 21
   "goldsounces", // GOLD
-  "silversounces" // SILVER
-]
+  "silversounces", // SILVER
+];
 
 const initialPrices: Record<string, number | null> = {
   "gold-price-region24": null,
   "gold-price-region21": null,
   goldsounces: null,
-  silversounces: null
-}
+  silversounces: null,
+};
 
 export default function LivePriceWidget() {
-  const { t } = useTranslation()
-  const prevPricesRef = useRef(initialPrices)
-  const { data: link } = useMarketPrices()
+  const { t } = useTranslation();
+  const prevPricesRef = useRef(initialPrices);
+  const { data: link } = useMarketPrices();
   const { data: prices = initialPrices, isConnected } =
-    useLivePricesSocket(link)
+    useLivePricesSocket(link);
 
   // Update previous prices ref when prices change
   if (prices !== prevPricesRef.current) {
-    prevPricesRef.current = { ...prevPricesRef.current, ...prices }
+    prevPricesRef.current = { ...prevPricesRef.current, ...prices };
   }
 
   const displayNames: Record<string, string> = {
     "gold-price-region24": t("live_market_insights.gold_price_region24"),
     "gold-price-region21": t("live_market_insights.gold_price_region21"),
     goldsounces: t("live_market_insights.goldsounces"),
-    silversounces: t("live_market_insights.silversounces")
-  }
+    silversounces: t("live_market_insights.silversounces"),
+  };
 
   // Show skeleton if not connected or if all prices are null
-  const isLoading = !isConnected || Object.values(prices).every(price => price === null)
+  const isLoading =
+    !isConnected || Object.values(prices).every((price) => price === null);
 
   if (isLoading) {
-    return <LivePriceWidgetSkeleton />
+    return <LivePriceWidgetSkeleton />;
   }
 
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 px-4 gap-4 border-y border-opacity-30 border-secondary-100 mb-6 py-4">
       {sortedKeys.map((key, index) => {
-        const value = prices[key]
-        const prevValue = prevPricesRef.current[key]
-        const hasChanged = prevValue !== null && value !== null
-        const isUp = hasChanged ? value! > prevValue! : null
+        const value = prices[key];
+        const prevValue = prevPricesRef.current[key];
+        const hasChanged = prevValue !== null && value !== null;
+        const isUp = hasChanged ? value! > prevValue! : null;
 
         return (
           <div
@@ -120,8 +121,8 @@ export default function LivePriceWidget() {
               )}
             </p>
           </div>
-        )
+        );
       })}
     </div>
-  )
+  );
 }
