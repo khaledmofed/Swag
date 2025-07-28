@@ -333,7 +333,9 @@ export default function ProductDetailsPage() {
         <div className="flex flex-col lg:flex-row gap-10">
           {/* Gallery */}
           <div className="flex-1 flex flex-col gap-2 max-w-xl">
-            <div className="grid grid-cols-2 gap-0 mb-0">
+            {/* Thumbnail Images */}
+            <div className="grid grid-cols-2 gap-2 mb-2">
+              {/* Main Image Thumbnail */}
               <div
                 className={`aspect-square bg-gray-50 flex items-center justify-center cursor-pointer border-2 ${
                   selectedImage === 0
@@ -348,11 +350,37 @@ export default function ProductDetailsPage() {
                   className="object-cover w-full h-full"
                 />
               </div>
+              {/* Additional Images Thumbnails */}
+              {product.images &&
+                product.images.length > 0 &&
+                product.images.map((image: any, index: number) => (
+                  <div
+                    key={image.id}
+                    className={`aspect-square bg-gray-50 flex items-center justify-center cursor-pointer border-2 ${
+                      selectedImage === index + 1
+                        ? "border-primary-500"
+                        : "border-transparent"
+                    }`}
+                    onClick={() => setSelectedImage(index + 1)}
+                  >
+                    <img
+                      src={getImageUrl(image.image)}
+                      alt={`${product.name} - Image ${index + 1}`}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                ))}
             </div>
-            {/* Main Image */}
+            {/* Main Image Display */}
             <div className="aspect-square bg-gray-50 flex items-center justify-center border border-gray-200">
               <img
-                src={getImageUrl(product.image)}
+                src={
+                  selectedImage === 0
+                    ? getImageUrl(product.image)
+                    : product.images && product.images[selectedImage - 1]
+                    ? getImageUrl(product.images[selectedImage - 1].image)
+                    : getImageUrl(product.image)
+                }
                 alt={product.name}
                 className="object-cover w-full h-full"
               />

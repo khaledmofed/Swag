@@ -4,11 +4,21 @@ import { useLanguageStore } from "@/stores/languageStore";
 
 const BASE_URL = "https://swag.ivadso.com";
 
+export interface ProductImage {
+  id: number;
+  product_id: number;
+  image: string;
+  is_main: number;
+  created_at: string;
+  updated_at: string;
+}
+
 export interface Product {
   id: number;
   category_id: number;
   slug: string;
   image: string;
+  images?: ProductImage[];
   short_description_en: string;
   old_price: string;
   price: string;
