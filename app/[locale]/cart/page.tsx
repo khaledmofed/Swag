@@ -308,25 +308,25 @@ export default function CartPage() {
                     className="flex gap-4 items-start border-b pb-4 last:border-b-0 last:pb-0"
                   >
                     <img
-                      src={getImageUrl(item.product?.images?.[0])}
+                      src={getImageUrl(item.product?.image)}
                       alt={item.product?.title}
-                      className="w-16 h-16 object-cover rounded-none"
+                      className="w-20 h-20 object-cover rounded-none"
                     />
                     <div className="flex-1">
-                      <div className="flex items-center justify-between mb-1">
-                        <div className="font-sukar font-bold text-sm">
-                          {item.product?.title}
+                      <div className="flex items-center justify-between mb-0">
+                        <div className="font-sukar font-bold">
+                          {item.product?.name}
                         </div>
-                        <div className="font-sukar font-semibold text-sm">
+                        <div className="font-sukar font-semibold text-md">
                           {item.product?.price?.toLocaleString()} SAR
                         </div>
                       </div>
-                      <div className="text-gray-500 text-xs mb-2 line-clamp-2">
+                      <div className="text-md mb-1 line-clamp-2">
                         {item.product?.description}
                       </div>
                       <div className="flex items-center gap-2">
                         <button
-                          className="w-6 h-6 border border-gray-300 rounded-none text-sm"
+                          className="w-8 h-8 border border-gray-300 rounded-none text-sm"
                           onClick={() =>
                             addMutation.mutate(
                               {
@@ -349,11 +349,11 @@ export default function CartPage() {
                         >
                           -
                         </button>
-                        <span className="w-6 text-center text-sm">
+                        <span className="w-8 text-center text-sm">
                           {item.quantity}
                         </span>
                         <button
-                          className="w-6 h-6 border border-gray-300 rounded-none text-sm"
+                          className="w-8 h-8 border border-gray-300 rounded-none text-sm"
                           onClick={() =>
                             addMutation.mutate(
                               {
