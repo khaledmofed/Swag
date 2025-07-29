@@ -5,7 +5,7 @@ import { Service } from "@/types/api";
 import { useLanguageStore } from "@/stores/languageStore";
 
 export const fetchServices = async (language: string = "en") => {
-  const response = await apiRequest<{ data: Service[] }>(() =>
+  const response = await apiRequest<{ data: { items: Service[] } }>(() =>
     apiClient.get(apiEndpoints.services, {
       headers: {
         Accept: "application/json",
@@ -13,7 +13,7 @@ export const fetchServices = async (language: string = "en") => {
       },
     })
   );
-  return response.data;
+  return response.data.items || [];
 };
 
 export const useServices = (
@@ -37,7 +37,7 @@ export const useActiveServices = (
   return useQuery({
     queryKey: ["services", "active", language],
     queryFn: async () => {
-      const response = await apiRequest<{ data: Service[] }>(() =>
+      const response = await apiRequest<{ data: { items: Service[] } }>(() =>
         apiClient.get(apiEndpoints.services, {
           headers: {
             Accept: "application/json",
@@ -45,7 +45,7 @@ export const useActiveServices = (
           },
         })
       );
-      const services = response.data || [];
+      const services = response.data.items || [];
       return services.filter((service: Service) => service.is_active);
     },
     staleTime: 15 * 60 * 1000,
@@ -65,7 +65,7 @@ export const useServiceBySlug = (
   return useQuery({
     queryKey: ["service", slug, language],
     queryFn: async () => {
-      const response = await apiRequest<{ data: Service[] }>(() =>
+      const response = await apiRequest<{ data: { items: Service[] } }>(() =>
         apiClient.get(apiEndpoints.services, {
           headers: {
             Accept: "application/json",
@@ -73,7 +73,7 @@ export const useServiceBySlug = (
           },
         })
       );
-      const services = response.data || [];
+      const services = response.data.items || [];
       return services.find((service: Service) => service.slug === slug);
     },
     staleTime: 10 * 60 * 1000,

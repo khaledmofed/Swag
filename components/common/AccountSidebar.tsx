@@ -7,7 +7,7 @@ const sidebarItems = [
   { icon: "user", label: "Profile", route: "/profile" },
   { icon: "heart", label: "View Saved Products", route: "/saved-products" },
   { icon: "briefcase", label: "Orders", route: "/orders" },
-  // { icon: "home", label: "Addresses", route: "/addresses" },
+  { icon: "home", label: "Addresses", route: "/addresses" },
   // { icon: "shield", label: "Change Password", route: "/change-password" },
   { icon: "log-out", label: "Logout", danger: true },
 ];

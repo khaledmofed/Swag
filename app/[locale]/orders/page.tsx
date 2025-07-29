@@ -17,10 +17,11 @@ function formatDate(dateStr: string) {
 }
 
 const STATUS_COLORS: Record<string, string> = {
-  "On Preparation": "bg-yellow-100 text-yellow-800 border-yellow-200",
-  Completed: "bg-green-100 text-green-800 border-green-200",
-  "Under Review": "bg-yellow-100 text-yellow-800 border-yellow-200",
-  "On Delivery": "bg-green-100 text-green-800 border-green-200",
+  pending: "bg-yellow-100 text-yellow-800 border-yellow-200",
+  completed: "bg-green-100 text-green-800 border-green-200",
+  under_review: "bg-yellow-100 text-yellow-800 border-yellow-200",
+  on_delivery: "bg-green-100 text-green-800 border-green-200",
+  on_preparation: "bg-yellow-100 text-yellow-800 border-yellow-200",
 };
 
 const fetchOrders = async (token: string) => {
@@ -50,7 +51,8 @@ export default function OrdersPage() {
     staleTime: 1000 * 60 * 5,
   });
 
-  const orders = ordersData?.items || [];
+  // استخراج الطلبات من الاستجابة الصحيحة
+  const orders = ordersData?.data?.orders || [];
   const totalPages = Math.ceil(orders.length / ORDERS_PER_PAGE);
   const paginated = orders.slice(
     (page - 1) * ORDERS_PER_PAGE,
@@ -158,35 +160,36 @@ export default function OrdersPage() {
                     <tbody>
                       {paginated.map((order: any, idx: number) => (
                         <tr
-                          key={order.orderNumber || order.id || idx}
+                          key={order.id || idx}
                           className="hover:bg-gray-50 dark:hover:bg-[#232b2b] cursor-pointer"
                         >
                           <td className="px-4 py-3 text-[#607A76] font-bold">
-                            {order.orderNumber || order.id}
+                            {order.id}
                           </td>
                           <td className="px-4 py-3 flex items-center gap-3">
                             <img
-                              src={order.products?.[0]?.image}
+                              src={order.items?.[0]?.product?.image}
                               alt=""
                               className="w-12 h-12 object-cover rounded-none "
                             />
                             <div>
                               <div className="font-bold text-gray-800 dark:text-white">
-                                {order.products?.[0]?.title}
+                                {order.items?.[0]?.product?.name}
                               </div>
                               <div className="text-green-700 font-bold">
-                                {order.products?.[0]?.price} SAR
+                                {order.items?.[0]?.price} SAR
                               </div>
                             </div>
                           </td>
                           <td className="px-4 py-3">
-                            {order.products?.reduce(
-                              (sum: number, p: any) => sum + (p.quantity || 1),
+                            {order.items?.reduce(
+                              (sum: number, item: any) =>
+                                sum + (item.quantity || 1),
                               0
                             )}
                           </td>
                           <td className="px-4 py-3">
-                            {formatDate(order.date)}
+                            {formatDate(order.created_at)}
                           </td>
                           <td className="px-4 py-3">
                             <span
@@ -256,7 +259,7 @@ export default function OrdersPage() {
                   >
                     <div className="bg-[#f7f9f8] dark:bg-[#181e1e] rounded-none shadow-lg max-w-5xl w-full relative border border-[#e3e7e5] dark:border-[#232b2b] p-0 overflow-hidden">
                       {/* Top Bar with Close and Breadcrumb */}
-                      <div className="flex items-center justify-between px-8 py-5 border-b border-[#e3e7e5] dark:border-[#232b2b] bg-white dark:bg-[#232b2b]">
+                      <div className="flex items-center justify-between px-8 py-2 border-b border-[#e3e7e5] dark:border-[#232b2b] bg-white dark:bg-[#232b2b]">
                         <button
                           className="flex items-center gap-2 text-[#607A76] hover:text-[#3d4e4b] text-2xl font-bold"
                           onClick={() => setSelectedOrder(null)}
@@ -267,8 +270,7 @@ export default function OrdersPage() {
                           <span className="opacity-70">Order Management</span>
                           <span className="mx-1">&#8250;</span>
                           <span className="opacity-70">
-                            Order Number #
-                            {selectedOrder.orderNumber || selectedOrder.id}
+                            Order Number #{selectedOrder.id}
                           </span>
                           <span className="mx-1">&#8250;</span>
                           <span className="text-[#607A76] font-bold">
@@ -278,80 +280,200 @@ export default function OrdersPage() {
                         <div style={{ width: 40 }} />
                       </div>
                       {/* Main Content */}
-                      <div className="px-8 py-6 bg-[#f7f9f8] dark:bg-[#181e1e]">
+                      <div className="px-4 py-4 bg-[#f7f9f8] dark:bg-[#181e1e]">
                         {/* Order Info Row */}
-                        <div className="flex flex-wrap items-center justify-between mb-4 gap-2">
-                          <div className="flex flex-wrap items-center gap-2 text-[#607A76] text-base font-sukar">
-                            <span className="flex items-center gap-1">
-                              <Icon name="calendar" size={18} />{" "}
-                              <span className="font-bold">Order Date:</span>{" "}
-                              {formatDate(selectedOrder.date)} -{" "}
-                              {new Date(selectedOrder.date).toLocaleTimeString(
-                                [],
-                                { hour: "2-digit", minute: "2-digit" }
-                              )}
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Icon name="credit-card" size={18} />{" "}
-                              <span className="font-bold">Payment Method:</span>{" "}
-                              Cash on Delivery
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Icon name="truck" size={18} />{" "}
-                              <span className="font-bold">
-                                Shipping Method:
-                              </span>{" "}
-                              Saree Company
-                            </span>
-                            <span className="flex items-center gap-1">
-                              <Icon name="globe" size={18} />{" "}
-                              <span className="font-bold">
-                                Source of Order:
-                              </span>{" "}
-                              SWAG
-                            </span>
+                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-2 mb-1">
+                          <div className="bg-white dark:bg-[#232b2b] border border-[#e3e7e5] dark:border-[#232b2b] rounded-none p-4">
+                            <div className="flex items-center gap-3 mb-0">
+                              <div className="w-10 h-10 bg-[#f0f4f3] dark:bg-[#2a2a2a] rounded-none flex items-center justify-center">
+                                <Icon
+                                  name="calendar"
+                                  size={20}
+                                  className="text-[#607A76]"
+                                />
+                              </div>
+                              <div>
+                                <div className="text-sm  font-sukar">
+                                  Order Date
+                                </div>
+                                <div
+                                  className="font-bold text-[#607A76] font-sukar"
+                                  style={{
+                                    display: "flex",
+                                    alignItems: "center",
+                                    justifyContent: "space-around",
+                                  }}
+                                >
+                                  {formatDate(selectedOrder.created_at)}
+                                  <div
+                                    className="text-xs text-gray-600 dark:text-gray-400"
+                                    style={{
+                                      marginLeft: "10px",
+                                      marginRight: "10px",
+                                    }}
+                                  >
+                                    {new Date(
+                                      selectedOrder.created_at
+                                    ).toLocaleTimeString([], {
+                                      hour: "2-digit",
+                                      minute: "2-digit",
+                                    })}
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="bg-white dark:bg-[#232b2b] border border-[#e3e7e5] dark:border-[#232b2b] rounded-none p-4">
+                            <div className="flex items-center gap-3 mb-0">
+                              <div className="w-10 h-10 bg-[#f0f4f3] dark:bg-[#2a2a2a] rounded-none flex items-center justify-center">
+                                <Icon
+                                  name="credit-card"
+                                  size={20}
+                                  className="text-[#607A76]"
+                                />
+                              </div>
+                              <div>
+                                <div className="text-sm  font-sukar">
+                                  Payment Method
+                                </div>
+                                <div className="font-bold text-[#607A76] font-sukar">
+                                  {selectedOrder.payment_method ===
+                                  "cash_on_delivery"
+                                    ? "Cash on Delivery"
+                                    : selectedOrder.payment_method}
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="bg-white dark:bg-[#232b2b] border border-[#e3e7e5] dark:border-[#232b2b] rounded-none p-4">
+                            <div className="flex items-center gap-3 mb-0">
+                              <div className="w-10 h-10 bg-[#f0f4f3] dark:bg-[#2a2a2a] rounded-none flex items-center justify-center">
+                                <Icon
+                                  name="truck"
+                                  size={20}
+                                  className="text-[#607A76]"
+                                />
+                              </div>
+                              <div>
+                                <div className="text-sm  font-sukar">
+                                  Shipping Method
+                                </div>
+                                <div className="font-bold text-[#607A76] font-sukar">
+                                  Saree Company
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+
+                          <div className="bg-white dark:bg-[#232b2b] border border-[#e3e7e5] dark:border-[#232b2b] rounded-none p-4">
+                            <div className="flex items-center gap-3 mb-0">
+                              <div className="w-10 h-10 bg-[#f0f4f3] dark:bg-[#2a2a2a] rounded-none flex items-center justify-center">
+                                <Icon
+                                  name="globe"
+                                  size={20}
+                                  className="text-[#607A76]"
+                                />
+                              </div>
+                              <div>
+                                <div className="text-sm  font-sukar">
+                                  Source of Order
+                                </div>
+                                <div className="font-bold text-[#607A76] font-sukar">
+                                  SWAG
+                                </div>
+                              </div>
+                            </div>
                           </div>
                         </div>
+
                         {/* ETA & Status Row */}
-                        <div className="flex flex-wrap items-center justify-between mb-6 gap-2">
-                          <div className="flex items-center gap-2 text-[#8ca39b] text-sm">
-                            <Icon name="clock" size={18} />
-                            Estimated time of arrival is 40-50 minutes
+                        <div className="flex flex-col md:flex-row items-center justify-between mb-1 gap-2">
+                          <div className="bg-white dark:bg-[#232b2b] border border-[#e3e7e5] dark:border-[#232b2b] rounded-none p-4 flex-1">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 bg-[#f0f4f3] dark:bg-[#2a2a2a] rounded-none flex items-center justify-center">
+                                <Icon
+                                  name="clock"
+                                  size={20}
+                                  className="text-[#607A76]"
+                                />
+                              </div>
+                              <div>
+                                <div className="text-sm  font-sukar">
+                                  Estimated Delivery
+                                </div>
+                                <div className="font-bold text-[#607A76] font-sukar">
+                                  40-50 minutes
+                                </div>
+                              </div>
+                            </div>
                           </div>
-                          <span
-                            className={`inline-block px-4 py-1 rounded-full border text-sm font-bold ${
-                              STATUS_COLORS[selectedOrder.status] ||
-                              "bg-gray-100 text-gray-700 border-gray-200"
-                            }`}
-                          >
-                            {selectedOrder.status}
-                          </span>
+
+                          <div className="bg-white dark:bg-[#232b2b] border border-[#e3e7e5] dark:border-[#232b2b] rounded-none p-4">
+                            <div className="flex items-center gap-3">
+                              <div className="w-10 h-10 bg-[#f0f4f3] dark:bg-[#2a2a2a] rounded-none flex items-center justify-center">
+                                <Icon
+                                  name="checkCircle"
+                                  size={20}
+                                  className="text-[#607A76]"
+                                />
+                              </div>
+                              <div>
+                                <div className="text-sm  font-sukar">
+                                  Order Status
+                                </div>
+                                <span
+                                  className={`inline-block px-3 py-1 rounded-full border text-sm font-bold ${
+                                    STATUS_COLORS[selectedOrder.status] ||
+                                    "bg-gray-100 text-gray-700 border-gray-200"
+                                  }`}
+                                >
+                                  {selectedOrder.status}
+                                </span>
+                              </div>
+                            </div>
+                          </div>
                         </div>
                         {/* Product Details & Invoice */}
-                        <div className="flex flex-col md:flex-row gap-8">
+                        <div className="flex flex-col md:flex-row gap-2">
                           {/* Product Details */}
                           <div className="flex-1">
-                            <div className="text-xl font-bold text-[#607A76] mb-4">
+                            <div className="text-xl font-bold text-[#607A76] mb-2 mt-2">
                               Product Details
                             </div>
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                              {selectedOrder.products.map(
-                                (p: any, idx: number) => (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                              {selectedOrder.items.map(
+                                (item: any, idx: number) => (
                                   <div
                                     key={idx}
-                                    className="flex items-center gap-4 bg-white dark:bg-[#232b2b] border border-[#e3e7e5] dark:border-[#232b2b] rounded-none p-4 min-h-[80px]"
+                                    className="flex items-center gap-2 bg-white dark:bg-[#232b2b] border border-[#e3e7e5] dark:border-[#232b2b] rounded-none p-4 min-h-[80px]"
                                   >
                                     <img
-                                      src={p.image}
+                                      src={item.product.image}
                                       alt=""
-                                      className="w-14 h-14 object-cover rounded-none bg-[#f7f9f8] dark:bg-[#181e1e] border border-[#e3e7e5] dark:border-[#232b2b]"
+                                      className="w-16 h-16 object-cover rounded-none bg-[#f7f9f8] dark:bg-[#181e1e] border border-[#e3e7e5] dark:border-[#232b2b]"
                                     />
                                     <div className="flex-1">
-                                      <div className="font-bold text-[#607A76] text-lg mb-1">
-                                        {p.title}
+                                      <div
+                                        className="font-bold text-[#607A76] text-lg mb-0"
+                                        style={{
+                                          lineHeight: "17px",
+                                          fontSize: "16px",
+                                        }}
+                                      >
+                                        {item.product.name}
                                       </div>
-                                      <div className="text-green-700 font-bold text-base">
-                                        {p.price} SAR
+                                      <div
+                                        className="text-green-700 font-bold text-base"
+                                        style={{
+                                          fontSize: "14px",
+                                        }}
+                                      >
+                                        {item.price} SAR
+                                      </div>
+                                      <div className="text-gray-600 text-sm">
+                                        Quantity: {item.quantity}
                                       </div>
                                     </div>
                                   </div>
@@ -361,7 +483,7 @@ export default function OrdersPage() {
                           </div>
                           {/* Invoice */}
                           <div className="w-full md:w-80 flex-shrink-0">
-                            <div className="bg-white dark:bg-[#232b2b] border border-[#e3e7e5] dark:border-[#232b2b] rounded-none p-6 mb-4">
+                            <div className="bg-white dark:bg-[#232b2b] border border-[#e3e7e5] dark:border-[#232b2b] rounded-none p-6 mb-1">
                               <div className="text-xl font-bold text-[#607A76] mb-4">
                                 Invoice
                               </div>
@@ -371,16 +493,14 @@ export default function OrdersPage() {
                                     Product Value
                                   </span>
                                   <span className="font-bold">
-                                    {selectedOrder.subtotal} SAR
+                                    {selectedOrder.total} SAR
                                   </span>
                                 </div>
                                 <div className="flex justify-between">
                                   <span className="text-[#607A76]">
                                     Delivery
                                   </span>
-                                  <span className="font-bold">
-                                    {selectedOrder.shipping} SAR
-                                  </span>
+                                  <span className="font-bold">0.00 SAR</span>
                                 </div>
                                 <div className="flex justify-between">
                                   <span className="text-[#607A76]">
@@ -402,7 +522,7 @@ export default function OrdersPage() {
                               </button>
                             </div>
                             {/* FAQ & Support */}
-                            <div className="flex flex-col gap-3">
+                            <div className="flex flex-col gap-2">
                               <div className="bg-white dark:bg-[#232b2b] border border-[#e3e7e5] dark:border-[#232b2b] rounded-none p-4 flex items-center gap-4">
                                 <Icon
                                   name="life-buoy"

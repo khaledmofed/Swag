@@ -61,7 +61,7 @@ export default function Banner() {
 
       {/* Content Container */}
       <div className="relative z-10 flex items-end justify-center h-full px-4 sm:px-6 lg:px-8">
-        <div className="container">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-0">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 lg:gap-12 mb-4 sm:mb-6 lg:mb-8 items-center min-h-[15vh] sm:min-h-[17.5vh]">
             <>
               <h1 className="justify-start text-primary-50 text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-normal leading-tight sm:leading-[1.2] md:leading-[1.3] lg:leading-[56px]">

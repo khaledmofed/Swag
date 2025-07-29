@@ -17,7 +17,6 @@ export default function HomePage() {
     <MainLayout>
       {/* Full-screen video banner */}
       <Banner />
-
       {/* What We Offer Services Section */}
       <WhatWeOffer />
 

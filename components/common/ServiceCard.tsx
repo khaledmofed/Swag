@@ -97,7 +97,7 @@ export function ServiceCard({
           </h3>
           {description && (
             <div
-              className="text-sm sm:text-base text-gray-600 dark:text-slate-400 leading-relaxed"
+              className="text-sm sm:text-base text-gray-600 dark:text-slate-400 leading-relaxed font-body"
               dangerouslySetInnerHTML={{ __html: description }}
             />
           )}

@@ -109,7 +109,10 @@ export function Header({
     pathname === "/en/terms" ||
     pathname === "/privacy" ||
     pathname === "/ar/privacy" ||
-    pathname === "/en/privacy";
+    pathname === "/en/privacy" ||
+    pathname === "/addresses" ||
+    pathname === "/ar/addresses" ||
+    pathname === "/en/addresses";
   const [searchOpen, setSearchOpen] = useState(false);
   const [searchValue, setSearchValue] = useState("");
   const searchBtnRef = useRef<HTMLButtonElement>(null);

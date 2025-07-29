@@ -23,9 +23,17 @@ export function WhatWeOffer() {
   const { getSettingByKey } = useSystemSettingsWithStore({
     enabled: isClient,
   });
-  const { data: activeServices = [], isLoading } = useActiveServicesWithStore({
+  const {
+    data: activeServices = [],
+    isLoading,
+    error,
+  } = useActiveServicesWithStore({
     enabled: isClient,
   });
+
+  console.log("WhatWeOffer - activeServices:", activeServices);
+  console.log("WhatWeOffer - isLoading:", isLoading);
+  console.log("WhatWeOffer - error:", error);
 
   const services = activeServices.map((service) => ({
     key: service.slug,
@@ -33,27 +41,28 @@ export function WhatWeOffer() {
     description: service.description,
     image: service.image || "",
   }));
+  console.log("WhatWeOffer - mapped services:", services);
 
   // Don't render during SSR or while loading
   if (!isClient || isLoading) {
     return (
-      <></>
-      // <section className="py-8 lg:py-24 bg-white dark:bg-secondary-600 transition-colors duration-300">
-      //   <div className="container mx-auto px-4 sm:px-6 lg:px-0">
-      //     <div className="animate-pulse space-y-8">
-      //       <div className="text-center">
-      //         <div className="h-6 bg-gray-200 rounded w-1/4 mx-auto mb-4"></div>
-      //         <div className="h-12 bg-gray-200 rounded w-1/2 mx-auto mb-6"></div>
-      //         <div className="h-4 bg-gray-200 rounded w-3/4 mx-auto"></div>
-      //       </div>
-      //       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      //         {[...Array(4)].map((_, i) => (
-      //           <div key={i} className="h-48 bg-gray-200 rounded"></div>
-      //         ))}
-      //       </div>
-      //     </div>
-      //   </div>
-      // </section>
+      // <></>
+      <section className="py-8 lg:py-24 bg-white dark:bg-secondary-600 transition-colors duration-300">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-0">
+          <div className="animate-pulse space-y-8">
+            <div className="text-center">
+              <div className="h-6 bg-gray-200 rounded w-1/4 mx-auto mb-4"></div>
+              <div className="h-12 bg-gray-200 rounded w-1/2 mx-auto mb-6"></div>
+              <div className="h-4 bg-gray-200 rounded w-3/4 mx-auto"></div>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="h-48 bg-gray-200 rounded"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
     );
   }
 
@@ -65,7 +74,10 @@ export function WhatWeOffer() {
     router.push(getSettingByKey("WHAT_WE_OFFER_CTA_URL")?.value || "/");
   };
 
-  if (services.length === 0) return null;
+  if (services.length === 0) {
+    console.log("WhatWeOffer - No services found, returning null");
+    return null;
+  }
 
   return (
     <section id="services" className="py-8 sm:py-12 lg:py-16">
@@ -76,11 +88,11 @@ export function WhatWeOffer() {
         </h2>
         <div className="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-4 lg:gap-8">
           <div className="text-start mb-6 lg:mb-12 flex-1">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-secondary-500 dark:text-white-500 mb-3 sm:mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-secondary-500 dark:text-white-500 mb-0 sm:mb-0">
               {getSettingByKey("WHAT_WE_OFFER_HEADING")?.value ||
                 t("services.title")}
             </h2>
-            <p className="text-base sm:text-lg text-secondary-500 dark:text-white-500 max-w-2xl">
+            <p className="text-base sm:text-lg text-secondary-500 dark:text-white-500 max-w-2xl font-body">
               {getSettingByKey("WHAT_WE_OFFER_RICH_TEXT")?.value ||
                 t("services.subtitle")}
             </p>

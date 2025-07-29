@@ -13,6 +13,18 @@ import { useRouter } from "next/navigation";
 import { getImageUrl } from "@/lib/utils";
 import { useTranslation } from "react-i18next";
 import { useLanguageStore } from "@/stores/languageStore";
+import { useQuery, useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { AddAddressForm } from "@/components/AddAddressForm";
 
 export default function CartPage() {
   const router = useRouter();
@@ -22,15 +34,105 @@ export default function CartPage() {
 
   const { showToast } = useToastStore();
 
+  // State for form data
+  const [formData, setFormData] = useState({
+    firstName: profile?.firstName || "",
+    lastName: profile?.lastName || "",
+    email: profile?.email || "",
+    phone: profile?.phone || "",
+    address: "",
+    postal_code: "",
+    city: "",
+    country: "",
+  });
+
+  // State for addresses
+  const [selectedAddressId, setSelectedAddressId] = useState<number | null>(
+    null
+  );
+  const [isAddAddressDialogOpen, setIsAddAddressDialogOpen] = useState(false);
+  const [isSuccessDialogOpen, setIsSuccessDialogOpen] = useState(false);
+  const [isLoadingOrder, setIsLoadingOrder] = useState(false);
+
   // جلب cart من الـ API
   const { data: cartData, isLoading, isError, refetch } = useCart();
   console.log("cartData", cartData);
+
+  // جلب العناوين من API
+  const {
+    data: addressesData,
+    isLoading: addressesLoading,
+    isError: addressesError,
+  } = useQuery({
+    queryKey: ["addresses", token],
+    queryFn: async () => {
+      const res = await axios.get(
+        "https://swag.ivadso.com/api/store/my_addresses",
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
+      return res.data;
+    },
+    enabled: !!token,
+    staleTime: 1000 * 60 * 5,
+  });
 
   // إضافة للسلة
   const addMutation = useAddToCart();
 
   // حذف من السلة
   const removeMutation = useRemoveFromCart();
+
+  // إضافة عنوان جديد
+  const addAddressMutation = useMutation({
+    mutationFn: async (addressData: any) => {
+      const res = await axios.post(
+        "https://swag.ivadso.com/api/store/add_address",
+        addressData,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return res.data;
+    },
+    onSuccess: () => {
+      // Refetch addresses
+      window.location.reload();
+    },
+  });
+
+  // إضافة طلب جديد
+  const addOrderMutation = useMutation({
+    mutationFn: async (shippingAddressId: number) => {
+      const res = await axios.post(
+        `https://swag.ivadso.com/api/store/add_order?shiiping_address=${shippingAddressId}`,
+        {},
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      return res.data;
+    },
+    onSuccess: (data) => {
+      setIsLoadingOrder(false);
+      setIsSuccessDialogOpen(true);
+      // Redirect to orders page after 3 seconds
+      setTimeout(() => {
+        router.push("/orders");
+      }, 3000);
+    },
+    onError: (error) => {
+      setIsLoadingOrder(false);
+      showToast("Failed to place order. Please try again.");
+    },
+  });
 
   // حساب الإجماليات
   const subtotal =
@@ -42,6 +144,81 @@ export default function CartPage() {
   const SHIPPING_COST = 1200;
   const DISCOUNT = 5000;
   const total = subtotal + SHIPPING_COST - DISCOUNT;
+
+  // استخراج العناوين من الاستجابة الصحيحة
+  const addresses = addressesData?.data?.addresses || [];
+
+  // التحقق من اكتمال البيانات الشخصية
+  const isPersonalDataComplete = () => {
+    return (
+      formData.firstName.trim() &&
+      formData.lastName.trim() &&
+      formData.email.trim() &&
+      formData.phone.trim()
+    );
+  };
+
+  // التحقق من اكتمال بيانات الشحن
+  const isShippingDataComplete = () => {
+    return (
+      formData.address.trim() &&
+      formData.postal_code.trim() &&
+      formData.city.trim() &&
+      formData.country.trim()
+    );
+  };
+
+  // التحقق من اختيار عنوان
+  const isAddressSelected = () => {
+    return selectedAddressId !== null;
+  };
+
+  // التحقق من اكتمال جميع البيانات
+  const isAllDataComplete = () => {
+    return (
+      isPersonalDataComplete() &&
+      (isAddressSelected() || isShippingDataComplete())
+    );
+  };
+
+  // معالجة إضافة عنوان جديد
+  const handleAddAddress = (addressData: any) => {
+    addAddressMutation.mutate(addressData);
+  };
+
+  // معالجة إضافة طلب
+  const handlePlaceOrder = () => {
+    if (!isAllDataComplete()) {
+      showToast(
+        "Please complete all required information before placing order."
+      );
+      return;
+    }
+
+    if (!selectedAddressId) {
+      showToast("Please select a shipping address or add a new one.");
+      return;
+    }
+
+    setIsLoadingOrder(true);
+    addOrderMutation.mutate(selectedAddressId);
+  };
+
+  // تحميل بيانات المستخدم عند تحميل الصفحة
+  useEffect(() => {
+    if (profile) {
+      setFormData({
+        firstName: profile.firstName || "",
+        lastName: profile.lastName || "",
+        email: profile.email || "",
+        phone: profile.phone || "",
+        address: "",
+        postal_code: "",
+        city: "",
+        country: "",
+      });
+    }
+  }, [profile]);
 
   return (
     <MainLayout>
@@ -133,6 +310,10 @@ export default function CartPage() {
                     </label>
                     <input
                       type="text"
+                      value={formData.firstName}
+                      onChange={(e) =>
+                        setFormData({ ...formData, firstName: e.target.value })
+                      }
                       placeholder={t("checkout.first_name")}
                       className="w-full px-4 py-3 border border-gray-300 dark:border-[#353535] rounded-none bg-white dark:bg-[#232b2b] text-gray-900 dark:text-white font-sukar focus:outline-none focus:ring-2 focus:ring-[#607A76] focus:border-transparent"
                     />
@@ -143,6 +324,10 @@ export default function CartPage() {
                     </label>
                     <input
                       type="text"
+                      value={formData.lastName}
+                      onChange={(e) =>
+                        setFormData({ ...formData, lastName: e.target.value })
+                      }
                       placeholder={t("checkout.last_name")}
                       className="w-full px-4 py-3 border border-gray-300 dark:border-[#353535] rounded-none bg-white dark:bg-[#232b2b] text-gray-900 dark:text-white font-sukar focus:outline-none focus:ring-2 focus:ring-[#607A76] focus:border-transparent"
                     />
@@ -153,6 +338,10 @@ export default function CartPage() {
                     </label>
                     <input
                       type="email"
+                      value={formData.email}
+                      onChange={(e) =>
+                        setFormData({ ...formData, email: e.target.value })
+                      }
                       placeholder={t("checkout.email")}
                       className="w-full px-4 py-3 border border-gray-300 dark:border-[#353535] rounded-none bg-white dark:bg-[#232b2b] text-gray-900 dark:text-white font-sukar focus:outline-none focus:ring-2 focus:ring-[#607A76] focus:border-transparent"
                     />
@@ -170,6 +359,10 @@ export default function CartPage() {
                       </select>
                       <input
                         type="tel"
+                        value={formData.phone}
+                        onChange={(e) =>
+                          setFormData({ ...formData, phone: e.target.value })
+                        }
                         placeholder={t("checkout.phone")}
                         className="flex-1 px-4 py-3 border border-gray-300 dark:border-[#353535] rounded-r-none bg-white dark:bg-[#232b2b] text-gray-900 dark:text-white font-sukar focus:outline-none focus:ring-2 focus:ring-[#607A76] focus:border-transparent"
                       />
@@ -183,54 +376,146 @@ export default function CartPage() {
                 <h3 className="text-xl font-sukar font-bold mb-4">
                   02 {t("checkout.shipping_details")}
                 </h3>
-                <div className="space-y-4">
-                  <div>
-                    <label className="block font-sukar font-medium text-gray-700 dark:text-gray-300 mb-2">
-                      {t("checkout.address")}
-                    </label>
-                    <input
-                      type="text"
-                      placeholder={t("checkout.address")}
-                      className="w-full px-4 py-3 border border-gray-300 dark:border-[#353535] rounded-none bg-white dark:bg-[#232b2b] text-gray-900 dark:text-white font-sukar focus:outline-none focus:ring-2 focus:ring-[#607A76] focus:border-transparent"
-                    />
+
+                {/* Existing Addresses */}
+                {addressesLoading ? (
+                  <div className="text-center py-4">Loading addresses...</div>
+                ) : addressesError ? (
+                  <div className="text-center text-red-600 py-4">
+                    Error loading addresses
                   </div>
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                    <div>
-                      <label className="block font-sukar font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        {t("checkout.postal_code")}
-                      </label>
-                      <input
-                        type="text"
-                        placeholder={t("checkout.postal_code")}
-                        className="w-full px-4 py-3 border border-gray-300 dark:border-[#353535] rounded-none bg-white dark:bg-[#232b2b] text-gray-900 dark:text-white font-sukar focus:outline-none focus:ring-2 focus:ring-[#607A76] focus:border-transparent"
-                      />
-                    </div>
-                    <div>
-                      <label className="block font-sukar font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        {t("checkout.city")}
-                      </label>
-                      <input
-                        type="text"
-                        placeholder={t("checkout.city")}
-                        className="w-full px-4 py-3 border border-gray-300 dark:border-[#353535] rounded-none bg-white dark:bg-[#232b2b] text-gray-900 dark:text-white font-sukar focus:outline-none focus:ring-2 focus:ring-[#607A76] focus:border-transparent"
-                      />
-                    </div>
-                    <div>
-                      <label className="block font-sukar font-medium text-gray-700 dark:text-gray-300 mb-2">
-                        {t("checkout.country")}
-                      </label>
-                      <select className="w-full px-4 py-3 border border-gray-300 dark:border-[#353535] rounded-none bg-white dark:bg-[#232b2b] text-gray-900 dark:text-white font-sukar focus:outline-none focus:ring-2 focus:ring-[#607A76] focus:border-transparent">
-                        <option value="">{t("checkout.country")}</option>
-                        <option value="SA">Saudi Arabia</option>
-                        <option value="AE">United Arab Emirates</option>
-                        <option value="KW">Kuwait</option>
-                        <option value="BH">Bahrain</option>
-                        <option value="OM">Oman</option>
-                        <option value="QA">Qatar</option>
-                      </select>
+                ) : addresses.length > 0 ? (
+                  <div className="space-y-4 mb-6">
+                    <h4 className="font-sukar font-semibold text-gray-700 dark:text-gray-300">
+                      Select Shipping Address
+                    </h4>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {addresses.map((address: any) => (
+                        <div
+                          key={address.id}
+                          className={`border rounded-none p-4 cursor-pointer transition-colors ${
+                            selectedAddressId === address.id
+                              ? "border-[#607A76] bg-[#f0f4f3] dark:bg-[#2a2a2a]"
+                              : "border-gray-200 dark:border-[#353535] hover:border-[#607A76]"
+                          }`}
+                          onClick={() => setSelectedAddressId(address.id)}
+                        >
+                          <div className="flex items-start gap-3">
+                            <input
+                              type="radio"
+                              name="address"
+                              checked={selectedAddressId === address.id}
+                              onChange={() => setSelectedAddressId(address.id)}
+                              className="mt-1 text-[#607A76] focus:ring-[#607A76]"
+                            />
+                            <div className="flex-1">
+                              <div className="font-sukar font-semibold text-gray-800 dark:text-white">
+                                {address.address}
+                              </div>
+                              <div className="font-sukar text-md text-gray-600 dark:text-gray-300 mt-1">
+                                {address.city}, {address.country} -{" "}
+                                {address.postal_code}
+                              </div>
+                              <div className="font-sukar text-md text-gray-600 dark:text-gray-300">
+                                Phone: {address.phone}
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      ))}
                     </div>
                   </div>
+                ) : null}
+
+                {/* Add New Address Button */}
+                <div className="mb-6">
+                  <Button
+                    onClick={() => setIsAddAddressDialogOpen(true)}
+                    className="bg-[#607A76] text-md hover:bg-[#4a5d5a] text-white font-sukar rounded-none"
+                  >
+                    <Icon name="plus" size={16} className="mr-1" />
+                    Add New Address
+                  </Button>
                 </div>
+
+                {/* Manual Address Form (if no addresses selected) */}
+                {!selectedAddressId && (
+                  <div className="space-y-4">
+                    <h4 className="font-sukar font-semibold text-gray-700 dark:text-gray-300">
+                      Or Enter Address Manually
+                    </h4>
+                    <div>
+                      <label className="block font-sukar font-medium text-gray-700 dark:text-gray-300 mb-2">
+                        {t("checkout.address")}
+                      </label>
+                      <input
+                        type="text"
+                        value={formData.address}
+                        onChange={(e) =>
+                          setFormData({ ...formData, address: e.target.value })
+                        }
+                        placeholder={t("checkout.address")}
+                        className="w-full px-4 py-3 border border-gray-300 dark:border-[#353535] rounded-none bg-white dark:bg-[#232b2b] text-gray-900 dark:text-white font-sukar focus:outline-none focus:ring-2 focus:ring-[#607A76] focus:border-transparent"
+                      />
+                    </div>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div>
+                        <label className="block font-sukar font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          {t("checkout.postal_code")}
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.postal_code}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              postal_code: e.target.value,
+                            })
+                          }
+                          placeholder={t("checkout.postal_code")}
+                          className="w-full px-4 py-3 border border-gray-300 dark:border-[#353535] rounded-none bg-white dark:bg-[#232b2b] text-gray-900 dark:text-white font-sukar focus:outline-none focus:ring-2 focus:ring-[#607A76] focus:border-transparent"
+                        />
+                      </div>
+                      <div>
+                        <label className="block font-sukar font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          {t("checkout.city")}
+                        </label>
+                        <input
+                          type="text"
+                          value={formData.city}
+                          onChange={(e) =>
+                            setFormData({ ...formData, city: e.target.value })
+                          }
+                          placeholder={t("checkout.city")}
+                          className="w-full px-4 py-3 border border-gray-300 dark:border-[#353535] rounded-none bg-white dark:bg-[#232b2b] text-gray-900 dark:text-white font-sukar focus:outline-none focus:ring-2 focus:ring-[#607A76] focus:border-transparent"
+                        />
+                      </div>
+                      <div>
+                        <label className="block font-sukar font-medium text-gray-700 dark:text-gray-300 mb-2">
+                          {t("checkout.country")}
+                        </label>
+                        <select
+                          value={formData.country}
+                          onChange={(e) =>
+                            setFormData({
+                              ...formData,
+                              country: e.target.value,
+                            })
+                          }
+                          className="w-full px-4 py-3 border border-gray-300 dark:border-[#353535] rounded-none bg-white dark:bg-[#232b2b] text-gray-900 dark:text-white font-sukar focus:outline-none focus:ring-2 focus:ring-[#607A76] focus:border-transparent"
+                        >
+                          <option value="">{t("checkout.country")}</option>
+                          <option value="SA">Saudi Arabia</option>
+                          <option value="AE">United Arab Emirates</option>
+                          <option value="KW">Kuwait</option>
+                          <option value="BH">Bahrain</option>
+                          <option value="OM">Oman</option>
+                          <option value="QA">Qatar</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* 03 Payment Details */}
@@ -432,11 +717,11 @@ export default function CartPage() {
                 </div>
               </div>
               <button
-                className="w-full mt-6 py-3 bg-[#aab7b2] font-sukar text-lg font-bold rounded-none text-gray-800 hover:bg-[#9ba8a3] transition-colors"
-                // onClick={handleCheckout}
-                disabled
+                className="w-full mt-6 py-3 bg-[#aab7b2] font-sukar text-lg font-bold rounded-none text-gray-800 hover:bg-[#9ba8a3] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                onClick={handlePlaceOrder}
+                disabled={isLoadingOrder || !isAllDataComplete()}
               >
-                {t("cart.checkout")}
+                {isLoadingOrder ? "Processing..." : t("cart.checkout")}
               </button>
             </div>
           </div>
@@ -445,6 +730,60 @@ export default function CartPage() {
       <ProductBannerSection />
       <WhyChooseUsSection />
       <ContactUsBannerSection />
+
+      {/* Add Address Dialog */}
+      <Dialog
+        open={isAddAddressDialogOpen}
+        onOpenChange={setIsAddAddressDialogOpen}
+      >
+        <DialogContent className="bg-white dark:bg-[#2c2c2c] border border-gray-200 rounded-none dark:border-[#353535]">
+          <DialogHeader>
+            <DialogTitle className="text-[#607A76] font-sukar">
+              Add New Address
+            </DialogTitle>
+          </DialogHeader>
+          <AddAddressForm
+            onSubmit={handleAddAddress}
+            onCancel={() => setIsAddAddressDialogOpen(false)}
+            isLoading={addAddressMutation.isPending}
+          />
+        </DialogContent>
+      </Dialog>
+
+      {/* Success Dialog */}
+      <Dialog open={isSuccessDialogOpen} onOpenChange={setIsSuccessDialogOpen}>
+        <DialogContent className="bg-white dark:bg-[#2c2c2c] border border-gray-200 rounded-none dark:border-[#353535]">
+          <DialogHeader>
+            <DialogTitle className="text-[#607A76] font-sukar text-center">
+              Order Placed Successfully! 🎉
+            </DialogTitle>
+          </DialogHeader>
+          <div className="text-center py-6">
+            <div className="mb-4">
+              <svg width="64" height="64" fill="none" className="mx-auto">
+                <circle cx="32" cy="32" r="32" fill="#D1FADF" />
+                <path
+                  d="M20 34l8 8 16-16"
+                  stroke="#12B76A"
+                  strokeWidth="3"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              </svg>
+            </div>
+            <p className="text-lg font-sukar text-gray-700 dark:text-gray-300 mb-4">
+              Your order has been placed successfully! You will be redirected to
+              your orders page in a few seconds.
+            </p>
+            <Button
+              onClick={() => router.push("/orders")}
+              className="bg-[#607A76] hover:bg-[#4a5d5a] text-white font-sukar rounded-none"
+            >
+              View Orders Now
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
     </MainLayout>
   );
 }

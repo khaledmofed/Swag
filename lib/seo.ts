@@ -1,41 +1,41 @@
-import { Metadata } from 'next'
-import { en } from '@/locales/en'
-import { ar } from '@/locales/ar'
+import { Metadata } from "next";
+import { en } from "@/locales/en";
+import { ar } from "@/locales/ar";
 
-export type SupportedLocale = 'en' | 'ar'
+export type SupportedLocale = "en" | "ar";
 
 export interface SEOConfig {
-  title: string
-  description: string
-  keywords: string
-  locale: SupportedLocale
-  path?: string
-  image?: string
-  type?: 'website' | 'article'
-  publishedTime?: string
-  modifiedTime?: string
-  author?: string
-  section?: string
-  tags?: string[]
+  title: string;
+  description: string;
+  keywords: string;
+  locale: SupportedLocale;
+  path?: string;
+  image?: string;
+  type?: "website" | "article";
+  publishedTime?: string;
+  modifiedTime?: string;
+  author?: string;
+  section?: string;
+  tags?: string[];
 }
 
 /**
  * Get translations for a specific locale
  */
 function getTranslations(locale: SupportedLocale) {
-  return locale === 'ar' ? ar : en
+  return locale === "ar" ? ar : en;
 }
 
 /**
  * Generate base metadata for a page
  */
 export function generateMetadata(config: SEOConfig): Metadata {
-  const translations = getTranslations(config.locale)
-  const siteConfig = translations.seo.site
+  const translations = getTranslations(config.locale);
+  const siteConfig = translations.seo.site;
 
   const url = config.path
     ? `${siteConfig.url}/${config.locale}${config.path}`
-    : `${siteConfig.url}/${config.locale}`
+    : `${siteConfig.url}/${config.locale}`;
 
   const metadata: Metadata = {
     title: config.title,
@@ -49,16 +49,18 @@ export function generateMetadata(config: SEOConfig): Metadata {
       url,
       siteName: siteConfig.name,
       locale: siteConfig.locale,
-      type: config.type || 'website',
-      images: config.image ? [
-        {
-          url: config.image,
-          width: 1200,
-          height: 630,
-          alt: config.title,
-        }
-      ] : undefined,
-      ...(config.type === 'article' && {
+      type: config.type || "website",
+      images: config.image
+        ? [
+            {
+              url: config.image,
+              width: 1200,
+              height: 630,
+              alt: config.title,
+            },
+          ]
+        : undefined,
+      ...(config.type === "article" && {
         publishedTime: config.publishedTime,
         modifiedTime: config.modifiedTime,
         authors: config.author ? [config.author] : undefined,
@@ -69,7 +71,7 @@ export function generateMetadata(config: SEOConfig): Metadata {
 
     // Twitter Card
     twitter: {
-      card: 'summary_large_image',
+      card: "summary_large_image",
       title: config.title,
       description: config.description,
       images: config.image ? [config.image] : undefined,
@@ -82,9 +84,9 @@ export function generateMetadata(config: SEOConfig): Metadata {
       googleBot: {
         index: true,
         follow: true,
-        'max-video-preview': -1,
-        'max-image-preview': 'large',
-        'max-snippet': -1,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
       },
     },
 
@@ -92,47 +94,49 @@ export function generateMetadata(config: SEOConfig): Metadata {
     alternates: {
       canonical: url,
       languages: {
-        'en': `${siteConfig.url}/en${config.path || ''}`,
-        'ar': `${siteConfig.url}/ar${config.path || ''}`,
+        en: `${siteConfig.url}/en${config.path || ""}`,
+        ar: `${siteConfig.url}/ar${config.path || ""}`,
       },
     },
-  }
+  };
 
-  return metadata
+  return metadata;
 }
 
 /**
  * Generate metadata for the home page
  */
 export function generateHomeMetadata(locale: SupportedLocale): Metadata {
-  const translations = getTranslations(locale)
-  const seoConfig = translations.seo.home
+  const translations = getTranslations(locale);
+  const seoConfig = translations.seo.home;
 
   return generateMetadata({
     title: seoConfig.title,
     description: seoConfig.description,
     keywords: seoConfig.keywords,
     locale,
-    path: '',
+    path: "",
     image: `${translations.seo.site.url}/images/og-home.jpg`,
-  })
+  });
 }
 
 /**
  * Generate metadata for the market insights page
  */
-export function generateMarketInsightsMetadata(locale: SupportedLocale): Metadata {
-  const translations = getTranslations(locale)
-  const seoConfig = translations.seo.market_insights
+export function generateMarketInsightsMetadata(
+  locale: SupportedLocale
+): Metadata {
+  const translations = getTranslations(locale);
+  const seoConfig = translations.seo.market_insights;
 
   return generateMetadata({
     title: seoConfig.title,
     description: seoConfig.description,
     keywords: seoConfig.keywords,
     locale,
-    path: '/market-insights',
+    path: "/market-insights",
     image: `${translations.seo.site.url}/images/og-market-insights.jpg`,
-  })
+  });
 }
 
 /**
@@ -148,60 +152,60 @@ export function generateBlogDetailMetadata(
   author?: string,
   tags?: string[]
 ): Metadata {
-  const translations = getTranslations(locale)
-  const seoConfig = translations.seo.blog_details
+  const translations = getTranslations(locale);
+  const seoConfig = translations.seo.blog_details;
 
   // Use blog-specific data if available, otherwise fall back to defaults
   const title = blogTitle
     ? `${blogTitle} | ${translations.seo.site.name}`
-    : seoConfig.title
+    : seoConfig.title;
 
-  const description = blogDescription || seoConfig.description
+  const description = blogDescription || seoConfig.description;
 
   return generateMetadata({
     title,
     description,
     keywords: seoConfig.keywords,
     locale,
-    path: '/blog',
+    path: "/blog",
     image: blogImage || `${translations.seo.site.url}/images/og-blog.jpg`,
-    type: 'article',
+    type: "article",
     publishedTime,
     modifiedTime,
     author,
-    section: 'Blog',
+    section: "Blog",
     tags,
-  })
+  });
 }
 
 /**
  * Generate structured data (JSON-LD) for the organization
  */
 export function generateOrganizationStructuredData(locale: SupportedLocale) {
-  const translations = getTranslations(locale)
-  const siteConfig = translations.seo.site
+  const translations = getTranslations(locale);
+  const siteConfig = translations.seo.site;
 
   return {
-    '@context': 'https://schema.org',
-    '@type': 'Organization',
+    "@context": "https://schema.org",
+    "@type": "Organization",
     name: siteConfig.name,
     url: siteConfig.url,
     logo: `${siteConfig.url}/images/logo.png`,
     description: translations.seo.home.description,
     address: {
-      '@type': 'PostalAddress',
-      addressCountry: 'SA',
-      addressRegion: 'Riyadh',
+      "@type": "PostalAddress",
+      addressCountry: "SA",
+      addressRegion: "Riyadh",
     },
     contactPoint: {
-      '@type': 'ContactPoint',
-      contactType: 'customer service',
-      availableLanguage: ['English', 'Arabic'],
+      "@type": "ContactPoint",
+      contactType: "customer service",
+      availableLanguage: ["English", "Arabic"],
     },
     sameAs: [
       // Add social media URLs here
     ],
-  }
+  };
 }
 
 /**
@@ -217,35 +221,35 @@ export function generateArticleStructuredData(
   image?: string,
   url?: string
 ) {
-  const translations = getTranslations(locale)
-  const siteConfig = translations.seo.site
+  const translations = getTranslations(locale);
+  const siteConfig = translations.seo.site;
 
   return {
-    '@context': 'https://schema.org',
-    '@type': 'Article',
+    "@context": "https://schema.org",
+    "@type": "Article",
     headline: title,
     description,
     image: image || `${siteConfig.url}/images/og-blog.jpg`,
     datePublished: publishedTime,
     dateModified: modifiedTime || publishedTime,
     author: {
-      '@type': 'Person',
+      "@type": "Person",
       name: author || siteConfig.name,
     },
     publisher: {
-      '@type': 'Organization',
+      "@type": "Organization",
       name: siteConfig.name,
       logo: {
-        '@type': 'ImageObject',
+        "@type": "ImageObject",
         url: `${siteConfig.url}/images/logo.png`,
       },
     },
     url: url || siteConfig.url,
     mainEntityOfPage: {
-      '@type': 'WebPage',
-      '@id': url || siteConfig.url,
+      "@type": "WebPage",
+      "@id": url || siteConfig.url,
     },
-  }
+  };
 }
 
 /**
@@ -255,15 +259,15 @@ export function generateBreadcrumbStructuredData(
   locale: SupportedLocale,
   breadcrumbs: Array<{ name: string; url: string }>
 ) {
-  const translations = getTranslations(locale)
-  const siteConfig = translations.seo.site
+  const translations = getTranslations(locale);
+  const siteConfig = translations.seo.site;
 
   return {
-    '@context': 'https://schema.org',
-    '@type': 'BreadcrumbList',
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
 
     itemListElement: breadcrumbs.map((item, index) => ({
-      '@type': 'ListItem',
+      "@type": "ListItem",
       position: index + 1,
       name: item.name,
       item: item.url,
@@ -272,11 +276,74 @@ export function generateBreadcrumbStructuredData(
       image: item.url,
       sameAs: item.url,
       potentialAction: {
-        '@type': 'NavigateAction',
+        "@type": "NavigateAction",
         target: item.url,
       },
-      interactionCount: '1',
+      interactionCount: "1",
       inLanguage: locale,
     })),
-  }
+  };
+}
+
+export function generateAddressesMetadata(locale: SupportedLocale) {
+  const isArabic = locale === "ar";
+  const translations = getTranslations(locale);
+  const siteConfig = translations.seo.site;
+
+  const url = `${siteConfig.url}/${locale}/addresses`;
+
+  return {
+    title: isArabic ? "العناوين - Swag" : "Addresses - Swag",
+    description: isArabic
+      ? "إدارة عناوين الشحن الخاصة بك في متجر Swag للمجوهرات الفاخرة"
+      : "Manage your shipping addresses at Swag luxury jewelry store",
+    keywords: isArabic
+      ? "عناوين، شحن، إدارة، متجر، مجوهرات، فاخر"
+      : "addresses, shipping, management, store, jewelry, luxury",
+    openGraph: {
+      title: isArabic ? "العناوين - Swag" : "Addresses - Swag",
+      description: isArabic
+        ? "إدارة عناوين الشحن الخاصة بك في متجر Swag للمجوهرات الفاخرة"
+        : "Manage your shipping addresses at Swag luxury jewelry store",
+      url,
+      siteName: siteConfig.name,
+      locale: siteConfig.locale,
+      type: "website",
+      alternateLocale: locale === "en" ? "ar" : "en",
+      images: [
+        {
+          url: "/images/logo-swag-dark.png",
+          width: 1200,
+          height: 630,
+          alt: isArabic ? "Swag - العناوين" : "Swag - Addresses",
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: isArabic ? "العناوين - Swag" : "Addresses - Swag",
+      description: isArabic
+        ? "إدارة عناوين الشحن الخاصة بك في متجر Swag للمجوهرات الفاخرة"
+        : "Manage your shipping addresses at Swag luxury jewelry store",
+      images: ["/images/logo-swag-dark.png"],
+    },
+    robots: {
+      index: true,
+      follow: true,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large" as const,
+        "max-snippet": -1,
+      },
+    },
+    alternates: {
+      canonical: url,
+      languages: {
+        en: `${siteConfig.url}/en/addresses`,
+        ar: `${siteConfig.url}/ar/addresses`,
+      },
+    },
+  };
 }
