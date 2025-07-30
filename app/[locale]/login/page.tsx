@@ -16,6 +16,7 @@ export default function LoginPage() {
   const [phone, setPhone] = useState("");
   const [code, setCode] = useState(["", "", "", ""]);
   const [timer, setTimer] = useState(45);
+  const [isRegisterMode, setIsRegisterMode] = useState(false);
   const codeRefs: RefObject<HTMLInputElement | null>[] = [
     useRef<HTMLInputElement>(null),
     useRef<HTMLInputElement>(null),
@@ -174,9 +175,15 @@ export default function LoginPage() {
           {!otpSent ? (
             <>
               <h2 className="text-2xl font-bold text-[#607A76] mb-2">
-                {t("login.login_title")}
+                {isRegisterMode
+                  ? t("login.register_title")
+                  : t("login.login_title")}
               </h2>
-              <p className=" mb-6">{t("login.login_desc")}</p>
+              <p className=" mb-6">
+                {isRegisterMode
+                  ? t("login.register_desc")
+                  : t("login.login_desc")}
+              </p>
               <form
                 className="w-full flex flex-col gap-4"
                 onSubmit={async (e) => {
@@ -240,14 +247,20 @@ export default function LoginPage() {
                   className="mt-4 w-full py-3 bg-gradient-to-r from-[#8b9c98] to-[#dbe2e0] text-gray-800 font-sukar text-lg font-bold rounded-none flex items-center justify-center border-none shadow-none hover:from-[#7d8c86] hover:to-[#cfd7d4] transition-all"
                   disabled={loading}
                 >
-                  {loading ? t("login.sending") : t("login.login_button")}
+                  {loading
+                    ? t("login.sending")
+                    : isRegisterMode
+                    ? t("login.register_button")
+                    : t("login.login_button")}
                 </button>
               </form>
             </>
           ) : (
             <div className="w-full flex flex-col items-center">
               <h2 className="text-2xl font-bold text-[#607A76] mb-2 font-sans">
-                {t("login.verify_title")}
+                {isRegisterMode
+                  ? t("login.register_title")
+                  : t("login.login_title")}
               </h2>
               <p className="mb-6 text-center">{t("login.verify_desc")}</p>
               <div className="flex justify-center gap-2 mb-4">
@@ -275,7 +288,9 @@ export default function LoginPage() {
                     setTimer(45);
                   }}
                 >
-                  {t("login.verify_resend")}
+                  {isRegisterMode
+                    ? t("login.register_resend")
+                    : t("login.verify_resend")}
                   {timer > 0 ? ` (${String(timer).padStart(2, "0")})` : ""}
                 </button>
               </div>
@@ -297,15 +312,24 @@ export default function LoginPage() {
                         localStorage.getItem("token")
                       );
                       console.log(
-                        "User from localStorage:",
-                        localStorage.getItem("user")
+                        "Registration token from localStorage:",
+                        localStorage.getItem("registrationToken")
                       );
 
                       if (res.status) {
                         setToast({ type: "success", message: res.msg });
-                        if (res.data?.user) {
-                          // انتقل تلقائياً إلى صفحة /store
-                          console.log("Redirecting to store...");
+
+                        // Check if user needs to complete registration
+                        if (res.data?.user?.registration_status === false) {
+                          console.log(
+                            "User needs to complete registration, redirecting to register page"
+                          );
+                          router.push("/register");
+                        } else if (res.data?.user) {
+                          // User is fully registered, redirect to store
+                          console.log(
+                            "User fully registered, redirecting to store"
+                          );
                           router.push("/store");
                         }
                       } else {
@@ -321,19 +345,28 @@ export default function LoginPage() {
                 }}
                 disabled={loading}
               >
-                {loading ? t("login.verifying") : t("login.verify_button")}
+                {loading
+                  ? t("login.verifying")
+                  : isRegisterMode
+                  ? t("login.register_button")
+                  : t("login.verify_button")}
               </button>
-              {error && <p className="text-md text-red-500 mt-2">{error}</p>}
+              {error && <p className="text-md text-red-500 mt-2">{t(error)}</p>}
             </div>
           )}
           <div className="mt-6 text-center">
-            <span>{t("login.no_account")}</span>
-            <a
-              href="/register"
+            <span>
+              {isRegisterMode ? t("login.have_account") : t("login.no_account")}
+            </span>
+            <button
+              type="button"
+              onClick={() => setIsRegisterMode((prev) => !prev)}
               className="ml-2 text-primary-500 font-bold hover:underline"
             >
-              {t("login.register_now")}
-            </a>
+              {isRegisterMode
+                ? t("login.sign_in_now")
+                : t("login.register_now")}
+            </button>
           </div>
         </div>
       </div>

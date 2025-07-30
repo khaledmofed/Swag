@@ -152,53 +152,66 @@ export default function ProfilePage() {
 
   const handleSave = async () => {
     try {
-      // Convert form data to API format
-      const apiData = {
+      // Build query parameters for the new API
+      const params = new URLSearchParams({
         first_name: form.firstName,
         last_name: form.lastName,
         email: form.email,
         phone: form.phone,
         gender: form.gender,
         relationship_status: form.relationshipStatus,
+        birth_day: form.birthDay,
         birth_month: form.birthMonth,
-        birth_day: parseInt(form.birthDay) || 0,
         account_type: form.accountType,
         registration_number: form.registrationNumber,
         company_name: form.companyName,
-      };
+      });
 
-      // Send update request
-      const response = await authenticatedRequest<ProfileApiResponse>(
-        "PUT",
-        "/api/store/auth/profile",
-        apiData
+      // Send update request with query parameters
+      const response = await fetch(
+        `https://swag.ivadso.com/api/store/update_profile?${params}`,
+        {
+          method: "POST",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
       );
 
-      if (response) {
+      const data = await response.json();
+
+      if (response.ok && data) {
         // Update profile in store
         const updatedProfile = {
-          id: response.id,
-          firstName: response.first_name,
-          lastName: response.last_name,
-          email: response.email,
-          phone: response.phone,
-          gender: response.gender,
-          relationshipStatus: response.relationship_status,
-          birthMonth: response.birth_month,
-          birthDay: response.birth_day,
-          accountType: response.account_type,
-          registrationNumber: response.registration_number,
-          companyName: response.company_name,
-          registrationStatus: response.registration_status,
-          emailVerifiedAt: response.email_verified_at,
-          createdAt: response.created_at,
-          updatedAt: response.updated_at,
+          id: data.id || profile?.id,
+          firstName: data.first_name || form.firstName,
+          lastName: data.last_name || form.lastName,
+          email: data.email || form.email,
+          phone: data.phone || form.phone,
+          gender: data.gender || form.gender,
+          relationshipStatus:
+            data.relationship_status || form.relationshipStatus,
+          birthMonth: data.birth_month || form.birthMonth,
+          birthDay: data.birth_day || parseInt(form.birthDay) || 0,
+          accountType: data.account_type || form.accountType,
+          registrationNumber:
+            data.registration_number || form.registrationNumber,
+          companyName: data.company_name || form.companyName,
+          registrationStatus:
+            data.registration_status || profile?.registrationStatus,
+          emailVerifiedAt: data.email_verified_at || profile?.emailVerifiedAt,
+          createdAt: data.created_at || profile?.createdAt,
+          updatedAt: data.updated_at || profile?.updatedAt,
         };
 
         setProfile(updatedProfile);
         setShowToast(true);
         setTimeout(() => setShowToast(false), 3000);
         setIsDirty(false);
+      } else {
+        console.error("Error updating profile:", data);
+        // You can add error handling here
       }
     } catch (error) {
       console.error("Error updating profile:", error);
@@ -282,7 +295,7 @@ export default function ProfilePage() {
           />
           {/* Profile Form */}
           <main className="flex-1 bg-white dark:bg-[#2c2c2c] rounded-none border  border-gray-200 dark:border-[#353535] p-8">
-            <h1 className="text-3xl font-bold mb-2 font-sukar text-[#232323] dark:text-white">
+            <h1 className="text-2xl font-bold text-[#607A76] font-sukar">
               {t("profile.title")}
             </h1>
             <p className="mb-8 text-gray-600 dark:text-gray-300">

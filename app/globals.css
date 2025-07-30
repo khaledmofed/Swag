@@ -563,7 +563,10 @@ html[dir="rtl"] .heroSectionLeftText {
   padding-right: 0rem;
   padding-left: 1rem;
 }
-
+.saved-products-grid-zoom-88
+  .relative.overflow-hidden.group.flex.flex-col.cursor-pointer {
+  zoom: 0.87;
+}
 /* Responsive Design Utilities */
 
 /* Mobile-first approach */

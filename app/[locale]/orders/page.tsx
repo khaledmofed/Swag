@@ -6,6 +6,7 @@ import { Icon } from "@/components/common/Icon";
 import { useRouter } from "next/navigation";
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
+import { useTranslation } from "react-i18next";
 
 const BASE_URL = "https://swag.ivadso.com";
 const EMPTY_IMAGE = "/images/empty-favorites.png";
@@ -37,6 +38,7 @@ export default function OrdersPage() {
   const [page, setPage] = useState(1);
   const [selectedOrder, setSelectedOrder] = useState<any | null>(null);
   const router = useRouter();
+  const { t } = useTranslation();
 
   // جلب الطلبات من API
   const {
@@ -84,10 +86,76 @@ export default function OrdersPage() {
                 يجب تسجيل الدخول لعرض الطلبات
               </div>
             ) : isLoading ? (
-              <div className="text-center py-20">جاري تحميل الطلبات...</div>
+              <div className="space-y-6">
+                {/* Header Skeleton */}
+                <div className="flex items-center justify-between mb-6">
+                  <div className="h-8 w-48 bg-gray-200 dark:bg-[#353535] rounded animate-pulse"></div>
+                  <div className="h-10 w-96 bg-gray-200 dark:bg-[#353535] rounded animate-pulse"></div>
+                </div>
+
+                {/* Table Skeleton */}
+                <div className="overflow-x-auto rounded-none border border-gray-100 dark:border-[#353535] bg-[#f9f9fa] dark:bg-[#232b2b]">
+                  {/* Table Header Skeleton */}
+                  <div className="bg-[#f5f8f7] dark:bg-[#232b2b] px-4 py-3">
+                    <div className="grid grid-cols-6 gap-4">
+                      <div className="h-4 w-8 bg-gray-300 dark:bg-[#444] rounded animate-pulse"></div>
+                      <div className="h-4 w-20 bg-gray-300 dark:bg-[#444] rounded animate-pulse"></div>
+                      <div className="h-4 w-16 bg-gray-300 dark:bg-[#444] rounded animate-pulse"></div>
+                      <div className="h-4 w-24 bg-gray-300 dark:bg-[#444] rounded animate-pulse"></div>
+                      <div className="h-4 w-28 bg-gray-300 dark:bg-[#444] rounded animate-pulse"></div>
+                      <div className="h-4 w-16 bg-gray-300 dark:bg-[#444] rounded animate-pulse"></div>
+                    </div>
+                  </div>
+
+                  {/* Table Rows Skeleton */}
+                  {Array.from({ length: 4 }).map((_, index) => (
+                    <div
+                      key={index}
+                      className="px-4 py-3 border-b border-gray-200 dark:border-[#353535] last:border-b-0"
+                    >
+                      <div className="grid grid-cols-6 gap-4 items-center">
+                        {/* Order ID */}
+                        <div className="h-4 w-6 bg-gray-200 dark:bg-[#353535] rounded animate-pulse"></div>
+
+                        {/* Product */}
+                        <div className="flex items-center gap-3">
+                          <div className="w-12 h-12 bg-gray-200 dark:bg-[#353535] rounded animate-pulse"></div>
+                          <div className="flex-1 space-y-2">
+                            <div className="h-4 w-32 bg-gray-200 dark:bg-[#353535] rounded animate-pulse"></div>
+                            <div className="h-3 w-20 bg-green-200 dark:bg-green-800 rounded animate-pulse"></div>
+                          </div>
+                        </div>
+
+                        {/* Quantity */}
+                        <div className="h-4 w-8 bg-gray-200 dark:bg-[#353535] rounded animate-pulse"></div>
+
+                        {/* Order Date */}
+                        <div className="h-4 w-20 bg-gray-200 dark:bg-[#353535] rounded animate-pulse"></div>
+
+                        {/* Order Status */}
+                        <div className="h-6 w-16 bg-yellow-200 dark:bg-yellow-800 rounded-full animate-pulse"></div>
+
+                        {/* Action */}
+                        <div className="h-6 w-6 bg-gray-200 dark:bg-[#353535] rounded animate-pulse"></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Pagination Skeleton */}
+                <div className="flex justify-center mt-8">
+                  <div className="flex items-center gap-2">
+                    <div className="h-8 w-8 bg-gray-200 dark:bg-[#232b2b] rounded animate-pulse"></div>
+                    <div className="h-8 w-8 bg-[#607A76] rounded animate-pulse"></div>
+                    <div className="h-8 w-8 bg-gray-200 dark:bg-[#232b2b] rounded animate-pulse"></div>
+                    <div className="h-8 w-8 bg-gray-200 dark:bg-[#232b2b] rounded animate-pulse"></div>
+                    <div className="h-8 w-8 bg-gray-200 dark:bg-[#232b2b] rounded animate-pulse"></div>
+                  </div>
+                </div>
+              </div>
             ) : isError ? (
               <div className="text-center text-red-600 py-20">
-                حدث خطأ أثناء جلب الطلبات
+                {t("orders.error_loading")}
               </div>
             ) : orders.length === 0 ? (
               <div className="flex flex-col md:flex-row items-center justify-center gap-10 py-6">
@@ -96,20 +164,19 @@ export default function OrdersPage() {
                     className="text-3xl md:text-4xl font-sukar font-bold mb-4"
                     style={{ lineHeight: "30px" }}
                   >
-                    No Orders Yet – Let the Sparkle Begin!
+                    {t("orders.empty_title")}
                   </h1>
                   <p
                     className="text-lg font-sukar text-[#607A76] font-semibold mb-6"
                     style={{ lineHeight: "22px" }}
                   >
-                    You haven't placed any orders yet. Discover our luxury
-                    collections and find the perfect piece to call your own.
+                    {t("orders.empty_desc")}
                   </p>
                   <button
                     className="flex-1 h-12 px-6 py-2 bg-gradient-to-r from-[#8b9c98] to-[#dbe2e0] text-gray-800 font-sukar text-lg font-bold rounded-none flex items-center justify-center border-none shadow-none hover:from-[#7d8c86] hover:to-[#cfd7d4] transition-all"
                     onClick={() => router.push("/store")}
                   >
-                    Start Shopping
+                    {t("orders.start_shopping")}
                   </button>
                 </div>
                 <div className="flex-2 flex items-center justify-end">
@@ -125,11 +192,11 @@ export default function OrdersPage() {
               <>
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-bold text-[#607A76] font-sukar">
-                    My Orders
+                    {t("orders.title")}
                   </h2>
                   <input
                     type="text"
-                    placeholder="Look for your favorite jewelry items."
+                    placeholder={t("orders.search_placeholder")}
                     className="border border-gray-200 dark:border-[#353535] rounded-none px-4 py-2 bg-white dark:bg-[#232b2b] text-gray-700 dark:text-white font-sukar w-96"
                   />
                 </div>
@@ -138,22 +205,22 @@ export default function OrdersPage() {
                     <thead className="bg-[#f5f8f7] dark:bg-[#232b2b]">
                       <tr>
                         <th className="px-4 py-3 text-left text-sm font-bold text-[#607A76]">
-                          #
+                          {t("orders.table.order_id")}
                         </th>
                         <th className="px-4 py-3 text-left text-sm font-bold text-[#607A76]">
-                          Product
+                          {t("orders.table.product")}
                         </th>
                         <th className="px-4 py-3 text-left text-sm font-bold text-[#607A76]">
-                          Quantity
+                          {t("orders.table.quantity")}
                         </th>
                         <th className="px-4 py-3 text-left text-sm font-bold text-[#607A76]">
-                          Order Date
+                          {t("orders.table.order_date")}
                         </th>
                         <th className="px-4 py-3 text-left text-sm font-bold text-[#607A76]">
-                          Order Status
+                          {t("orders.table.order_status")}
                         </th>
                         <th className="px-4 py-3 text-left text-sm font-bold text-[#607A76]">
-                          Actual
+                          {t("orders.table.action")}
                         </th>
                       </tr>
                     </thead>
@@ -198,7 +265,7 @@ export default function OrdersPage() {
                                 "bg-gray-100 text-gray-700 border-gray-200"
                               }`}
                             >
-                              {order.status}
+                              {t(`orders.status.${order.status}`)}
                             </span>
                           </td>
                           <td className="px-4 py-3">

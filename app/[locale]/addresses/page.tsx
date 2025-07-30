@@ -15,6 +15,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
+import { useTranslation } from "react-i18next";
 
 const BASE_URL = "https://swag.ivadso.com";
 const EMPTY_IMAGE = "/images/empty-favorites.png";
@@ -109,6 +110,7 @@ export default function AddressesPage() {
   } | null>(null);
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { t } = useTranslation();
 
   // جلب العناوين من API
   const {
@@ -139,17 +141,19 @@ export default function AddressesPage() {
       setErrors({});
       setToastMessage({
         type: "success",
-        message: "Address added successfully!",
+        message: t("addresses.messages.add_success"),
       });
     },
     onError: (error: any) => {
       console.error("Error adding address:", error);
       setErrors({
-        general: error.response?.data?.message || "Failed to add address",
+        general:
+          error.response?.data?.message || t("addresses.messages.add_error"),
       });
       setToastMessage({
         type: "error",
-        message: error.response?.data?.message || "Failed to add address",
+        message:
+          error.response?.data?.message || t("addresses.messages.add_error"),
       });
     },
   });
@@ -170,17 +174,19 @@ export default function AddressesPage() {
       setErrors({});
       setToastMessage({
         type: "success",
-        message: "Address updated successfully!",
+        message: t("addresses.messages.update_success"),
       });
     },
     onError: (error: any) => {
       console.error("Error editing address:", error);
       setErrors({
-        general: error.response?.data?.message || "Failed to edit address",
+        general:
+          error.response?.data?.message || t("addresses.messages.update_error"),
       });
       setToastMessage({
         type: "error",
-        message: error.response?.data?.message || "Failed to edit address",
+        message:
+          error.response?.data?.message || t("addresses.messages.update_error"),
       });
     },
   });
@@ -194,13 +200,12 @@ export default function AddressesPage() {
         if (data.errNum === "404" && data.msg === "Orders already placed") {
           setToastMessage({
             type: "error",
-            message:
-              "Cannot delete address: Orders already placed with this address",
+            message: t("addresses.messages.delete_orders_error"),
           });
         } else {
           setToastMessage({
             type: "error",
-            message: data.msg || "Failed to delete address",
+            message: data.msg || t("addresses.messages.delete_error"),
           });
         }
         setIsDeleteDialogOpen(false);
@@ -214,17 +219,19 @@ export default function AddressesPage() {
       setAddressToDelete(null);
       setToastMessage({
         type: "success",
-        message: "Address deleted successfully!",
+        message: t("addresses.messages.delete_success"),
       });
     },
     onError: (error: any) => {
       console.error("Error deleting address:", error);
       setErrors({
-        general: error.response?.data?.message || "Failed to delete address",
+        general:
+          error.response?.data?.message || t("addresses.messages.delete_error"),
       });
       setToastMessage({
         type: "error",
-        message: error.response?.data?.message || "Failed to delete address",
+        message:
+          error.response?.data?.message || t("addresses.messages.delete_error"),
       });
     },
   });
@@ -334,19 +341,53 @@ export default function AddressesPage() {
           <main className="flex-1 bg-white dark:bg-[#2c2c2c] rounded-none border border-gray-200 dark:border-[#353535] p-8">
             {!token ? (
               <div className="text-center text-red-600 py-20">
-                يجب تسجيل الدخول لعرض العناوين
+                {t("addresses.login_required")}
               </div>
             ) : isLoading ? (
-              <div className="text-center py-20">جاري تحميل العناوين...</div>
+              <div className="space-y-6">
+                {/* Header Skeleton */}
+                <div className="flex items-center justify-between mb-6">
+                  <div className="h-8 w-48 bg-gray-200 dark:bg-[#353535] rounded animate-pulse"></div>
+                  <div className="h-10 w-56 bg-gray-200 dark:bg-[#353535] rounded animate-pulse"></div>
+                </div>
+                {/* Table Skeleton */}
+                <div className="overflow-x-auto rounded-none border border-gray-100 dark:border-[#353535] bg-[#f9f9fa] dark:bg-[#232b2b]">
+                  <div className="bg-[#f5f8f7] dark:bg-[#232b2b] px-4 py-3">
+                    <div className="grid grid-cols-6 gap-4">
+                      <div className="h-4 w-8 bg-gray-300 dark:bg-[#444] rounded animate-pulse"></div>
+                      <div className="h-4 w-32 bg-gray-300 dark:bg-[#444] rounded animate-pulse"></div>
+                      <div className="h-4 w-20 bg-gray-300 dark:bg-[#444] rounded animate-pulse"></div>
+                      <div className="h-4 w-20 bg-gray-300 dark:bg-[#444] rounded animate-pulse"></div>
+                      <div className="h-4 w-24 bg-gray-300 dark:bg-[#444] rounded animate-pulse"></div>
+                      <div className="h-4 w-16 bg-gray-300 dark:bg-[#444] rounded animate-pulse"></div>
+                    </div>
+                  </div>
+                  {Array.from({ length: 4 }).map((_, index) => (
+                    <div
+                      key={index}
+                      className="px-4 py-3 border-b border-gray-200 dark:border-[#353535] last:border-b-0"
+                    >
+                      <div className="grid grid-cols-6 gap-4 items-center">
+                        <div className="h-4 w-6 bg-gray-200 dark:bg-[#353535] rounded animate-pulse"></div>
+                        <div className="h-4 w-32 bg-gray-200 dark:bg-[#353535] rounded animate-pulse"></div>
+                        <div className="h-4 w-20 bg-gray-200 dark:bg-[#353535] rounded animate-pulse"></div>
+                        <div className="h-4 w-20 bg-gray-200 dark:bg-[#353535] rounded animate-pulse"></div>
+                        <div className="h-4 w-24 bg-gray-200 dark:bg-[#353535] rounded animate-pulse"></div>
+                        <div className="h-6 w-16 bg-gray-200 dark:bg-[#353535] rounded animate-pulse"></div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             ) : isError ? (
               <div className="text-center text-red-600 py-20">
-                حدث خطأ أثناء جلب العناوين
+                {t("addresses.error_loading")}
               </div>
             ) : (
               <>
                 <div className="flex items-center justify-between mb-6">
                   <h2 className="text-2xl font-bold text-[#607A76] font-sukar">
-                    My Addresses
+                    {t("addresses.title")}
                   </h2>
                   <Button
                     onClick={() => {
@@ -356,7 +397,7 @@ export default function AddressesPage() {
                     className="bg-[#607A76] hover:bg-[#4a5d5a] text-md rounded-none text-white font-sukar"
                   >
                     <Icon name="plus" size={16} className="mr-1" />
-                    Add New Address
+                    {t("addresses.add_new")}
                   </Button>
                 </div>
 
@@ -367,14 +408,13 @@ export default function AddressesPage() {
                         className="text-3xl md:text-4xl font-sukar font-bold mb-4"
                         style={{ lineHeight: "30px" }}
                       >
-                        No Addresses Yet – Add Your First Address!
+                        {t("addresses.empty_title")}
                       </h1>
                       <p
                         className="text-lg font-sukar text-[#607A76] font-semibold mb-6"
                         style={{ lineHeight: "22px" }}
                       >
-                        You haven't added any addresses yet. Add your first
-                        address to make shopping easier.
+                        {t("addresses.empty_desc")}
                       </p>
                       <Button
                         onClick={() => {
@@ -383,7 +423,7 @@ export default function AddressesPage() {
                         }}
                         className="bg-[#607A76] hover:bg-[#4a5d5a] text-white font-sukar"
                       >
-                        Add First Address
+                        {t("addresses.add_first_address")}
                       </Button>
                     </div>
                     <div className="flex-2 flex items-center justify-end">
@@ -401,22 +441,22 @@ export default function AddressesPage() {
                       <thead className="bg-[#f5f8f7] dark:bg-[#232b2b]">
                         <tr>
                           <th className="px-4 py-3 text-left text-md font-bold text-[#607A76]">
-                            #
+                            {t("addresses.table.id")}
                           </th>
                           <th className="px-4 py-3 text-left text-md font-bold text-[#607A76]">
-                            Address
+                            {t("addresses.table.address")}
                           </th>
                           <th className="px-4 py-3 text-left text-md font-bold text-[#607A76]">
-                            City
+                            {t("addresses.table.city")}
                           </th>
                           <th className="px-4 py-3 text-left text-md font-bold text-[#607A76]">
-                            Country
+                            {t("addresses.table.country")}
                           </th>
                           <th className="px-4 py-3 text-left text-md font-bold text-[#607A76]">
-                            Phone
+                            {t("addresses.table.phone")}
                           </th>
                           <th className="px-4 py-3 text-left text-md font-bold text-[#607A76]">
-                            Actions
+                            {t("addresses.table.actions")}
                           </th>
                         </tr>
                       </thead>
@@ -435,7 +475,8 @@ export default function AddressesPage() {
                                   {address.address}
                                 </div>
                                 <div className=" text-md">
-                                  Postal Code: {address.postal_code}
+                                  {t("addresses.form.postal_code")}:{" "}
+                                  {address.postal_code}
                                 </div>
                               </div>
                             </td>
@@ -453,14 +494,14 @@ export default function AddressesPage() {
                                 <button
                                   onClick={() => openEditDialog(address)}
                                   className="hover:bg-gray-200 dark:hover:bg-[#353535] p-2 rounded-none"
-                                  title="Edit"
+                                  title={t("common.edit")}
                                 >
                                   <Icon name="edit" size={18} />
                                 </button>
                                 <button
                                   onClick={() => openDeleteDialog(address)}
                                   className="hover:bg-red-100 dark:hover:bg-red-900 p-2 rounded-none text-red-600"
-                                  title="Delete"
+                                  title={t("common.delete")}
                                 >
                                   <Icon name="trash" size={18} />
                                 </button>
@@ -483,7 +524,7 @@ export default function AddressesPage() {
         <DialogContent className="bg-white dark:bg-[#2c2c2c] border border-gray-200 rounded-none dark:border-[#353535]">
           <DialogHeader>
             <DialogTitle className="text-[#607A76] font-sukar">
-              Add New Address
+              {t("addresses.dialog.add_title")}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 font-sukar text-md ">
@@ -494,7 +535,7 @@ export default function AddressesPage() {
             )}
             <div>
               <Label htmlFor="address" className="text-[#607A76]">
-                Address *
+                {t("addresses.form.address")} *
               </Label>
               <Input
                 id="address"
@@ -502,7 +543,7 @@ export default function AddressesPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, address: e.target.value })
                 }
-                placeholder="Enter your address"
+                placeholder={t("addresses.form.address")}
                 className={`border-gray-200 dark:border-[#353535] ${
                   errors.address ? "border-red-500" : ""
                 }`}
@@ -513,7 +554,7 @@ export default function AddressesPage() {
             </div>
             <div>
               <Label htmlFor="postal_code" className="text-[#607A76]">
-                Postal Code *
+                {t("addresses.form.postal_code")} *
               </Label>
               <Input
                 id="postal_code"
@@ -521,7 +562,7 @@ export default function AddressesPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, postal_code: e.target.value })
                 }
-                placeholder="Enter postal code"
+                placeholder={t("addresses.form.postal_code")}
                 className={`border-gray-200 dark:border-[#353535] ${
                   errors.postal_code ? "border-red-500" : ""
                 }`}
@@ -534,7 +575,7 @@ export default function AddressesPage() {
             </div>
             <div>
               <Label htmlFor="city" className="text-[#607A76]">
-                City *
+                {t("addresses.form.city")} *
               </Label>
               <Input
                 id="city"
@@ -542,7 +583,7 @@ export default function AddressesPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, city: e.target.value })
                 }
-                placeholder="Enter city"
+                placeholder={t("addresses.form.city")}
                 className={`border-gray-200 dark:border-[#353535] ${
                   errors.city ? "border-red-500" : ""
                 }`}
@@ -553,7 +594,7 @@ export default function AddressesPage() {
             </div>
             <div>
               <Label htmlFor="country" className="text-[#607A76]">
-                Country *
+                {t("addresses.form.country")} *
               </Label>
               <Input
                 id="country"
@@ -561,7 +602,7 @@ export default function AddressesPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, country: e.target.value })
                 }
-                placeholder="Enter country"
+                placeholder={t("addresses.form.country")}
                 className={`border-gray-200 dark:border-[#353535] ${
                   errors.country ? "border-red-500" : ""
                 }`}
@@ -572,7 +613,7 @@ export default function AddressesPage() {
             </div>
             <div>
               <Label htmlFor="phone" className="text-[#607A76]">
-                Phone *
+                {t("addresses.form.phone")} *
               </Label>
               <Input
                 id="phone"
@@ -580,7 +621,7 @@ export default function AddressesPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, phone: e.target.value })
                 }
-                placeholder="Enter phone number"
+                placeholder={t("addresses.form.phone")}
                 className={`border-gray-200 dark:border-[#353535] ${
                   errors.phone ? "border-red-500" : ""
                 }`}
@@ -595,7 +636,9 @@ export default function AddressesPage() {
                 disabled={addAddressMutation.isPending}
                 className="flex-1 bg-[#607A76] hover:bg-[#4a5d5a] text-white rounded-none text-md font-sukar"
               >
-                {addAddressMutation.isPending ? "Adding..." : "Add Address"}
+                {addAddressMutation.isPending
+                  ? t("addresses.form.adding")
+                  : t("addresses.form.add_address")}
               </Button>
               <Button
                 onClick={() => {
@@ -605,7 +648,7 @@ export default function AddressesPage() {
                 variant="outline"
                 className="flex-1 border-gray-200 dark:border-[#353535] rounded-none text-md  text-[#607A76]"
               >
-                Cancel
+                {t("addresses.form.cancel")}
               </Button>
             </div>
           </div>
@@ -617,7 +660,7 @@ export default function AddressesPage() {
         <DialogContent className="bg-white dark:bg-[#2c2c2c] border border-gray-200 dark:border-[#353535]">
           <DialogHeader>
             <DialogTitle className="text-[#607A76] font-sukar">
-              Edit Address
+              {t("addresses.dialog.edit_title")}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4 font-sukar text-md">
@@ -628,7 +671,7 @@ export default function AddressesPage() {
             )}
             <div>
               <Label htmlFor="edit-address" className="text-[#607A76]">
-                Address *
+                {t("addresses.form.address")} *
               </Label>
               <Input
                 id="edit-address"
@@ -636,7 +679,7 @@ export default function AddressesPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, address: e.target.value })
                 }
-                placeholder="Enter your address"
+                placeholder={t("addresses.form.address")}
                 className={`border-gray-200 dark:border-[#353535] ${
                   errors.address ? "border-red-500" : ""
                 }`}
@@ -647,7 +690,7 @@ export default function AddressesPage() {
             </div>
             <div>
               <Label htmlFor="edit-postal_code" className="text-[#607A76]">
-                Postal Code *
+                {t("addresses.form.postal_code")} *
               </Label>
               <Input
                 id="edit-postal_code"
@@ -655,7 +698,7 @@ export default function AddressesPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, postal_code: e.target.value })
                 }
-                placeholder="Enter postal code"
+                placeholder={t("addresses.form.postal_code")}
                 className={`border-gray-200 dark:border-[#353535] ${
                   errors.postal_code ? "border-red-500" : ""
                 }`}
@@ -668,7 +711,7 @@ export default function AddressesPage() {
             </div>
             <div>
               <Label htmlFor="edit-city" className="text-[#607A76]">
-                City *
+                {t("addresses.form.city")} *
               </Label>
               <Input
                 id="edit-city"
@@ -676,7 +719,7 @@ export default function AddressesPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, city: e.target.value })
                 }
-                placeholder="Enter city"
+                placeholder={t("addresses.form.city")}
                 className={`border-gray-200 dark:border-[#353535] ${
                   errors.city ? "border-red-500" : ""
                 }`}
@@ -687,7 +730,7 @@ export default function AddressesPage() {
             </div>
             <div>
               <Label htmlFor="edit-country" className="text-[#607A76]">
-                Country *
+                {t("addresses.form.country")} *
               </Label>
               <Input
                 id="edit-country"
@@ -695,7 +738,7 @@ export default function AddressesPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, country: e.target.value })
                 }
-                placeholder="Enter country"
+                placeholder={t("addresses.form.country")}
                 className={`border-gray-200 dark:border-[#353535] ${
                   errors.country ? "border-red-500" : ""
                 }`}
@@ -706,7 +749,7 @@ export default function AddressesPage() {
             </div>
             <div>
               <Label htmlFor="edit-phone" className="text-[#607A76]">
-                Phone *
+                {t("addresses.form.phone")} *
               </Label>
               <Input
                 id="edit-phone"
@@ -714,7 +757,7 @@ export default function AddressesPage() {
                 onChange={(e) =>
                   setFormData({ ...formData, phone: e.target.value })
                 }
-                placeholder="Enter phone number"
+                placeholder={t("addresses.form.phone")}
                 className={`border-gray-200 dark:border-[#353535] ${
                   errors.phone ? "border-red-500" : ""
                 }`}
@@ -730,8 +773,8 @@ export default function AddressesPage() {
                 className="flex-1 bg-[#607A76] hover:bg-[#4a5d5a] text-white rounded-none text-md font-sukar"
               >
                 {editAddressMutation.isPending
-                  ? "Updating..."
-                  : "Update Address"}
+                  ? t("addresses.form.updating")
+                  : t("addresses.form.update_address")}
               </Button>
               <Button
                 onClick={() => {
@@ -741,7 +784,7 @@ export default function AddressesPage() {
                 variant="outline"
                 className="flex-1 border-gray-200 dark:border-[#353535] rounded-none text-md text-[#607A76]"
               >
-                Cancel
+                {t("addresses.form.cancel")}
               </Button>
             </div>
           </div>
@@ -753,7 +796,7 @@ export default function AddressesPage() {
         <DialogContent className="bg-white dark:bg-[#2c2c2c] border border-gray-200 dark:border-[#353535]">
           <DialogHeader>
             <DialogTitle className="text-[#607A76] font-sukar">
-              Delete Address
+              {t("addresses.dialog.delete_title")}
             </DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
@@ -763,8 +806,7 @@ export default function AddressesPage() {
               </div>
             )}
             <p className="text-lg font-sukar">
-              Are you sure you want to delete this address? This action cannot
-              be undone.
+              {t("addresses.dialog.delete_confirm")}
             </p>
             {addressToDelete && (
               <div className="bg-gray-50 dark:bg-[#232b2b] p-4 rounded">
@@ -783,8 +825,8 @@ export default function AddressesPage() {
                 className="flex-1 bg-red-600 hover:bg-red-700 text-white rounded-none text-md font-sukar"
               >
                 {deleteAddressMutation.isPending
-                  ? "Deleting..."
-                  : "Delete Address"}
+                  ? t("addresses.form.deleting")
+                  : t("addresses.form.delete_address")}
               </Button>
               <Button
                 onClick={() => {
@@ -794,7 +836,7 @@ export default function AddressesPage() {
                 variant="outline"
                 className="flex-1 border-gray-200 dark:border-[#353535] rounded-none text-md font-sukar text-[#607A76]"
               >
-                Cancel
+                {t("addresses.form.cancel")}
               </Button>
             </div>
           </div>

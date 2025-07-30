@@ -3,6 +3,8 @@ import { Icon } from "@/components/common/Icon";
 import { useRouter, usePathname } from "next/navigation";
 import { useUserStore } from "@/stores/userStore";
 import { useTranslation } from "react-i18next";
+import { useLanguageStore } from "@/stores/languageStore";
+import { useTheme } from "@/stores/themeStore";
 
 export function UserSidebar({
   open,
@@ -15,6 +17,8 @@ export function UserSidebar({
   const router = useRouter();
   const pathname = usePathname();
   const { profile, logout, token, loadProfileFromAPI } = useUserStore();
+  const { language, setLanguage } = useLanguageStore();
+  const { mode, toggleTheme } = useTheme();
   console.log("Guest User", profile);
 
   // Load profile from API if token exists but no profile
@@ -48,6 +52,16 @@ export function UserSidebar({
     // Redirect to login page with proper locale
     const locale = pathname?.split("/")[1] || "";
     router.push(`/${locale ? locale + "/" : ""}login`);
+  };
+
+  const handleLanguageToggle = () => {
+    const newLanguage = language === "ar" ? "en" : "ar";
+    setLanguage(newLanguage);
+
+    // Update URL to reflect language change
+    const currentPath = pathname;
+    const newPath = currentPath.replace(/^\/[a-z]{2}/, `/${newLanguage}`);
+    router.push(newPath);
   };
 
   if (!open) return null;
@@ -126,34 +140,52 @@ export function UserSidebar({
               </button>
             </li>
             <li>
-              <button className="w-full flex items-center gap-3 py-3 px-4 text-lg text-[#607A76] dark:text-primary-300 font-sukar font-semibold hover:bg-[#f5f8f7] dark:hover:bg-[#2d3535] rounded-none transition">
+              <button
+                className="w-full flex items-center gap-3 py-3 px-4 text-lg text-[#607A76] dark:text-primary-300 font-sukar font-semibold hover:bg-[#f5f8f7] dark:hover:bg-[#2d3535] rounded-none transition"
+                onClick={() =>
+                  router.push(`/${locale ? locale + "/" : ""}addresses`)
+                }
+              >
                 <Icon name="home" size={22} /> {t("user.addresses")}
               </button>
             </li>
-            <li>
+            {/* <li>
               <button className="w-full flex items-center gap-3 py-3 px-4 text-lg text-[#607A76] dark:text-primary-300 font-sukar font-semibold hover:bg-[#f5f8f7] dark:hover:bg-[#2d3535] rounded-none transition">
                 <Icon name="shield" size={22} /> {t("user.change_password")}
               </button>
-            </li>
+            </li> */}
             <li>
-              <div className="flex items-center justify-between py-3 px-4">
-                <span className="flex items-center gap-3 text-lg text-[#607A76] dark:text-primary-300 font-sukar font-semibold">
-                  <Icon name="settings" size={22} />{" "}
+              <button
+                className="w-full flex items-center justify-between py-3 px-4 text-lg text-[#607A76] dark:text-primary-300 font-sukar font-semibold hover:bg-[#f5f8f7] dark:hover:bg-[#2d3535] rounded-none transition"
+                onClick={toggleTheme}
+              >
+                <span className="flex items-center gap-3">
+                  <Icon name="settings" size={22} />
                   {t("user.theme_preferences")}
                 </span>
-                <Icon name="moon" size={22} />
-              </div>
+                <Icon
+                  name={mode === "dark" ? "sun" : "moon"}
+                  size={22}
+                  className="text-[#607A76] dark:text-primary-300"
+                />
+              </button>
             </li>
             <li>
-              <div className="flex items-center justify-between py-3 px-4">
-                <span className="flex items-center gap-3 text-lg text-[#607A76] dark:text-primary-300 font-sukar font-semibold">
-                  <Icon name="globe" size={22} /> {t("user.language_settings")}
+              <button
+                className="w-full flex items-center justify-between py-3 px-4 text-lg text-[#607A76] dark:text-primary-300 font-sukar font-semibold hover:bg-[#f5f8f7] dark:hover:bg-[#2d3535] rounded-none transition"
+                onClick={handleLanguageToggle}
+              >
+                <span className="flex items-center gap-3">
+                  <Icon name="globe" size={22} />
+                  {t("user.language_settings")}
                 </span>
                 <span className="text-base text-[#607A76] dark:text-primary-300">
-                  {t("language.arabic")}{" "}
+                  {language === "ar"
+                    ? t("language.arabic")
+                    : t("language.english")}
                   <Icon name="chevron-down" size={18} className="inline ml-1" />
                 </span>
-              </div>
+              </button>
             </li>
             <li>
               <button className="w-full flex items-center gap-3 py-3 px-4 text-lg text-[#607A76] dark:text-primary-300 font-sukar font-semibold hover:bg-[#f5f8f7] dark:hover:bg-[#2d3535] rounded-none transition">

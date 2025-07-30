@@ -59,6 +59,7 @@ interface UserProfile {
 interface UserStore {
   profile: UserProfile | null;
   token: string | null;
+  registrationToken: string | null; // Token مؤقت للتسجيل
   loading: boolean;
   error: string | null;
   otpSent: boolean;
@@ -67,10 +68,11 @@ interface UserStore {
   verifyOtp: (phone: string, otp: string) => Promise<ApiResponse>;
   completeRegistration: (
     data: Partial<UserProfile> & { email: string }
-  ) => Promise<void>;
+  ) => Promise<{ status: boolean; msg: string } | void>;
   setProfile: (profile: UserProfile) => void;
   updateProfile: (fields: Partial<UserProfile>) => void;
   setToken: (token: string) => void;
+  setRegistrationToken: (token: string) => void;
   logout: () => void;
   loadProfileFromAPI: () => Promise<void>;
   // Helper function to convert API user to frontend profile
@@ -122,6 +124,7 @@ export const useUserStore = create<UserStore>((set, get) => {
   return {
     profile: initialProfile,
     token: initialToken,
+    registrationToken: null,
     loading: false,
     error: null,
     otpSent: false,
@@ -217,34 +220,58 @@ export const useUserStore = create<UserStore>((set, get) => {
             throw new Error("Token not found in API response");
           }
 
-          // Store token
-          console.log("Storing token:", token);
-          localStorage.setItem("token", token);
-
-          // Convert and store user profile
+          // Convert user data
           const userProfile = convertApiUserToProfile(responseData.data.user);
-          console.log("Storing user profile:", userProfile);
-          localStorage.setItem("user", JSON.stringify(userProfile));
+          console.log("User profile:", userProfile);
+          console.log("Registration status:", userProfile.registrationStatus);
 
-          // Update store state immediately
-          set({
-            token,
-            profile: userProfile,
-            isRegistered: true,
-            loading: false,
-            error: null,
-          });
-
-          // Verify the state was updated
-          console.log("UserStore state after update:", get());
-
-          // Dispatch custom event to notify other components
-          if (typeof window !== "undefined") {
-            window.dispatchEvent(
-              new CustomEvent("user-logged-in", {
-                detail: { token, profile: userProfile },
-              })
+          // Check registration status
+          if (userProfile.registrationStatus === false) {
+            // User is not fully registered, store registration token
+            console.log(
+              "User not fully registered, storing registration token"
             );
+            localStorage.setItem("registrationToken", token);
+            set({
+              registrationToken: token,
+              loading: false,
+              error: null,
+            });
+
+            // Don't set main token or profile yet
+            return responseData;
+          } else {
+            // User is fully registered, proceed with normal login
+            console.log("User fully registered, proceeding with login");
+
+            // Store main token
+            console.log("Storing main token:", token);
+            localStorage.setItem("token", token);
+
+            // Store user profile
+            console.log("Storing user profile:", userProfile);
+            localStorage.setItem("user", JSON.stringify(userProfile));
+
+            // Update store state
+            set({
+              token,
+              profile: userProfile,
+              isRegistered: true,
+              loading: false,
+              error: null,
+            });
+
+            // Verify the state was updated
+            console.log("UserStore state after update:", get());
+
+            // Dispatch custom event to notify other components
+            if (typeof window !== "undefined") {
+              window.dispatchEvent(
+                new CustomEvent("user-logged-in", {
+                  detail: { token, profile: userProfile },
+                })
+              );
+            }
           }
         } else {
           console.error("Invalid response structure:", responseData);
@@ -253,16 +280,29 @@ export const useUserStore = create<UserStore>((set, get) => {
 
         return responseData;
       } catch (error: any) {
-        const errorMsg = error?.response?.data?.msg || "خطأ في التحقق من OTP";
-        set({ error: errorMsg, loading: false });
+        const apiErrorMsg = error?.response?.data?.msg;
+        let errorToStore: string;
+
+        if (Array.isArray(apiErrorMsg)) {
+          errorToStore = JSON.stringify(apiErrorMsg);
+        } else if (typeof apiErrorMsg === "string") {
+          errorToStore = apiErrorMsg;
+        } else {
+          errorToStore = "login.error_verifying_otp"; // Fallback translation key
+        }
+        set({ error: errorToStore, loading: false });
         throw error;
       }
     },
 
     completeRegistration: async (data) => {
+      console.log("=== completeRegistration called ===");
+      console.log("Input data:", data);
+
       set({ loading: true, error: null });
       try {
-        const token = get().token;
+        const registrationToken =
+          get().registrationToken || localStorage.getItem("registrationToken");
         const language =
           typeof window !== "undefined"
             ? window.location.pathname.split("/")[1] === "ar"
@@ -271,40 +311,163 @@ export const useUserStore = create<UserStore>((set, get) => {
             : "en";
 
         const headers = {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${registrationToken}`,
           Accept: "application/json",
           "Accept-Language": language,
         };
 
         console.log("Completing registration with headers:", headers);
+        console.log("Registration token:", registrationToken);
+
+        // Convert camelCase to snake_case for API
+        const apiData = {
+          first_name: data.firstName,
+          last_name: data.lastName,
+          email: data.email,
+          gender: data.gender,
+          relationship_status: data.relationshipStatus,
+          birth_day: data.birthDay,
+          birth_month: data.birthMonth,
+          account_type: data.accountType,
+          registration_number: data.registrationNumber || "",
+          company_name: data.companyName || "",
+        };
+
+        console.log("API data:", apiData);
 
         const res = await axios.post(
           `${BASE_URL}/api/store/auth/complete-registration`,
           null,
           {
-            params: data,
+            params: apiData,
             headers,
           }
         );
 
-        if (res.data?.data?.user) {
-          const userProfile = convertApiUserToProfile(res.data.data.user);
-          localStorage.setItem("user", JSON.stringify(userProfile));
-          set({ profile: userProfile, isRegistered: true, loading: false });
+        console.log("=== API Response ===");
+        console.log("Full response:", res.data);
+        console.log("Response status:", res.data?.status);
+        console.log("Response data:", res.data?.data);
+        console.log("Response user:", res.data?.data?.user);
 
-          // Dispatch custom event to notify other components
-          if (typeof window !== "undefined") {
-            window.dispatchEvent(
-              new CustomEvent("user-logged-in", {
-                detail: { profile: userProfile },
-              })
+        // Check if the response indicates success
+        if (res.data?.status === true) {
+          console.log("Registration successful, but no user data in response");
+
+          // Since the API only returns success message without user data,
+          // we need to load the user profile from a separate API call
+          // or handle this differently
+
+          // For now, let's create a minimal user profile and use the registration token
+          // as the main token since the registration was successful
+          const registrationToken =
+            get().registrationToken ||
+            localStorage.getItem("registrationToken");
+
+          if (registrationToken) {
+            console.log("=== Using registration token as main token ===");
+
+            // Store the registration token as the main token
+            localStorage.setItem("token", registrationToken);
+            localStorage.removeItem("registrationToken"); // Remove temporary token
+
+            // Create a minimal user profile (we'll load the full profile later)
+            const minimalProfile = {
+              id: 0, // Will be updated when we load the full profile
+              firstName: data.firstName || "",
+              lastName: data.lastName || "",
+              email: data.email,
+              phone: "", // Will be loaded from API
+              gender: data.gender || "",
+              relationshipStatus: data.relationshipStatus || "",
+              birthMonth: data.birthMonth || "",
+              birthDay: data.birthDay || 0,
+              accountType: data.accountType || "",
+              registrationNumber: data.registrationNumber || null,
+              companyName: data.companyName || null,
+              registrationStatus: true, // Now registered
+              emailVerifiedAt: null,
+              createdAt: new Date().toISOString(),
+              updatedAt: new Date().toISOString(),
+            };
+
+            localStorage.setItem("user", JSON.stringify(minimalProfile));
+
+            console.log(
+              "Token stored in localStorage:",
+              localStorage.getItem("token")
             );
+            console.log(
+              "User stored in localStorage:",
+              localStorage.getItem("user")
+            );
+
+            set({
+              profile: minimalProfile,
+              token: registrationToken,
+              registrationToken: null,
+              isRegistered: true,
+              loading: false,
+            });
+
+            console.log("=== Store state updated ===");
+            console.log("isRegistered set to true");
+
+            // Dispatch custom event to notify other components
+            if (typeof window !== "undefined") {
+              window.dispatchEvent(
+                new CustomEvent("user-logged-in", {
+                  detail: { token: registrationToken, profile: minimalProfile },
+                })
+              );
+              console.log("Custom event dispatched");
+            }
+
+            // Try to load the full profile from API
+            try {
+              console.log("Attempting to load full profile from API...");
+              await get().loadProfileFromAPI();
+              console.log("Full profile loaded successfully");
+            } catch (profileError) {
+              console.warn(
+                "Failed to load full profile, using minimal profile:",
+                profileError
+              );
+            }
+
+            // Return success response for toast
+            const successResponse = {
+              status: true,
+              msg: res.data.msg || "User registered successfully",
+            };
+            console.log("=== Returning success response ===");
+            console.log("Success response:", successResponse);
+            return successResponse;
+          } else {
+            console.error("No registration token found");
+            throw new Error("No registration token available");
           }
+        } else {
+          console.error("Registration failed or invalid response");
+          throw new Error("Registration failed");
         }
-      } catch (e: any) {
-        const errorMsg = e?.response?.data?.msg || "خطأ في إكمال التسجيل";
-        set({ error: errorMsg, loading: false });
-        throw e;
+      } catch (error: any) {
+        console.log("=== Error in completeRegistration ===");
+        console.log("Error:", error);
+        console.log("Error response:", error?.response?.data);
+
+        const apiErrorMsg = error?.response?.data?.msg;
+        let errorToStore: string;
+
+        if (Array.isArray(apiErrorMsg)) {
+          errorToStore = JSON.stringify(apiErrorMsg);
+        } else if (typeof apiErrorMsg === "string") {
+          errorToStore = apiErrorMsg;
+        } else {
+          errorToStore = "register.error_completing_registration"; // Fallback translation key
+        }
+        set({ error: errorToStore, loading: false });
+        throw error;
       }
     },
 
@@ -381,6 +544,25 @@ export const useUserStore = create<UserStore>((set, get) => {
           })
         );
       }
+    },
+
+    setRegistrationToken: (token) => {
+      console.log("UserStore - setRegistrationToken called with:", token);
+      console.log("UserStore - Registration Token type:", typeof token);
+
+      if (token) {
+        localStorage.setItem("registrationToken", token);
+        console.log(
+          "UserStore - Registration Token stored in localStorage:",
+          localStorage.getItem("registrationToken")
+        );
+      } else {
+        console.warn(
+          "UserStore - Attempting to store null/undefined registration token"
+        );
+      }
+
+      set({ registrationToken: token });
     },
 
     logout: () => {

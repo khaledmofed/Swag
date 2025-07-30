@@ -7,9 +7,12 @@ import { useRouter } from "next/navigation";
 import { ContactUsBannerSection } from "../store/ContactUsBannerSection";
 import { useFavorites, useToggleFavorite } from "@/hooks/api";
 import { useUserStore } from "@/stores/userStore";
+import { useTranslation } from "react-i18next";
 
 export default function SavedProductsPage() {
   const { token, profile, setProfile, setToken } = useUserStore();
+  const { t } = useTranslation();
+
   useEffect(() => {
     if (!token) {
       const storedToken = localStorage.getItem("token");
@@ -36,7 +39,7 @@ export default function SavedProductsPage() {
     if (label === "Profile") router.push("/profile");
     else if (label === "View Saved Products") router.push("/saved-products");
     else if (label === "Orders") router.push("/orders");
-    // else if (label === "Addresses") router.push("/addresses");
+    else if (label === "Addresses") router.push("/addresses");
     // else if (label === "Change Password") router.push("/change-password");
     // Logout can be handled here
   };
@@ -67,11 +70,11 @@ export default function SavedProductsPage() {
             onMenuClick={handleSidebarMenuClick}
           />
           <main className="flex-1 bg-white dark:bg-[#2c2c2c] rounded-none border border-gray-200 dark:border-[#353535] p-8">
-            <h1 className="text-3xl font-bold mb-2 font-sukar text-[#232323] dark:text-white">
-              Saved Products
+            <h1 className="text-2xl font-bold text-[#607A76] font-sukar">
+              {t("saved_products.title")}
             </h1>
             <p className="mb-8 text-gray-600 dark:text-gray-300">
-              All your favorite jewelry in one place.
+              {t("saved_products.subtitle")}
             </p>
             {!token ? (
               <div className="flex flex-col md:flex-row items-center justify-center gap-10 py-6">
@@ -80,22 +83,19 @@ export default function SavedProductsPage() {
                     className="text-3xl md:text-4xl font-sukar font-bold mb-4"
                     style={{ lineHeight: "30px" }}
                   >
-                    Oops! Your favorites list is empty. Let’s fill it up with
-                    some stunning jewelry!
+                    {t("saved_products.login_empty_title")}
                   </h1>
                   <p
                     className="text-lg font-sukar text-[#607A76] font-semibold mb-6"
                     style={{ lineHeight: "22px" }}
                   >
-                    It seems you haven’t added any jewelry to your favorites
-                    yet. Log in to discover our exquisite collection and elevate
-                    your style!
+                    {t("saved_products.login_empty_desc")}
                   </p>
                   <button
                     className="flex-1 h-12 px-6 py-2 bg-gradient-to-r from-[#8b9c98] to-[#dbe2e0] text-gray-800 font-sukar text-lg font-bold rounded-none flex items-center justify-center border-none shadow-none hover:from-[#7d8c86] hover:to-[#cfd7d4] transition-all"
                     onClick={() => router.push("/store")}
                   >
-                    Discover Now
+                    {t("saved_products.discover_now")}
                   </button>
                 </div>
                 <div className="flex-2 flex items-center justify-end">
@@ -108,10 +108,33 @@ export default function SavedProductsPage() {
                 </div>
               </div>
             ) : isLoading ? (
-              <div className="text-center py-20">جاري تحميل المفضلة...</div>
+              <div className="space-y-6">
+                {/* Header Skeleton */}
+                <div className="flex items-center justify-between mb-6">
+                  <div className="h-8 w-48 bg-gray-200 dark:bg-[#353535] rounded animate-pulse"></div>
+                </div>
+                {/* Products Grid Skeleton */}
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+                  {Array.from({ length: 4 }).map((_, index) => (
+                    <div
+                      key={index}
+                      className="bg-white dark:bg-[#232b2b] border border-gray-200 dark:border-[#353535] rounded-none p-0"
+                    >
+                      {/* Image Skeleton */}
+                      <div className="w-full h-48 bg-gray-200 dark:bg-[#353535] rounded animate-pulse mb-4"></div>
+                      {/* Title Skeleton */}
+                      <div className="h-4 w-3/4 bg-gray-200 dark:bg-[#353535] rounded animate-pulse mb-2"></div>
+                      {/* Price Skeleton */}
+                      <div className="h-4 w-1/2 bg-gray-200 dark:bg-[#353535] rounded animate-pulse mb-2"></div>
+                      {/* Button Skeleton */}
+                      <div className="h-8 w-full bg-gray-200 dark:bg-[#353535] rounded animate-pulse"></div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             ) : isError ? (
               <div className="text-center text-red-600 py-20">
-                حدث خطأ أثناء جلب المفضلة
+                {t("saved_products.error_loading")}
               </div>
             ) : favData?.data?.favorite?.length === 0 ? (
               <>
@@ -121,22 +144,19 @@ export default function SavedProductsPage() {
                       className="text-3xl md:text-4xl font-sukar font-bold mb-4"
                       style={{ lineHeight: "30px" }}
                     >
-                      Oops! Your favorites list is empty. Let’s fill it up with
-                      some stunning jewelry!
+                      {t("saved_products.empty_title")}
                     </h1>
                     <p
                       className="text-lg font-sukar text-[#607A76] font-semibold mb-6"
                       style={{ lineHeight: "22px" }}
                     >
-                      It seems you haven’t added any jewelry to your favorites
-                      yet. Log in to discover our exquisite collection and
-                      elevate your style!
+                      {t("saved_products.empty_desc")}
                     </p>
                     <button
                       className="flex-1 h-12 px-6 py-2 bg-gradient-to-r from-[#8b9c98] to-[#dbe2e0] text-gray-800 font-sukar text-lg font-bold rounded-none flex items-center justify-center border-none shadow-none hover:from-[#7d8c86] hover:to-[#cfd7d4] transition-all"
                       onClick={() => router.push("/store")}
                     >
-                      Discover Now
+                      {t("saved_products.discover_now")}
                     </button>
                   </div>
                   <div className="flex-2 flex items-center justify-end">
@@ -151,7 +171,7 @@ export default function SavedProductsPage() {
               </>
             ) : (
               <>
-                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+                <div className="grid grid-cols-2 md:grid-cols-4 gap-2 saved-products-grid-zoom-88">
                   {
                     paginated
                       .map((favoriteItem: any, idx: number) => {
