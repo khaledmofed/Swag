@@ -118,7 +118,7 @@ export function SideMenuBar() {
     t("navigation.all_categories")
   );
 
-  const { isRTL } = useLanguageStore();
+  const { isRTL, language } = useLanguageStore();
   const { data: footer } = useFooterWithStore();
 
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -228,18 +228,18 @@ export function SideMenuBar() {
           <nav className="py-4">
             <MenuItem
               label={t("navigation.store")}
-              href="/store"
-              active={isActive("/store")}
+              href={`/${language}/store`}
+              active={isActive(`/${language}/store`)}
             />
             <MenuItem
               label={t("navigation.all_categories")}
-              href="/all-categories"
-              active={isActive("/all-categories")}
+              href={`/${language}/all-categories`}
+              active={isActive(`/${language}/all-categories`)}
             />
             <MenuItem
               label={t("navigation.about_us")}
-              href="/about"
-              active={isActive("/about")}
+              href={`/${language}/about`}
+              active={isActive(`/${language}/about`)}
             />
 
             {(footer?.quick_links?.links || []).map((link, index) => (
@@ -255,13 +255,13 @@ export function SideMenuBar() {
             <div className="my-4 border-t border-gray-200 dark:border-slate-700" />
             <MenuItem
               label={t("terms.title")}
-              href="/terms"
-              active={isActive("/terms")}
+              href={`/${language}/terms`}
+              active={isActive(`/${language}/terms`)}
             />
             <MenuItem
               label={t("privacy.title")}
-              href="/privacy"
-              active={isActive("/privacy")}
+              href={`/${language}/privacy`}
+              active={isActive(`/${language}/privacy`)}
             />
             {/* {(footer?.legal_links?.links || []).map((link, index) => (
               <MenuItem

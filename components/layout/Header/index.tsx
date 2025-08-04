@@ -62,7 +62,7 @@ export function Header({
     queryFn: fetchFavourites,
     enabled: !!token,
   });
-  const { isRTL } = useLanguageStore();
+  const { isRTL, language } = useLanguageStore();
   const { toggleSidebar } = useSidebarStore();
   const pathname = usePathname();
   const router = useRouter();
@@ -325,13 +325,13 @@ export function Header({
     {
       id: menu?.[0]?.id || defaultMenuItems[0].id,
       key: menu?.[0]?.key || defaultMenuItems[0].key,
-      href: "/store",
+      href: `/${language}/store`,
       label: t("navigation.store"),
     },
     {
       id: "collections",
       key: "HEAD_SECTION_MENU_COLLECTIONS",
-      href: "/all-categories",
+      href: `/${language}/all-categories`,
       label: t("navigation.collections"),
     },
   ];
@@ -339,14 +339,14 @@ export function Header({
     {
       id: menu?.[1]?.id || defaultMenuItems[1].id,
       key: menu?.[1]?.key || defaultMenuItems[1].key,
-      href: "/about",
+      href: `/${language}/about`,
       label: menu?.[1]?.value || defaultMenuItems[1].value,
     },
 
     {
       id: menu?.[3]?.id || defaultMenuItems[3].id,
       key: menu?.[3]?.key || defaultMenuItems[3].key,
-      href: "/market-insights",
+      href: `/${language}/market-insights`,
       label: menu?.[3]?.value || defaultMenuItems[3].value,
     },
   ];

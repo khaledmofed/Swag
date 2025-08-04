@@ -279,7 +279,7 @@ export default function ProductDetailsPage() {
           )}
           <div className="mt-4">
             <a
-              href="/store"
+              href={`/${language}/store`}
               className="text-primary-500 hover:text-primary-600 underline"
             >
               العودة إلى المتجر
@@ -310,12 +310,15 @@ export default function ProductDetailsPage() {
           className="flex items-center justify-center text-gray-400 text-md my-4 font-sukar"
           aria-label="Breadcrumb"
         >
-          <a href="/store" className="hover:text-primary-500 transition">
+          <a
+            href={`/${language}/store`}
+            className="hover:text-primary-500 transition"
+          >
             Store
           </a>
           <span className="mx-2">&gt;</span>
           <a
-            href="/all-categories"
+            href={`/${language}/all-categories`}
             className="hover:text-primary-500 transition"
           >
             Categories

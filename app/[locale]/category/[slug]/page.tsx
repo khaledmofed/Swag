@@ -3,6 +3,7 @@
 import { MainLayout } from "@/components/layout/MainLayout";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
+import { useLanguageStore } from "@/stores/languageStore";
 import { Icon } from "@/components/common/Icon";
 import { Button } from "@/components/ui/button";
 import { PaginationCustom } from "@/components/ui/PaginationCustom";
@@ -28,6 +29,7 @@ const demoTabs = [
 
 export default function CategoryPage() {
   const { slug } = useParams();
+  const { language } = useLanguageStore();
   const [activeTab, setActiveTab] = useState(0);
   const [searchParams, setSearchParams] = useState({
     category: 0,
@@ -269,12 +271,15 @@ export default function CategoryPage() {
           className="flex items-center justify-center text-gray-400 text-md my-4 font-sukar"
           aria-label="Breadcrumb"
         >
-          <a href="/store" className="hover:text-primary-500 transition">
+          <a
+            href={`/${language}/store`}
+            className="hover:text-primary-500 transition"
+          >
             Store
           </a>
           <span className="mx-2">&gt;</span>
           <a
-            href="/all-categories"
+            href={`/${language}/all-categories`}
             className="hover:text-primary-500 transition"
           >
             Categories

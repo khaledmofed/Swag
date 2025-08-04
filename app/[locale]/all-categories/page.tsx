@@ -15,7 +15,7 @@ import { useLanguageStore } from "@/stores/languageStore";
 export default function AllCategoriesPage() {
   const [page, setPage] = useState(1);
   const { t } = useTranslation();
-  const { initializeLanguageFromURL } = useLanguageStore();
+  const { initializeLanguageFromURL, language } = useLanguageStore();
 
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -88,7 +88,10 @@ export default function AllCategoriesPage() {
           className="flex items-center justify-center text-gray-400 text-md my-4 font-sukar"
           aria-label="Breadcrumb"
         >
-          <a href="/store" className="hover:text-primary-500 transition">
+          <a
+            href={`/${language}/store`}
+            className="hover:text-primary-500 transition"
+          >
             {t("navigation.store")}
           </a>
 

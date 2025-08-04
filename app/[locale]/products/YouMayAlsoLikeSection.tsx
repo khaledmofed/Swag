@@ -6,6 +6,7 @@ import { Icon } from "@/components/common/Icon";
 import Link from "next/link";
 import { ProductCard } from "@/components/common/ProductCard";
 import { getImageUrl } from "@/lib/utils";
+import { useLanguageStore } from "@/stores/languageStore";
 
 interface Product {
   id: number;
@@ -37,6 +38,7 @@ interface YouMayAlsoLikeSectionProps {
 export function YouMayAlsoLikeSection({
   relatedProducts = [],
 }: YouMayAlsoLikeSectionProps) {
+  const { language } = useLanguageStore();
   const [hovered, setHovered] = useState<number | null>(null);
   const [page, setPage] = useState(1);
 
@@ -80,7 +82,7 @@ export function YouMayAlsoLikeSection({
             </p>
           </div>
           <Link
-            href="/all-categories"
+            href={`/${language}/all-categories`}
             className="flex items-center gap-2 text-base font-en text-gray-700 dark:text-gray-200 hover:text-primary-500 transition"
           >
             Explore the Entire Collection

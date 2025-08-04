@@ -73,7 +73,7 @@ export function EnchantingSummerCollectionSection() {
             {t("summer_collection.title")}
           </h2>
           <Link
-            href="/all-categories"
+            href={`/${language}/all-categories`}
             className="flex items-center gap-2 text-base font-en text-gray-700 dark:text-gray-200 hover:text-primary-500 transition"
           >
             {t("summer_collection.explore")}
