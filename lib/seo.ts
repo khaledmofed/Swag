@@ -31,7 +31,12 @@ function getTranslations(locale: SupportedLocale) {
  */
 export function generateMetadata(config: SEOConfig): Metadata {
   const translations = getTranslations(config.locale);
-  const siteConfig = translations.seo.site;
+  const siteConfig = (translations as any).seo?.site || {
+    name: "SWAG",
+    url: "https://swaggold.co",
+    locale: "en_US",
+    type: "website",
+  };
 
   const url = config.path
     ? `${siteConfig.url}/${config.locale}${config.path}`
@@ -108,7 +113,13 @@ export function generateMetadata(config: SEOConfig): Metadata {
  */
 export function generateHomeMetadata(locale: SupportedLocale): Metadata {
   const translations = getTranslations(locale);
-  const seoConfig = translations.seo.home;
+  const seoConfig = (translations as any).seo?.home || {
+    title: "SWAG | Premium Bullion & Jewelry Services in Saudi Arabia",
+    description:
+      "SWAG offers premium bullion trading, logistics, and custom jewelry services in Saudi Arabia. Trusted expertise in precious metals since 2013.",
+    keywords:
+      "bullion trading, jewelry, precious metals, gold, silver, Saudi Arabia, SWAG, luxury jewelry, investment",
+  };
 
   return generateMetadata({
     title: seoConfig.title,
@@ -116,7 +127,9 @@ export function generateHomeMetadata(locale: SupportedLocale): Metadata {
     keywords: seoConfig.keywords,
     locale,
     path: "",
-    image: `${translations.seo.site.url}/images/og-home.jpg`,
+    image: `${
+      (translations as any).seo?.site?.url || "https://swaggold.co"
+    }/images/og-home.jpg`,
   });
 }
 
@@ -127,7 +140,13 @@ export function generateMarketInsightsMetadata(
   locale: SupportedLocale
 ): Metadata {
   const translations = getTranslations(locale);
-  const seoConfig = translations.seo.market_insights;
+  const seoConfig = (translations as any).seo?.market_insights || {
+    title: "Live Gold Prices & Global Market Updates | SWAG Economic Monitor",
+    description:
+      "Stay updated with real-time gold prices, global market insights, and economic indicators. SWAG's comprehensive market monitoring platform.",
+    keywords:
+      "gold prices, market insights, economic calendar, precious metals, live prices, market analysis, SWAG",
+  };
 
   return generateMetadata({
     title: seoConfig.title,
@@ -135,7 +154,9 @@ export function generateMarketInsightsMetadata(
     keywords: seoConfig.keywords,
     locale,
     path: "/market-insights",
-    image: `${translations.seo.site.url}/images/og-market-insights.jpg`,
+    image: `${
+      (translations as any).seo?.site?.url || "https://swaggold.co"
+    }/images/og-market-insights.jpg`,
   });
 }
 
@@ -153,11 +174,17 @@ export function generateBlogDetailMetadata(
   tags?: string[]
 ): Metadata {
   const translations = getTranslations(locale);
-  const seoConfig = translations.seo.blog_details;
+  const seoConfig = (translations as any).seo?.blog_details || {
+    title: "Blog Details | Jewelry & Bullion Insights Blog | SWAG",
+    description:
+      "Explore expert insights on jewelry, bullion trading, and precious metals investment. Educational articles from SWAG's industry experts.",
+    keywords:
+      "jewelry blog, bullion insights, precious metals, investment advice, SWAG blog, diamond education",
+  };
 
   // Use blog-specific data if available, otherwise fall back to defaults
   const title = blogTitle
-    ? `${blogTitle} | ${translations.seo.site.name}`
+    ? `${blogTitle} | ${(translations as any).seo?.site?.name || "SWAG"}`
     : seoConfig.title;
 
   const description = blogDescription || seoConfig.description;
@@ -168,7 +195,11 @@ export function generateBlogDetailMetadata(
     keywords: seoConfig.keywords,
     locale,
     path: "/blog",
-    image: blogImage || `${translations.seo.site.url}/images/og-blog.jpg`,
+    image:
+      blogImage ||
+      `${
+        (translations as any).seo?.site?.url || "https://swaggold.co"
+      }/images/og-blog.jpg`,
     type: "article",
     publishedTime,
     modifiedTime,
@@ -183,7 +214,12 @@ export function generateBlogDetailMetadata(
  */
 export function generateOrganizationStructuredData(locale: SupportedLocale) {
   const translations = getTranslations(locale);
-  const siteConfig = translations.seo.site;
+  const siteConfig = (translations as any).seo?.site || {
+    name: "SWAG",
+    url: "https://swaggold.co",
+    locale: "en_US",
+    type: "website",
+  };
 
   return {
     "@context": "https://schema.org",
@@ -191,7 +227,9 @@ export function generateOrganizationStructuredData(locale: SupportedLocale) {
     name: siteConfig.name,
     url: siteConfig.url,
     logo: `${siteConfig.url}/images/logo.png`,
-    description: translations.seo.home.description,
+    description:
+      (translations as any).seo?.home?.description ||
+      "SWAG offers premium bullion trading, logistics, and custom jewelry services in Saudi Arabia. Trusted expertise in precious metals since 2013.",
     address: {
       "@type": "PostalAddress",
       addressCountry: "SA",
@@ -222,7 +260,12 @@ export function generateArticleStructuredData(
   url?: string
 ) {
   const translations = getTranslations(locale);
-  const siteConfig = translations.seo.site;
+  const siteConfig = (translations as any).seo?.site || {
+    name: "SWAG",
+    url: "https://swaggold.co",
+    locale: "en_US",
+    type: "website",
+  };
 
   return {
     "@context": "https://schema.org",
@@ -260,7 +303,12 @@ export function generateBreadcrumbStructuredData(
   breadcrumbs: Array<{ name: string; url: string }>
 ) {
   const translations = getTranslations(locale);
-  const siteConfig = translations.seo.site;
+  const siteConfig = (translations as any).seo?.site || {
+    name: "SWAG",
+    url: "https://swaggold.co",
+    locale: "en_US",
+    type: "website",
+  };
 
   return {
     "@context": "https://schema.org",
@@ -288,7 +336,12 @@ export function generateBreadcrumbStructuredData(
 export function generateAddressesMetadata(locale: SupportedLocale) {
   const isArabic = locale === "ar";
   const translations = getTranslations(locale);
-  const siteConfig = translations.seo.site;
+  const siteConfig = (translations as any).seo?.site || {
+    name: "SWAG",
+    url: "https://swaggold.co",
+    locale: "en_US",
+    type: "website",
+  };
 
   const url = `${siteConfig.url}/${locale}/addresses`;
 

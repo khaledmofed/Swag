@@ -324,6 +324,7 @@ function SearchContent() {
                 price={product.final_price || product.price}
                 image={product.image}
                 slug={product.slug}
+                id={product.id.toString()}
               />
             ))
           ) : (
