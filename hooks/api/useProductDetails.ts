@@ -35,6 +35,14 @@ export interface Product {
   name: string;
   short_description: string;
   description: string;
+  weight: string | null;
+  color: string | null;
+  availability: string | null;
+  approved: string | null;
+  collection: number | null;
+  occasion: string | null;
+  items_no: string | null;
+  final_price: string | null;
 }
 
 export interface ProductResponse {

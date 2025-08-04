@@ -399,7 +399,10 @@ export function Header({
                     : "text-secondary-500 hover:text-primary-500"
                   : "text-primary-50 hover:text-primary-400"
               )}
-              onClick={() => setSearchOpen((v) => !v)}
+              onClick={() => {
+                const locale = pathname.split("/")[1];
+                router.push(`/${locale ? locale + "/" : ""}search`);
+              }}
             >
               <Icon
                 name="search"

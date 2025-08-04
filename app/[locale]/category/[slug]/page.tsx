@@ -2,7 +2,7 @@
 
 import { MainLayout } from "@/components/layout/MainLayout";
 import { useParams } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Icon } from "@/components/common/Icon";
 import { Button } from "@/components/ui/button";
 import { PaginationCustom } from "@/components/ui/PaginationCustom";
@@ -14,22 +14,146 @@ import {
   useCategoryBySlug,
   useProductsByCategory,
 } from "@/hooks/api/useCategoryProducts";
+import { useProductSearch } from "@/hooks/api/useProductSearch";
 
 const demoTabs = [
-  "All",
-  "18K Gold Ring",
-  "21K Gold Ring",
-  "18K Gold Wedding Bands",
-  "21K Gold Wedding Bands",
+  { id: "all", label: "All", metal: null, karat: null },
+  { id: "18k-gold", label: "18K Gold", metal: "gold", karat: "18" },
+  { id: "21k-gold", label: "21K Gold", metal: "gold", karat: "21" },
+  { id: "22k-gold", label: "22K Gold", metal: "gold", karat: "22" },
+  { id: "24k-gold", label: "24K Gold", metal: "gold", karat: "24" },
+  { id: "silver", label: "Silver", metal: "silver", karat: null },
+  { id: "platinum", label: "Platinum", metal: "platinum", karat: null },
 ];
 
 export default function CategoryPage() {
   const { slug } = useParams();
   const [activeTab, setActiveTab] = useState(0);
+  const [searchParams, setSearchParams] = useState({
+    category: 0,
+    metal: null as string | null,
+    karat: null as string | null,
+    page: 1,
+    name: undefined as string | undefined,
+    gender: undefined as string | undefined,
+    occasion: undefined as string | undefined,
+    weight: undefined as number | undefined,
+    price_from: undefined as number | undefined,
+    price_to: undefined as number | undefined,
+    order: undefined as string | undefined,
+    orderby: undefined as string | undefined,
+  });
   const [page, setPage] = useState(1);
   const [filterOpen, setFilterOpen] = useState(false);
   const [sortOpen, setSortOpen] = useState(false);
-  const [sortBy, setSortBy] = useState("Default");
+
+  const handleFilterApply = (filters: any) => {
+    setSearchParams((prev) => ({
+      ...prev,
+      name: filters.name || undefined,
+      karat: filters.karat || undefined,
+      metal: filters.metal || undefined,
+      gender: filters.gender || undefined,
+      occasion: filters.occasion || undefined,
+      weight: filters.weight || undefined,
+      price_from: filters.price_from || undefined,
+      price_to: filters.price_to || undefined,
+      page: 1,
+    }));
+    setPage(1);
+  };
+
+  // دالة مساعدة للحصول على معاملات الترتيب
+  const getSortOptions = () => [
+    { value: "default", label: "Default", order: "", orderby: "" },
+    { value: "newest", label: "Newest", order: "created_at", orderby: "desc" },
+    { value: "oldest", label: "Oldest", order: "created_at", orderby: "asc" },
+    {
+      value: "highest_price",
+      label: "Highest Price",
+      order: "price",
+      orderby: "desc",
+    },
+    {
+      value: "lowest_price",
+      label: "Lowest Price",
+      order: "price",
+      orderby: "asc",
+    },
+    // {
+    //   value: "highest_rated",
+    //   label: "Highest Rated",
+    //   order: "rate",
+    //   orderby: "desc",
+    // },
+    // {
+    //   value: "lowest_rated",
+    //   label: "Lowest Rated",
+    //   order: "rate",
+    //   orderby: "asc",
+    // },
+  ];
+
+  const handleSortApply = (sortValue: string) => {
+    try {
+      // محاولة تحليل JSON إذا كان القيمة تحتوي على معاملات متعددة
+      const sortParams = JSON.parse(sortValue);
+
+      console.log("Category - Sort Params:", sortParams);
+
+      setSearchParams((prev) => ({
+        ...prev,
+        order: sortParams.order || undefined,
+        orderby: sortParams.orderby || undefined,
+        page: 1,
+      }));
+    } catch {
+      // إذا فشل التحليل، استخدم القيمة القديمة
+      const sortOptions = getSortOptions();
+      const selectedSort = sortOptions.find((opt) => opt.value === sortValue);
+
+      setSearchParams((prev) => ({
+        ...prev,
+        order: selectedSort?.order || undefined,
+        orderby: selectedSort?.orderby || undefined,
+        page: 1,
+      }));
+    }
+    setPage(1);
+  };
+
+  const getCurrentSortLabel = () => {
+    if (!searchParams.order || !searchParams.orderby) return "Sort By";
+
+    const sortOptions = getSortOptions();
+    const found = sortOptions.find((opt) => opt.order === searchParams.order);
+
+    if (!found) return "Sort By";
+
+    const orderByText = searchParams.orderby === "asc" ? " (A-Z)" : " (Z-A)";
+    return found.label + orderByText;
+  };
+
+  const getCurrentSortValue = () => {
+    if (!searchParams.order || !searchParams.orderby) return "default";
+
+    const sortOptions = getSortOptions();
+    const found = sortOptions.find(
+      (opt) =>
+        opt.order === searchParams.order && opt.orderby === searchParams.orderby
+    );
+
+    console.log("Current searchParams:", searchParams);
+    console.log("Found option:", found);
+
+    if (!found) return "default";
+
+    // إرجاع JSON string يحتوي على كلا القيمتين
+    return JSON.stringify({
+      order: searchParams.order,
+      orderby: searchParams.orderby,
+    });
+  };
 
   // Fetch category data by slug
   const {
@@ -38,18 +162,48 @@ export default function CategoryPage() {
     error: categoryError,
   } = useCategoryBySlug(slug as string);
 
-  // Fetch products by category ID
+  // Update search params when category changes
+  useEffect(() => {
+    if (categoryData?.id) {
+      setSearchParams((prev) => ({
+        ...prev,
+        category: categoryData.id,
+      }));
+    }
+  }, [categoryData?.id]);
+
+  // مراقبة تغييرات searchParams
+  useEffect(() => {
+    console.log("Search Params Updated:", searchParams);
+  }, [searchParams]);
+
+  // Fetch products using search API
   const {
     data: productsData,
     isLoading: productsLoading,
     error: productsError,
-  } = useProductsByCategory(categoryData?.id || 0, page);
+  } = useProductSearch({
+    category: searchParams.category,
+    metal: searchParams.metal || undefined,
+    karat: searchParams.karat || undefined,
+    name: searchParams.name,
+    gender: searchParams.gender,
+    occasion: searchParams.occasion,
+    weight: searchParams.weight?.toString(),
+    price_from: searchParams.price_from?.toString(),
+    price_to: searchParams.price_to?.toString(),
+    order: searchParams.order,
+    orderby: searchParams.orderby,
+    page,
+  });
+
+  const products = productsData?.data?.products?.data || [];
+  const totalPages = productsData?.data?.products?.last_page || 1;
+  const totalProducts = productsData?.data?.products?.total || 0;
 
   console.log("productsData", productsData);
-
-  const products = productsData?.products?.data || [];
-  const totalPages = productsData?.products?.last_page || 1;
-  const totalProducts = productsData?.products?.total || 0;
+  console.log("searchParams", searchParams);
+  console.log("products", products);
 
   // Loading state
   if (categoryLoading || productsLoading) {
@@ -150,16 +304,26 @@ export default function CategoryPage() {
           <div className="flex gap-8 flex-wrap">
             {demoTabs.map((tab, idx) => (
               <button
-                key={tab}
+                key={tab.id}
                 className={`text-lg font-sukar transition-colors duration-200 px-0 pb-1 border-b-2  ${
                   activeTab === idx
                     ? "text-[#607A76] font-bold border-[#607A76] border-b-2"
                     : "text-gray-700 dark:text-gray-300 border-transparent hover:text-[#607A76]"
                 } bg-transparent outline-none`}
                 style={{ minWidth: 0 }}
-                onClick={() => setActiveTab(idx)}
+                onClick={() => {
+                  setActiveTab(idx);
+                  setSearchParams((prev) => ({
+                    ...prev,
+                    category: categoryData?.id || 0,
+                    metal: tab.metal,
+                    karat: tab.karat,
+                    page: 1,
+                  }));
+                  setPage(1);
+                }}
               >
-                {tab}
+                {tab.label}
               </button>
             ))}
           </div>
@@ -173,7 +337,7 @@ export default function CategoryPage() {
               style={{ boxShadow: "none" }}
               onClick={() => setSortOpen(true)}
             >
-              Sort By
+              {getCurrentSortLabel()}
               <Icon name="sort" size={28} className="ml-2" />
             </Button>
             <Button
@@ -196,7 +360,11 @@ export default function CategoryPage() {
               <ProductCard
                 key={product.id}
                 title={product.name}
-                price={`$${product.price}`}
+                price={
+                  product.final_price
+                    ? Number(product.final_price).toLocaleString()
+                    : product.price
+                }
                 image={product.image}
                 isNew={product.featured === 1}
                 slug={product.slug}
@@ -222,19 +390,27 @@ export default function CategoryPage() {
           <PaginationCustom
             page={page}
             totalPages={totalPages}
-            onPageChange={setPage}
+            onPageChange={(newPage) => {
+              setPage(newPage);
+              setSearchParams((prev) => ({
+                ...prev,
+                page: newPage,
+              }));
+            }}
           />
         )}
 
         <ProductFilterSidebar
           open={filterOpen}
           onClose={() => setFilterOpen(false)}
+          onApply={handleFilterApply}
+          currentFilters={searchParams}
         />
         <SortBySidebar
           open={sortOpen}
           onClose={() => setSortOpen(false)}
-          selected={sortBy}
-          onSelect={setSortBy}
+          selected={getCurrentSortValue()}
+          onSelect={(val) => handleSortApply(val)}
           onApply={() => setSortOpen(false)}
         />
       </div>

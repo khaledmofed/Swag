@@ -247,7 +247,7 @@ export default function ProductDetailsPage() {
   if (isLoading) {
     return (
       <MainLayout>
-        <div className="container mx-auto px-4 py-8">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-0 py-10">
           <div className="animate-pulse space-y-8">
             <div className="h-8 bg-gray-200 rounded w-1/4"></div>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -273,7 +273,9 @@ export default function ProductDetailsPage() {
             حدث خطأ أثناء جلب بيانات المنتج
           </div>
           {error && (
-            <div className="text-gray-500 text-sm">{error.message}</div>
+            <div className="text-gray-500 text-sm">
+              {error instanceof Error ? error.message : String(error)}
+            </div>
           )}
           <div className="mt-4">
             <a
@@ -418,37 +420,221 @@ export default function ProductDetailsPage() {
                   className="text-yellow-400"
                 />
               ))}
-              <span className="ml-2 text-gray-700 dark:text-gray-200 text-base font-sukar">
+              {/* <span className="ml-2 text-gray-700 dark:text-gray-200 text-base font-sukar">
                 {product.reviews_count || 0} Review
-              </span>
+              </span> */}
             </div>
             {/* Price */}
-            <div className="flex items-baseline gap-2 mt-2 mb-1">
-              <span className="text-2xl md:text-3xl font-bold text-[#607A76] font-sukar">
-                ${product.price}
-              </span>
-              <span className="text-xl font-sukar">
-                {product.currency || "USD"}
-              </span>
+            <div className="flex flex-col gap-2 mt-2 mb-1">
+              {/* Final Price */}
+              <div className="flex items-baseline gap-2">
+                <span className="text-2xl md:text-3xl font-bold text-[#607A76] font-sukar">
+                  {product.final_price || product.price}{" "}
+                  <svg
+                    id="Layer_1"
+                    className="inline-block fill-primary-607a76 customeSize"
+                    width="24"
+                    height="24"
+                    data-name="Layer 1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 1124.14 1256.39"
+                  >
+                    <path
+                      className="cls-1"
+                      d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"
+                    ></path>
+                    <path
+                      className="cls-1"
+                      d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"
+                    ></path>
+                  </svg>{" "}
+                </span>
+              </div>
+
+              {/* Manufacturing Cost per Gram */}
+              {product.price && (
+                <div className="flex items-center gap-2">
+                  <span className="text-base text-gray-400 font-sukar">
+                    {t("product_details.manufacturing_cost_per_gram")}:
+                  </span>
+                  <span className="text-base font-semibold text-gray-700 dark:text-gray-300 font-sukar">
+                    {product.price}{" "}
+                    <svg
+                      id="Layer_1"
+                      className="inline-block fill-primary-607a76 customeSize"
+                      width="16"
+                      height="16"
+                      data-name="Layer 1"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 1124.14 1256.39"
+                    >
+                      <path
+                        className="cls-1"
+                        d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"
+                      ></path>
+                      <path
+                        className="cls-1"
+                        d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"
+                      ></path>
+                    </svg>
+                    | {t("product_details.grams")}
+                  </span>
+                </div>
+              )}
+            </div>
+
+            {/* Old Price and Tax Info */}
+            <div className="flex items-baseline gap-2">
               {product.old_price && product.old_price !== product.price && (
                 <span className="text-base text-gray-400 font-sukar ml-2 line-through">
-                  ${product.old_price}
+                  {product.old_price}{" "}
+                  <svg
+                    id="Layer_1"
+                    className="inline-block fill-gray-400 customeSize"
+                    width="18"
+                    height="18"
+                    data-name="Layer 1"
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 1124.14 1256.39"
+                  >
+                    <path
+                      className="cls-1"
+                      d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"
+                    ></path>
+                    <path
+                      className="cls-1"
+                      d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"
+                    ></path>
+                  </svg>{" "}
                 </span>
               )}
-              <span className="text-base text-gray-400 font-sukar ml-2">
+              {/* <span className="text-base text-gray-400 font-sukar ml-2">
                 Tax Included
-              </span>
+              </span> */}
             </div>
             {/* Description */}
-            <p className="text-gray-700 dark:text-gray-200 text-lg font-sukar leading-relaxed mb-4">
-              {product.description}
-            </p>
+            <div
+              className="text-gray-700 dark:text-gray-200 text-lg font-sukar leading-relaxed mb-4 prose prose-gray dark:prose-invert max-w-none"
+              dangerouslySetInnerHTML={{ __html: product.description }}
+            />
+
+            {/* Product Specifications */}
+            <div className="rounded-none mb-6">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-4 font-sukar flex items-center gap-2">
+                {/* <Icon name="eye" size={20} className="text-[#607A76]" /> */}
+                {t("product_details.specifications")}
+              </h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-1">
+                {product.karat && (
+                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-none dark:border-gray-600">
+                    <span className="text-gray-600 dark:text-gray-300 font-sukar flex items-center gap-2">
+                      {t("product_details.karat")}:
+                    </span>
+                    <span className="font-bold text-gray-900 dark:text-white font-sukar">
+                      {product.karat}K
+                    </span>
+                  </div>
+                )}
+                {product.weight && (
+                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-none dark:border-gray-600">
+                    <span className="text-gray-600 dark:text-gray-300 font-sukar flex items-center gap-2">
+                      {t("product_details.weight")}:
+                    </span>
+                    <span className="font-bold text-gray-900 dark:text-white font-sukar">
+                      {product.weight} {t("product_details.grams")}
+                    </span>
+                  </div>
+                )}
+                {product.metal && (
+                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-none dark:border-gray-600">
+                    <span className="text-gray-600 dark:text-gray-300 font-sukar flex items-center gap-2">
+                      {t("product_details.metal")}:
+                    </span>
+                    <span className="font-bold text-gray-900 dark:text-white font-sukar capitalize">
+                      {product.metal}
+                    </span>
+                  </div>
+                )}
+                {product.color && (
+                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-none dark:border-gray-600">
+                    <span className="text-gray-600 dark:text-gray-300 font-sukar flex items-center gap-2">
+                      {t("product_details.color")}:
+                    </span>
+                    <span className="font-bold text-gray-900 dark:text-white font-sukar capitalize">
+                      {product.color}
+                    </span>
+                  </div>
+                )}
+                {product.gender && (
+                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-none dark:border-gray-600">
+                    <span className="text-gray-600 dark:text-gray-300 font-sukar flex items-center gap-2">
+                      {t("product_details.gender")}:
+                    </span>
+                    <span className="font-bold text-gray-900 dark:text-white font-sukar capitalize">
+                      {product.gender === "womens"
+                        ? t("product_details.womens")
+                        : product.gender === "mens"
+                        ? t("product_details.mens")
+                        : product.gender}
+                    </span>
+                  </div>
+                )}
+                {product.availability && (
+                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-none dark:border-gray-600">
+                    <span className="text-gray-600 dark:text-gray-300 font-sukar flex items-center gap-2">
+                      {t("product_details.availability")}:
+                    </span>
+                    <span
+                      className={`font-bold font-sukar ${
+                        product.availability === "1"
+                          ? "text-green-600 dark:text-green-400"
+                          : "text-red-600 dark:text-red-400"
+                      }`}
+                    >
+                      {product.availability === "1"
+                        ? t("product_details.available")
+                        : t("product_details.not_available")}
+                    </span>
+                  </div>
+                )}
+                {product.occasion && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600 dark:text-gray-300 font-sukar">
+                      {t("product_details.occasion")}:
+                    </span>
+                    <span className="font-bold text-gray-900 dark:text-white font-sukar capitalize">
+                      {product.occasion}
+                    </span>
+                  </div>
+                )}
+                {product.items_no && (
+                  <div className="flex items-center justify-between">
+                    <span className="text-gray-600 dark:text-gray-300 font-sukar">
+                      {t("product_details.item_number")}:
+                    </span>
+                    <span className="font-bold text-gray-900 dark:text-white font-sukar">
+                      {product.items_no}
+                    </span>
+                  </div>
+                )}
+                {/* {product.final_price && (
+                  <div className="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-700 rounded-none dark:border-gray-600">
+                    <span className="text-gray-600 dark:text-gray-300 font-sukar flex items-center gap-2">
+                      {t("product_details.final_price")}:
+                    </span>
+                    <span className="font-bold text-gray-900 dark:text-white font-sukar">
+                      {product.final_price}
+                    </span>
+                  </div>
+                )} */}
+              </div>
+            </div>
             {/* Quantity & Buy Section */}
             <div className="flex items-center gap-4 mt-8 w-full">
               {/* Left: Cart & Favorite */}
               <div className="flex gap-2">
                 <button
-                  className={`min-w-[3rem] flex items-center justify-center border rounded-none transition-all duration-200 font-sukar 
+                  className={`min-w-[3rem] flex items-center justify-center border rounded-none transition-all duration-200 font-sukar
                     ${
                       isInCart
                         ? "bg-red-100 border-red-400 text-red-700 px-4"

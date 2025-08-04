@@ -6,18 +6,30 @@ import Slider from "@mui/material/Slider";
 export function ProductFilterSidebar({
   open,
   onClose,
+  onApply,
+  currentFilters,
 }: {
   open: boolean;
   onClose: () => void;
+  onApply?: (filters: any) => void;
+  currentFilters?: any;
 }) {
   if (!open) return null;
-  const MIN = 250;
-  const MAX = 5000;
-  const [values, setValues] = React.useState([750, 3000]);
+  const MIN = 0;
+  const MAX = 100000;
+  const [values, setValues] = React.useState([0, 100000]);
   const handleSliderChange = (event: Event, newValue: number | number[]) => {
     setValues(newValue as number[]);
   };
   const [weight, setWeight] = React.useState(0);
+  const [productName, setProductName] = React.useState("");
+  const [selectedKarat, setSelectedKarat] = React.useState<string[]>([]);
+  const [selectedMetal, setSelectedMetal] = React.useState("");
+  const [selectedGender, setSelectedGender] = React.useState("");
+  const [selectedOccasion, setSelectedOccasion] = React.useState("");
+  const [selectedStone, setSelectedStone] = React.useState("");
+  const [selectedPattern, setSelectedPattern] = React.useState("");
+
   const handleWeightChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const val = parseFloat(e.target.value);
     setWeight(isNaN(val) ? 0 : val);
@@ -26,6 +38,92 @@ export function ProductFilterSidebar({
     setWeight((w) => parseFloat((w + 0.01).toFixed(2)));
   const decrementWeight = () =>
     setWeight((w) => Math.max(0, parseFloat((w - 0.01).toFixed(2))));
+
+  const handleKaratChange = (karat: string) => {
+    setSelectedKarat((prev) =>
+      prev.includes(karat) ? prev.filter((k) => k !== karat) : [...prev, karat]
+    );
+  };
+
+  const handleMetalChange = (metal: string) => {
+    setSelectedMetal(metal);
+  };
+
+  const handleGenderChange = (gender: string) => {
+    setSelectedGender(gender);
+  };
+
+  const handleOccasionChange = (occasion: string) => {
+    setSelectedOccasion(occasion);
+  };
+
+  const handleStoneChange = (stone: string) => {
+    setSelectedStone(stone);
+  };
+
+  const handlePatternChange = (pattern: string) => {
+    setSelectedPattern(pattern);
+  };
+
+  const handleApply = () => {
+    const filters = {
+      name: productName,
+      karat: selectedKarat.length > 0 ? selectedKarat.join(",") : undefined,
+      metal: selectedMetal || undefined,
+      gender: selectedGender || undefined,
+      occasion: selectedOccasion || undefined,
+      weight: weight > 0 ? weight : undefined,
+      price_from: values[0],
+      price_to: values[1],
+    };
+
+    onApply?.(filters);
+    onClose();
+  };
+
+  const handleClearAll = () => {
+    setProductName("");
+    setSelectedKarat([]);
+    setSelectedMetal("");
+    setSelectedGender("");
+    setSelectedOccasion("");
+    setSelectedStone("");
+    setSelectedPattern("");
+    setWeight(0);
+    setValues([0, 100000]);
+
+    // إرسال فلاتر فارغة لإعادة تعيين البحث
+    const emptyFilters = {
+      name: undefined,
+      karat: undefined,
+      metal: undefined,
+      gender: undefined,
+      occasion: undefined,
+      weight: undefined,
+      price_from: 0,
+      price_to: 100000,
+    };
+
+    onApply?.(emptyFilters);
+  };
+
+  // تعيين الفلاتر الحالية عند فتح السايد بار
+  React.useEffect(() => {
+    if (open && currentFilters) {
+      setProductName(currentFilters.name || "");
+      setSelectedKarat(
+        currentFilters.karat ? currentFilters.karat.split(",") : []
+      );
+      setSelectedMetal(currentFilters.metal || "");
+      setSelectedGender(currentFilters.gender || "");
+      setSelectedOccasion(currentFilters.occasion || "");
+      setWeight(currentFilters.weight || 0);
+      setValues([
+        currentFilters.price_from || 0,
+        currentFilters.price_to || 100000,
+      ]);
+    }
+  }, [open, currentFilters]);
   return (
     <div className="fixed inset-0 z-40 flex font-sukar">
       {/* Overlay */}
@@ -60,6 +158,8 @@ export function ProductFilterSidebar({
             </label>
             <input
               type="text"
+              value={productName}
+              onChange={(e) => setProductName(e.target.value)}
               placeholder="Search for your favorite jewelry pieces"
               className="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#232b2b] rounded-none px-3 py-3 text-md focus:outline-none focus:ring-2 focus:ring-primary-100 text-[#5C5C5C] dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500"
             />
@@ -70,13 +170,18 @@ export function ProductFilterSidebar({
               Choose Karat
             </label>
             <div className="flex gap-4">
-              {["24K", "22K", "21K", "18K"].map((k) => (
+              {["24", "21", "18"].map((k) => (
                 <label
                   key={k}
                   className="flex items-center gap-1 cursor-pointer text-[#5C5C5C] dark:text-gray-200"
                 >
-                  <input type="checkbox" className="accent-[#607A76]" />
-                  <span className="text-base font-sukar">{k}</span>
+                  <input
+                    type="checkbox"
+                    className="accent-[#607A76]"
+                    checked={selectedKarat.includes(k)}
+                    onChange={() => handleKaratChange(k)}
+                  />
+                  <span className="text-base font-sukar">{k} K</span>
                 </label>
               ))}
             </div>
@@ -119,8 +224,29 @@ export function ProductFilterSidebar({
                 }}
               />
             </div>
-            <div className="mt-2" style={{ color: "#5C5C5C", fontSize: 12 }}>
-              Prices: {values[0]} SAR - {values[1]} SAR
+            <div
+              className="mt-2 flex items-center gap-1"
+              style={{ color: "#5C5C5C", fontSize: 12 }}
+            >
+              Prices: {values[0]} - {values[1]}
+              <svg
+                id="Layer_1"
+                className="inline-block fill-gray-400 customeSize"
+                width="18"
+                height="18"
+                data-name="Layer 1"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 1124.14 1256.39"
+              >
+                <path
+                  className="cls-1"
+                  d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"
+                ></path>
+                <path
+                  className="cls-1"
+                  d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"
+                ></path>
+              </svg>
             </div>
           </div>
           {/* Weight */}
@@ -171,6 +297,8 @@ export function ProductFilterSidebar({
                     type="radio"
                     name="metal"
                     className="accent-[#607A76] mr-2"
+                    checked={selectedMetal === m}
+                    onChange={() => handleMetalChange(m)}
                   />
                   {m}
                 </label>
@@ -192,6 +320,8 @@ export function ProductFilterSidebar({
                     type="radio"
                     name="gender"
                     className="accent-[#607A76] mr-2"
+                    checked={selectedGender === g}
+                    onChange={() => handleGenderChange(g)}
                   />
                   {g}
                 </label>
@@ -214,6 +344,8 @@ export function ProductFilterSidebar({
                       type="radio"
                       name="occasion"
                       className="accent-[#607A76] mr-2"
+                      checked={selectedOccasion === o}
+                      onChange={() => handleOccasionChange(o)}
                     />
                     {o}
                   </label>
@@ -268,11 +400,36 @@ export function ProductFilterSidebar({
         <div className="flex gap-2 border-t border-gray-100 dark:border-gray-800 p-4 bg-white dark:bg-[#232b2b]">
           <Button
             variant="ghost"
-            className="text-md w-1/2 bg-[#F7F9F9] dark:bg-[#232b2b] text-[#607A76] dark:text-gray-200 font-sukar font-semibold rounded-none border border-gray-100 dark:border-gray-800"
+            className="text-md w-1/3 bg-[#F7F9F9] dark:bg-[#232b2b] text-[#607A76] dark:text-gray-200 font-sukar font-semibold rounded-none border border-gray-100 dark:border-gray-800"
+            onClick={() => {
+              handleClearAll();
+              // لا نغلق السايد بار عند الضغط على Clear All
+            }}
           >
             Clear All
           </Button>
-          <Button className="text-md w-1/2 bg-[#607A76] dark:bg-primary-700 text-white font-sukar font-semibold rounded-none">
+          <Button
+            variant="ghost"
+            className="text-md w-1/3 bg-[#F7F9F9] dark:bg-[#232b2b] text-[#607A76] dark:text-gray-200 font-sukar font-semibold rounded-none border border-gray-100 dark:border-gray-800"
+            onClick={() => {
+              // تفريغ الحقول فقط بدون إرسال فلاتر فارغة
+              setProductName("");
+              setSelectedKarat([]);
+              setSelectedMetal("");
+              setSelectedGender("");
+              setSelectedOccasion("");
+              setSelectedStone("");
+              setSelectedPattern("");
+              setWeight(0);
+              setValues([0, 100000]);
+            }}
+          >
+            Reset Fields
+          </Button>
+          <Button
+            className="text-md w-1/3 bg-[#607A76] dark:bg-primary-700 text-white font-sukar font-semibold rounded-none"
+            onClick={handleApply}
+          >
             Show Results
           </Button>
         </div>
