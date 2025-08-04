@@ -33,16 +33,7 @@ export default function Banner() {
         frameBorder="0"
         allow="autoplay; encrypted-media"
         allowFullScreen
-        className="absolute inset-0 w-full h-full object-cover"
-        style={{
-          width: "111%",
-          height: "111%",
-          margin: "0 auto",
-          textAlign: "center",
-          left: "-5%",
-          top: "-11%",
-          position: "absolute",
-        }}
+        className="absolute inset-0 w-full h-full object-cover sizeIframe"
       ></iframe>
       {/* <video
         className="absolute inset-0 w-full h-full object-cover"

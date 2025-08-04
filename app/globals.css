@@ -1243,3 +1243,16 @@ html[dir="rtl"] .heroSectionLeftText {
 .fill-747474 {
   fill: #747474;
 }
+.sizeIframe {
+  width: 111% !important;
+  height: 111% !important;
+  margin: 0 auto !important;
+  text-align: center !important;
+  left: -5%;
+  top: -11% !important;
+  position: absolute !important;
+}
+html[dir="rtl"] .sizeIframe {
+  left: auto;
+  right: -5%;
+}

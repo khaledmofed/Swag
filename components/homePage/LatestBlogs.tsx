@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import BlogCard from "../common/BlogCard";
 import { useTranslation } from "react-i18next";
 import { useSystemSettingsWithStore, useBlogsWithStore } from "@/hooks";
+import { Icon } from "@/components/common/Icon";
 
 // Register ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
@@ -15,6 +16,7 @@ const LatestBlogs: React.FC = () => {
   const titleRef = useRef<HTMLDivElement>(null);
   const blogRefs = useRef<(HTMLDivElement | null)[]>([]);
   const [isClient, setIsClient] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
     setIsClient(true);
@@ -44,53 +46,81 @@ const LatestBlogs: React.FC = () => {
   }));
   console.log("blogsResponse", blogsResponse);
 
+  // Navigation functions
+  const goToSlide = (slideIndex: number) => {
+    if (slideIndex < 0 || slideIndex >= blogPosts.length) return;
+
+    setCurrentSlide(slideIndex);
+
+    const container = blogRefs.current[0];
+    if (!container) return;
+
+    const slideDistance = slideIndex * 100;
+    // Fix the direction - always move left for next slide
+    gsap.to(container, {
+      x: `-${slideDistance}vw`,
+      duration: 0.8,
+      ease: "power2.out",
+    });
+  };
+
+  const nextSlide = () => {
+    if (currentSlide < blogPosts.length - 1) {
+      goToSlide(currentSlide + 1);
+    }
+  };
+
+  const prevSlide = () => {
+    if (currentSlide > 0) {
+      goToSlide(currentSlide - 1);
+    }
+  };
+
   useEffect(() => {
     if (!isClient || isLoading) {
       return;
     }
-    const direction = document.documentElement.dir === "rtl" ? "rtl" : "ltr";
 
     const ctx = gsap.context(() => {
-      gsap.fromTo(
-        titleRef.current,
-        { opacity: 0, y: 50 },
-        {
-          opacity: 1,
-          y: 0,
-          duration: 1,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: titleRef.current,
-            start: "top 80%",
-            end: "bottom 10%",
-            toggleActions: "play none none reverse",
-          },
-        }
-      );
+      // Only run the title animation once when component mounts
+      if (titleRef.current) {
+        gsap.fromTo(
+          titleRef.current,
+          { opacity: 0, y: 50 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 1,
+            ease: "power2.out",
+          }
+        );
+      }
 
+      // Initialize first slide position
       const container = blogRefs.current[0];
-      if (!container) return;
-
-      const slideDistance = blogPosts.length * 60;
-      const directionMultiplier = direction === "rtl" ? 1 : -1;
-
-      gsap.to(container, {
-        x: `${directionMultiplier * slideDistance}vw`,
-        ease: "none",
-        scrollTrigger: {
-          trigger: sectionRef.current,
-          start: "top top",
-          end: `+=${blogPosts.length * window.innerWidth}`,
-          scrub: 1,
-          pin: true,
-          anticipatePin: 1,
-          invalidateOnRefresh: true,
-        },
-      });
+      if (container) {
+        // Always start at position 0
+        gsap.set(container, {
+          x: "0vw",
+        });
+      }
     }, sectionRef);
 
     return () => ctx.revert();
-  }, [blogPosts.length, isClient, isLoading]);
+  }, [isClient, isLoading]); // Removed currentSlide and blogPosts.length dependencies
+
+  // Reset slide position when data changes
+  useEffect(() => {
+    if (blogPosts.length > 0 && isClient) {
+      setCurrentSlide(0);
+      const container = blogRefs.current[0];
+      if (container) {
+        gsap.set(container, {
+          x: "0vw",
+        });
+      }
+    }
+  }, [blogPosts.length, isClient]);
 
   if (!isClient || isLoading) {
     return (
@@ -125,22 +155,52 @@ const LatestBlogs: React.FC = () => {
       <div className="mx-auto px-4 sm:px-6 lg:px-0">
         {/* Header */}
         <div ref={titleRef} className="text-center mb-16">
-          <p className="text-primary-500  text-lg  mb-4  uppercase">
+          <p className="text-primary-500  text-lg  mb-0  uppercase">
             {getSettingByKey("LAST_BLOGS_CAPTION")?.value ||
               t("latest_blogs.section_title")}
           </p>
-          <h2 className="text-4xl lg:text-6xl font-thin text-secondary-500 dark:text-white-50 mb-6">
+          <h2 className="text-4xl lg:text-6xl font-thin text-secondary-500 dark:text-white-50 mb-0">
             {getSettingByKey("LAST_BLOGS_HEADLINE")?.value ||
               t("latest_blogs.title")}
           </h2>
-          <p className="text-md text-secondary-400 dark:text-white-200  mx-auto">
+          <p className="text-base sm:text-lg text-secondary-400 dark:text-white-200 font-body mx-auto">
             {getSettingByKey("LAST_BLOGS_RICH_TEXT")?.value ||
               t("latest_blogs.subtitle")}
           </p>
         </div>
 
-        {/* Blog Posts */}
+        {/* Blog Posts with Navigation */}
         <div className="relative overflow-hidden">
+          {/* Navigation Arrows - Right Side */}
+          <button
+            onClick={prevSlide}
+            disabled={currentSlide === 0}
+            className="absolute right-16 z-10 w-12 h-12 bg-white/80 dark:bg-gray-800/80 rounded-full flex items-center justify-center shadow-lg hover:bg-white dark:hover:bg-gray-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Previous slide"
+            style={{ top: "2px" }}
+          >
+            <Icon
+              name="arrow-left"
+              size={20}
+              className="text-gray-700 dark:text-white"
+            />
+          </button>
+
+          <button
+            onClick={nextSlide}
+            disabled={currentSlide === blogPosts.length - 1}
+            className="absolute right-4 z-10 w-12 h-12 bg-white/80 dark:bg-gray-800/80 rounded-full flex items-center justify-center shadow-lg hover:bg-white dark:hover:bg-gray-800 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            aria-label="Next slide"
+            style={{ top: "2px" }}
+          >
+            <Icon
+              name="arrow-right"
+              size={20}
+              className="text-gray-700 dark:text-white"
+            />
+          </button>
+
+          {/* Slides Container */}
           <div
             className="flex"
             ref={(el) => {
@@ -149,7 +209,28 @@ const LatestBlogs: React.FC = () => {
             style={{ width: `${blogPosts.length * 100}vw` }}
           >
             {blogPosts.map((post: any) => (
-              <BlogCard key={post.id} post={post} />
+              <div key={post.id} style={{ width: "100vw", flexShrink: 0 }}>
+                <BlogCard post={post} />
+              </div>
+            ))}
+          </div>
+
+          {/* Dots Navigation - Left Side */}
+          <div
+            className="absolute left-4 flex flex-row justify-center items-center gap-2"
+            style={{ top: "2px" }}
+          >
+            {blogPosts.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`w-3 h-1 rounded-full transition-all duration-200 ${
+                  currentSlide === index
+                    ? "bg-primary-500 scale-125"
+                    : "bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 dark:hover:bg-gray-500"
+                }`}
+                aria-label={`Go to slide ${index + 1}`}
+              />
             ))}
           </div>
         </div>
