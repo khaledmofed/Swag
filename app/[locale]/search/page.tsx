@@ -321,10 +321,15 @@ function SearchContent() {
               <ProductCard
                 key={product.id || idx}
                 title={product.name}
-                price={product.final_price || product.price}
+                price={product.price} // سيتم استبداله بالسعر المحسوب
                 image={product.image}
+                isNew={product.featured === 1}
                 slug={product.slug}
                 id={product.id.toString()}
+                karat={product.karat || undefined}
+                metal={product.metal || undefined}
+                weight={product.weight}
+                manufacturingCost={Number(product.price) || 0}
               />
             ))
           ) : (

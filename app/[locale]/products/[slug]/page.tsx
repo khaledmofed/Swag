@@ -26,6 +26,7 @@ import {
 import { useUserStore } from "@/stores/userStore";
 import { useToastStore } from "@/stores/toastStore";
 import { useTranslation } from "react-i18next";
+import { useSocketPricing } from "@/hooks/useSocketPricing";
 
 const BASE_URL = "https://swag.ivadso.com";
 
@@ -42,6 +43,63 @@ export default function ProductDetailsPage() {
   const { showToast: showToastMessage } = useToastStore();
   const { t } = useTranslation();
   const queryClient = useQueryClient();
+
+  // استخدام هوك Socket للأسعار المباشرة
+  const { priceUpdates, broadcastData } = useSocketPricing();
+
+  // دالة حساب السعر المباشر للمنتج
+  const calculateLivePrice = (
+    product: any
+  ): { price: string; isLive: boolean } => {
+    if (!product.karat || !product.metal || !product.weight || !product.price) {
+      return {
+        price: product.final_price || product.price || "0",
+        isLive: false,
+      };
+    }
+
+    // تحديد اسم السعر في Socket
+    let socketPriceName = "";
+    if (product.metal.toLowerCase() === "gold") {
+      socketPriceName = `gold-price-region${product.karat}`;
+    } else if (product.metal.toLowerCase() === "silver") {
+      socketPriceName = "silversounces";
+    } else {
+      return {
+        price: product.final_price || product.price || "0",
+        isLive: false,
+      };
+    }
+
+    // الحصول على سعر البورصة من priceUpdates أولاً
+    let exchangeRate = null;
+    const latestUpdate = priceUpdates.find(
+      (update) => update.priceName === socketPriceName
+    );
+
+    if (latestUpdate) {
+      exchangeRate = latestUpdate.newPrice;
+    } else if (broadcastData && broadcastData[socketPriceName]) {
+      exchangeRate = broadcastData[socketPriceName];
+    }
+
+    if (!exchangeRate && exchangeRate !== 0) {
+      return {
+        price: product.final_price || product.price || "0",
+        isLive: false,
+      };
+    }
+
+    // حساب السعر: (سعر البورصة + سعر المصنعية) × الوزن
+    const manufacturingCost = Number(product.price) || 0;
+    const weight = Number(product.weight) || 0;
+    const totalPrice = (exchangeRate + manufacturingCost) * weight;
+
+    return {
+      price: totalPrice.toLocaleString("en-US", { maximumFractionDigits: 2 }),
+      isLive: true,
+    };
+  };
 
   // Fetch product details using the product ID directly
   const {
@@ -431,8 +489,8 @@ export default function ProductDetailsPage() {
             <div className="flex flex-col gap-2 mt-2 mb-1">
               {/* Final Price */}
               <div className="flex items-baseline gap-2">
-                <span className="text-2xl md:text-3xl font-bold text-[#607A76] font-sukar">
-                  {product.final_price || product.price}{" "}
+                <span className="text-2xl md:text-3xl font-bold text-[#607A76] font-sukar flex items-center gap-2">
+                  {calculateLivePrice(product).price}{" "}
                   <svg
                     id="Layer_1"
                     className="inline-block fill-primary-607a76 customeSize"
@@ -450,7 +508,10 @@ export default function ProductDetailsPage() {
                       className="cls-1"
                       d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"
                     ></path>
-                  </svg>{" "}
+                  </svg>
+                  {/* {calculateLivePrice(product).isLive && (
+                      <span className="text-base text-green-600 font-bold">LIVE</span>
+                    )} */}
                 </span>
               </div>
 
@@ -637,7 +698,7 @@ export default function ProductDetailsPage() {
               {/* Left: Cart & Favorite */}
               <div className="flex gap-2">
                 <button
-                  className={`min-w-[3rem] flex items-center justify-center border rounded-none transition-all duration-200 font-sukar
+                  className={`min-w-[3rem] flex items-center justify-center border rounded-none transition-all duration-200 font-sukar 
                     ${
                       isInCart
                         ? "bg-red-100 border-red-400 text-red-700 px-4"
@@ -727,7 +788,12 @@ export default function ProductDetailsPage() {
         </div>
       </div>
 
-      <YouMayAlsoLikeSection relatedProducts={relatedProducts} />
+      <YouMayAlsoLikeSection
+        relatedProducts={relatedProducts.map((product: any) => ({
+          ...product,
+          weight: product.weight ? Number(product.weight) : undefined,
+        }))}
+      />
       <ProductBannerSection />
       <WhyChooseUsSection />
       <ContactUsBannerSection />

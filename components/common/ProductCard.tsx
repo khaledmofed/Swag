@@ -14,6 +14,7 @@ import { useUserStore } from "@/stores/userStore";
 import { useToastStore } from "@/stores/toastStore";
 import { getAuthToken } from "@/lib/api";
 import { useTranslation } from "react-i18next";
+import { useSocketPricing } from "@/hooks/useSocketPricing";
 
 interface ProductCardProps {
   title: string;
@@ -22,6 +23,10 @@ interface ProductCardProps {
   isNew?: boolean;
   slug?: string;
   id?: string; // Add product ID
+  karat?: string | number; // إضافة العيار
+  metal?: string; // إضافة المعدن
+  weight?: number; // إضافة الوزن
+  manufacturingCost?: number; // سعر المصنعية
   onAddToBag?: () => void;
   onMaximize?: () => void;
   onFavorite?: () => void;
@@ -34,6 +39,120 @@ export function ProductCard(props: ProductCardProps) {
   const { token } = useUserStore();
   const { showToast } = useToastStore();
   const { t } = useTranslation();
+
+  // استخدام هوك Socket للأسعار المباشرة
+  const {
+    isConnected,
+    priceUpdates,
+    broadcastData,
+    getCurrentPrice,
+    getLastPriceUpdate,
+  } = useSocketPricing();
+
+  // حالة السعر المحسوب
+  const [calculatedPrice, setCalculatedPrice] = useState<number | null>(null);
+
+  // دالة حساب السعر الحقيقي
+  const calculateRealPrice = () => {
+    // رسائل تشخيص فقط للمنتج الأول
+    const isFirstProduct = props.id === "1";
+
+    if (isFirstProduct) {
+      console.log(`🔍 Starting price calculation for ${props.title}`);
+    }
+
+    // التحقق من البيانات المطلوبة
+    if (!props.karat) {
+      if (isFirstProduct)
+        console.warn(`❌ Missing karat for ${props.title}:`, props.karat);
+      return null;
+    }
+    if (!props.metal) {
+      if (isFirstProduct)
+        console.warn(`❌ Missing metal for ${props.title}:`, props.metal);
+      return null;
+    }
+    if (!props.weight) {
+      if (isFirstProduct)
+        console.warn(`❌ Missing weight for ${props.title}:`, props.weight);
+      return null;
+    }
+    if (!props.manufacturingCost) {
+      if (isFirstProduct)
+        console.warn(
+          `❌ Missing manufacturingCost for ${props.title}:`,
+          props.manufacturingCost
+        );
+      return null;
+    }
+    if (!priceUpdates.length && !broadcastData) {
+      if (isFirstProduct)
+        console.warn(`❌ Missing price data for ${props.title}`);
+      return null;
+    }
+
+    // تحديد اسم السعر في Socket بناءً على المعدن والعيار
+    let socketPriceName = "";
+
+    if (props.metal.toLowerCase() === "gold") {
+      socketPriceName = `gold-price-region${props.karat}`;
+    } else if (props.metal.toLowerCase() === "silver") {
+      socketPriceName = "silversounces";
+    } else {
+      console.warn(`❌ Unknown metal type: ${props.metal}`);
+      return null;
+    }
+
+    if (isFirstProduct) {
+      console.log(`🔎 Looking for price key: ${socketPriceName}`);
+      console.log(
+        `💹 Available price updates:`,
+        priceUpdates.map((p) => p.priceName)
+      );
+    }
+
+    // الحصول على سعر البورصة من priceUpdates أولاً (أحدث البيانات)
+    let exchangeRate = null;
+    const latestUpdate = priceUpdates.find(
+      (update) => update.priceName === socketPriceName
+    );
+
+    if (latestUpdate) {
+      exchangeRate = latestUpdate.newPrice;
+      if (isFirstProduct)
+        console.log(`✅ Found exchange rate in priceUpdates: ${exchangeRate}`);
+    } else if (broadcastData && broadcastData[socketPriceName]) {
+      exchangeRate = broadcastData[socketPriceName];
+      if (isFirstProduct)
+        console.log(`✅ Found exchange rate in broadcastData: ${exchangeRate}`);
+    }
+
+    if (!exchangeRate && exchangeRate !== 0) {
+      if (isFirstProduct) {
+        console.warn(`❌ Exchange rate not found for: ${socketPriceName}`);
+        console.warn(`📊 Available priceUpdates:`, priceUpdates);
+      }
+      return null;
+    }
+
+    // حساب السعر: (سعر البورصة للعيار + سعر المصنعية للجرام) × الوزن
+    const totalPrice = (exchangeRate + props.manufacturingCost) * props.weight;
+
+    if (isFirstProduct) {
+      console.log(`💰 Price calculation for ${props.title}:`, {
+        metal: props.metal,
+        karat: props.karat,
+        weight: props.weight,
+        manufacturingCost: props.manufacturingCost,
+        socketPriceName,
+        exchangeRate,
+        calculation: `(${exchangeRate} + ${props.manufacturingCost}) × ${props.weight}`,
+        totalPrice: totalPrice.toFixed(2),
+      });
+    }
+
+    return totalPrice;
+  };
 
   // جلب المفضلة من API
   const { data: favData } = useFavorites();
@@ -128,6 +247,108 @@ export function ProductCard(props: ProductCardProps) {
       window.removeEventListener("user-logged-in", handleLogin);
     };
   }, []);
+
+  // مراقبة بيانات المنتج (فقط للمنتج الأول للتشخيص)
+  useEffect(() => {
+    if (props.id === "1") {
+      // فقط للمنتج الأول
+      console.log(`🛍️ Product data for ${props.title}:`, {
+        karat: props.karat,
+        metal: props.metal,
+        weight: props.weight,
+        manufacturingCost: props.manufacturingCost,
+      });
+    }
+  }, [
+    props.karat,
+    props.metal,
+    props.weight,
+    props.manufacturingCost,
+    props.title,
+    props.id,
+  ]);
+
+  // حساب السعر الحقيقي عند تغيير بيانات Socket
+  useEffect(() => {
+    const newCalculatedPrice = calculateRealPrice();
+
+    if (newCalculatedPrice !== null && newCalculatedPrice !== calculatedPrice) {
+      setCalculatedPrice(newCalculatedPrice);
+      if (props.id === "1") {
+        // فقط للمنتج الأول
+        // console.log(
+        //   `🔄 Price updated for ${props.title}: ${newCalculatedPrice.toFixed(
+        //     2
+        //   )} (Live)`
+        // );
+      }
+    }
+  }, [
+    broadcastData,
+    priceUpdates,
+    props.karat,
+    props.metal,
+    props.weight,
+    props.manufacturingCost,
+  ]);
+
+  // مراقبة تحديثات الأسعار من Socket وطباعتها في الكونسول
+  useEffect(() => {
+    console.log("🔌 Socket connection status:", isConnected);
+    console.log("📊 Current broadcast data:", broadcastData);
+    console.log("💹 Latest price updates:", priceUpdates);
+
+    if (priceUpdates.length > 0) {
+      console.log("🆕 New price updates received:");
+      priceUpdates.forEach((update) => {
+        console.log(
+          `  - ${update.priceName}: ${update.newPrice} (${update.direction}) [${update.color}]`
+        );
+      });
+    }
+
+    // طباعة أسعار الذهب الحالية
+    const gold24Price = getCurrentPrice(24);
+    const gold21Price = getCurrentPrice(21);
+    const gold18Price = getCurrentPrice(18);
+
+    console.log("🥇 Current Gold Prices:", {
+      "24K": gold24Price,
+      "21K": gold21Price,
+      "18K": gold18Price,
+    });
+
+    // طباعة جميع البيانات المتوفرة في broadcastData
+    if (broadcastData) {
+      console.log(
+        "📡 All available broadcast data keys:",
+        Object.keys(broadcastData)
+      );
+      console.log("📡 Full broadcast data:", broadcastData);
+    }
+
+    // طباعة آخر التحديثات لأسعار مهمة
+    const importantPrices = [
+      "gold-price-region24",
+      "gold-price-region21",
+      "gold-price-region18",
+      "goldsounces",
+      "silversounces",
+    ];
+
+    importantPrices.forEach((priceName) => {
+      const lastUpdate = getLastPriceUpdate(priceName);
+      if (lastUpdate) {
+        console.log(`📈 Last update for ${priceName}:`, lastUpdate);
+      }
+    });
+  }, [
+    isConnected,
+    broadcastData,
+    priceUpdates,
+    getCurrentPrice,
+    getLastPriceUpdate,
+  ]);
 
   const handleFavorite = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -295,7 +516,35 @@ export function ProductCard(props: ProductCardProps) {
           className="text-base font-en font-semibold flex items-center gap-1"
           style={{ color: "#607A76", letterSpacing: "0.5px" }}
         >
-          {typeof props.price === "string" ? (
+          {/* عرض السعر المحسوب (Live) أو السعر الأصلي (المصنعية فقط) */}
+          {calculatedPrice !== null ? (
+            <>
+              {calculatedPrice.toLocaleString("en-US", {
+                maximumFractionDigits: 2,
+              })}
+              <svg
+                id="Layer_1"
+                className="inline-block fill-primary-607a76 customeSize"
+                width="16"
+                height="16"
+                data-name="Layer 1"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 1124.14 1256.39"
+              >
+                <path
+                  className="cls-1"
+                  d="M699.62,1113.02h0c-20.06,44.48-33.32,92.75-38.4,143.37l424.51-90.24c20.06-44.47,33.31-92.75,38.4-143.37l-424.51,90.24Z"
+                ></path>
+                <path
+                  className="cls-1"
+                  d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"
+                ></path>
+              </svg>
+              {/* <span className="text-xs text-green-600 ml-1 font-bold">
+                LIVE
+              </span> */}
+            </>
+          ) : typeof props.price === "string" ? (
             <>
               {props.price
                 .replace("$", "")

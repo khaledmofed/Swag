@@ -194,11 +194,14 @@ export default function SavedProductsPage() {
                             title={
                               product.name || product.title || "Product Name"
                             }
-                            price={`${product.price || "0"} ${
-                              product.currency || "USD"
-                            }`}
+                            price={product.price || "0"} // سيتم استبداله بالسعر المحسوب
                             image={product.image || ""}
                             slug={product.slug || ""}
+                            isNew={product.featured === 1}
+                            karat={product.karat || undefined}
+                            metal={product.metal || undefined}
+                            weight={product.weight}
+                            manufacturingCost={Number(product.price) || 0}
                           />
                         );
                       })

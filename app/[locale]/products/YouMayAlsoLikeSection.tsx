@@ -26,6 +26,7 @@ interface Product {
   karat: string | null;
   gender: string | null;
   metal: string | null;
+  weight?: number; // إضافة الوزن
   name: string;
   short_description: string;
   description: string;
@@ -95,9 +96,15 @@ export function YouMayAlsoLikeSection({
             <ProductCard
               key={product.id}
               title={product.name}
-              price={`${product.price} ${product.currency}`}
+              price={product.price} // سيتم استبداله بالسعر المحسوب
               image={getImageUrl(product.image)}
+              isNew={product.featured === 1}
+              slug={product.slug}
               id={product.id.toString()}
+              karat={product.karat || undefined}
+              metal={product.metal || undefined}
+              weight={product.weight}
+              manufacturingCost={Number(product.price) || 0}
             />
           ))}
         </div>

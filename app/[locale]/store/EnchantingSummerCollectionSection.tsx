@@ -90,10 +90,15 @@ export function EnchantingSummerCollectionSection() {
             >
               <ProductCard
                 title={product.name}
-                price={`${product.price} ${product.currency}`}
+                price={product.price} // سيتم استبداله بالسعر المحسوب
                 image={getImageUrl(product.image)}
                 id={product.id.toString()}
                 isNew={product.featured === 1}
+                slug={product.slug}
+                karat={product.karat || undefined}
+                metal={product.metal || undefined}
+                weight={product.weight}
+                manufacturingCost={Number(product.price) || 0}
               />
             </div>
           ))}

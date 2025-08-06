@@ -365,15 +365,15 @@ export default function CategoryPage() {
               <ProductCard
                 key={product.id}
                 title={product.name}
-                price={
-                  product.final_price
-                    ? Number(product.final_price).toLocaleString()
-                    : product.price
-                }
+                price={product.price} // سيتم استبداله بالسعر المحسوب
                 image={product.image}
                 isNew={product.featured === 1}
                 slug={product.slug}
                 id={product.id.toString()}
+                karat={product.karat}
+                metal={product.metal}
+                weight={product.weight}
+                manufacturingCost={Number(product.price) || 0}
               />
             ))}
           </div>
