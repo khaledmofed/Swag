@@ -17,21 +17,21 @@ const sliderImages = [
 const sliderData = [
   {
     image: "/images/store-slider/slide1.png",
-    title: "The Enchanted City Ring Collection",
-    author: "Elena Voss",
-    price: "$2035.00",
+    title: "store.slider_items.enchanted_city_ring.title",
+    author: "store.slider_items.enchanted_city_ring.author",
+    price: "store.slider_items.enchanted_city_ring.price",
   },
   {
     image: "/images/store-slider/slide2.png",
-    title: "Delicate Floral Gold Stud Earring",
-    author: "Marcus Lee",
-    price: "$2035.00",
+    title: "store.slider_items.delicate_floral_earring.title",
+    author: "store.slider_items.delicate_floral_earring.author",
+    price: "store.slider_items.delicate_floral_earring.price",
   },
   {
     image: "/images/store-slider/slide3.png",
-    title: "Modern Minimalist Bracelet",
-    author: "Sara Kim",
-    price: "$2035.00",
+    title: "store.slider_items.modern_bracelet.title",
+    author: "store.slider_items.modern_bracelet.author",
+    price: "store.slider_items.modern_bracelet.price",
   },
 ];
 
@@ -81,16 +81,16 @@ export function StoreHeroSection() {
           dir={isRTL ? "rtl" : "ltr"}
         >
           <h1 className="text-5xl md:text-6xl font-light mb-6 leading-tight heroSectionLeftTitle">
-            {t("store.hero_title")}
+            {t("store.hero.title")}
           </h1>
           <p className="text-lg mb-8 max-w-lg heroSectionLeftText font-sukar">
-            {t("store.hero_desc")}
+            {t("store.hero.subtitle")}
           </p>
           <a
             href="#"
             className="underline text-primary-500 text-lg hover:text-primary-500 transition heroSectionLeftButton"
           >
-            {t("store.hero_button")}
+            {t("store.hero.explore_button")}
           </a>
         </div>
         {/* اليمين: سلايدر صور */}
@@ -116,19 +116,19 @@ export function StoreHeroSection() {
                       className="  text-base md:text-lg mb-1 line-clamp-2 font-bold font-sukar"
                       style={{ letterSpacing: "0.3px" }}
                     >
-                      {item.title}
+                      {t(item.title)}
                     </div>
                     <div
                       className="mb-2 font-author font-sukar"
                       style={{ letterSpacing: "0.8px" }}
                     >
-                      {t("store.crafted_by", { author: item.author })}
+                      {t("store.crafted_by", { author: t(item.author) })}
                     </div>
                     <div
                       className="text-base md:text-lg font-light mb-2"
                       style={{ letterSpacing: "1px" }}
                     >
-                      {item.price}
+                      {t(item.price)}
                     </div>
                   </div>
                 </div>

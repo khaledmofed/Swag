@@ -4,6 +4,7 @@ import { MainLayout } from "@/components/layout/MainLayout";
 import { useParams } from "next/navigation";
 import { useState, useEffect } from "react";
 import { useLanguageStore } from "@/stores/languageStore";
+import { useTranslation } from "react-i18next";
 import { Icon } from "@/components/common/Icon";
 import { Button } from "@/components/ui/button";
 import { PaginationCustom } from "@/components/ui/PaginationCustom";
@@ -18,18 +19,44 @@ import {
 import { useProductSearch } from "@/hooks/api/useProductSearch";
 
 const demoTabs = [
-  { id: "all", label: "All", metal: null, karat: null },
-  { id: "18k-gold", label: "18K Gold", metal: "gold", karat: "18" },
-  { id: "21k-gold", label: "21K Gold", metal: "gold", karat: "21" },
-  { id: "22k-gold", label: "22K Gold", metal: "gold", karat: "22" },
-  { id: "24k-gold", label: "24K Gold", metal: "gold", karat: "24" },
-  { id: "silver", label: "Silver", metal: "silver", karat: null },
-  { id: "platinum", label: "Platinum", metal: "platinum", karat: null },
+  { id: "all", label: "category.tabs.all", metal: null, karat: null },
+  {
+    id: "18k-gold",
+    label: "category.tabs.gold_18k",
+    metal: "gold",
+    karat: "18",
+  },
+  {
+    id: "21k-gold",
+    label: "category.tabs.gold_21k",
+    metal: "gold",
+    karat: "21",
+  },
+  {
+    id: "22k-gold",
+    label: "category.tabs.gold_22k",
+    metal: "gold",
+    karat: "22",
+  },
+  {
+    id: "24k-gold",
+    label: "category.tabs.gold_24k",
+    metal: "gold",
+    karat: "24",
+  },
+  { id: "silver", label: "category.tabs.silver", metal: "silver", karat: null },
+  {
+    id: "platinum",
+    label: "category.tabs.platinum",
+    metal: "platinum",
+    karat: null,
+  },
 ];
 
 export default function CategoryPage() {
   const { slug } = useParams();
   const { language } = useLanguageStore();
+  const { t } = useTranslation();
   const [activeTab, setActiveTab] = useState(0);
   const [searchParams, setSearchParams] = useState({
     category: 0,
@@ -67,30 +94,45 @@ export default function CategoryPage() {
 
   // دالة مساعدة للحصول على معاملات الترتيب
   const getSortOptions = () => [
-    { value: "default", label: "Default", order: "", orderby: "" },
-    { value: "newest", label: "Newest", order: "created_at", orderby: "desc" },
-    { value: "oldest", label: "Oldest", order: "created_at", orderby: "asc" },
+    {
+      value: "default",
+      label: t("category.sort_options.default"),
+      order: "",
+      orderby: "",
+    },
+    {
+      value: "newest",
+      label: t("category.sort_options.newest"),
+      order: "created_at",
+      orderby: "desc",
+    },
+    {
+      value: "oldest",
+      label: t("category.sort_options.oldest"),
+      order: "created_at",
+      orderby: "asc",
+    },
     {
       value: "highest_price",
-      label: "Highest Price",
+      label: t("category.sort_options.highest_price"),
       order: "price",
       orderby: "desc",
     },
     {
       value: "lowest_price",
-      label: "Lowest Price",
+      label: t("category.sort_options.lowest_price"),
       order: "price",
       orderby: "asc",
     },
     // {
     //   value: "highest_rated",
-    //   label: "Highest Rated",
+    //   label: t("category.sort_options.highest_rated"),
     //   order: "rate",
     //   orderby: "desc",
     // },
     // {
     //   value: "lowest_rated",
-    //   label: "Lowest Rated",
+    //   label: t("category.sort_options.lowest_rated"),
     //   order: "rate",
     //   orderby: "asc",
     // },
@@ -125,12 +167,13 @@ export default function CategoryPage() {
   };
 
   const getCurrentSortLabel = () => {
-    if (!searchParams.order || !searchParams.orderby) return "Sort By";
+    if (!searchParams.order || !searchParams.orderby)
+      return t("search.sort_by") || "Sort By";
 
     const sortOptions = getSortOptions();
     const found = sortOptions.find((opt) => opt.order === searchParams.order);
 
-    if (!found) return "Sort By";
+    if (!found) return t("search.sort_by") || "Sort By";
 
     const orderByText = searchParams.orderby === "asc" ? " (A-Z)" : " (Z-A)";
     return found.label + orderByText;
@@ -237,7 +280,7 @@ export default function CategoryPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-0 py-10">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-900 mb-4">
-              Error Loading Category
+              {t("category.error_loading_category") || "Error Loading Category"}
             </h1>
             <p className="text-gray-600 mb-4">{categoryError.message}</p>
           </div>
@@ -252,10 +295,11 @@ export default function CategoryPage() {
         <div className="container mx-auto px-4 sm:px-6 lg:px-0 py-10">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-gray-900 mb-4">
-              Category Not Found
+              {t("category.category_not_found") || "Category Not Found"}
             </h1>
             <p className="text-gray-600">
-              The category you're looking for doesn't exist.
+              {t("category.category_not_found_desc") ||
+                "The category you're looking for doesn't exist."}
             </p>
           </div>
         </div>
@@ -275,14 +319,14 @@ export default function CategoryPage() {
             href={`/${language}/store`}
             className="hover:text-primary-500 transition"
           >
-            Store
+            {t("navigation.store") || "Store"}
           </a>
           <span className="mx-2">&gt;</span>
           <a
             href={`/${language}/all-categories`}
             className="hover:text-primary-500 transition"
           >
-            Categories
+            {t("all_categories") || "All Categories"}
           </a>
           <span className="mx-2">&gt;</span>
           <span className="text-primary-600 font-semibold">
@@ -292,14 +336,15 @@ export default function CategoryPage() {
       </div>
       <div className="container mx-auto px-4 sm:px-6 lg:px-0 py-10">
         <h1 className="text-3xl font-en font-light mb-2 capitalize">
-          {categoryData.name} Section
+          {categoryData.name} {t("category.section_title") || "Section"}
         </h1>
         <div className="mb-4 text-gray-500 text-lg font-sukar">
           <span className="font-bold text-[#607A76]">
-            {totalProducts} products
+            {totalProducts} {t("category.products_found") || "products"}
           </span>
           <span className="ml-1">
-            matching your selected criteria were found.
+            {t("category.matching_criteria") ||
+              "matching your selected criteria were found."}
           </span>
         </div>
 
@@ -328,7 +373,7 @@ export default function CategoryPage() {
                   setPage(1);
                 }}
               >
-                {tab.label}
+                {t(tab.label)}
               </button>
             ))}
           </div>
@@ -352,7 +397,7 @@ export default function CategoryPage() {
               style={{ boxShadow: "none" }}
               onClick={() => setFilterOpen(true)}
             >
-              Product Filtering
+              {t("search.product_filtering") || "Product Filtering"}
               <Icon name="filter" size={28} className="ml-2" />
             </Button>
           </div>
@@ -380,7 +425,8 @@ export default function CategoryPage() {
         ) : (
           <div className="text-center py-10">
             <p className="text-gray-500 text-lg">
-              No products found in this category.
+              {t("category.no_products_found") ||
+                "No products found in this category."}
             </p>
             {productsError && (
               <p className="text-red-500 text-sm mt-2">

@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/common/Icon";
 import Slider from "@mui/material/Slider";
+import { useTranslation } from "react-i18next";
 
 export function ProductFilterSidebar({
   open,
@@ -15,6 +16,13 @@ export function ProductFilterSidebar({
   currentFilters?: any;
 }) {
   if (!open) return null;
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === "ar";
+
+  // دالة مساعدة لضبط الاتجاهات
+  const getDirectionalClass = (ltrClass: string, rtlClass: string) => {
+    return isRTL ? rtlClass : ltrClass;
+  };
   const MIN = 0;
   const MAX = 100000;
   const [values, setValues] = React.useState([0, 100000]);
@@ -138,9 +146,14 @@ export function ProductFilterSidebar({
         style={{ boxShadow: "0 0 32px 0 rgba(0,0,0,0.10)" }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 dark:border-gray-800">
+        <div
+          className={`flex items-center ${getDirectionalClass(
+            "justify-between",
+            "justify-between"
+          )} px-6 py-5 border-b border-gray-100 dark:border-gray-800`}
+        >
           <h2 className="text-xl font-sukar font-semibold text-[#607A76] dark:text-gray-100">
-            Refine Results
+            {t("filter_sidebar.title") || "Refine Results"}
           </h2>
           <button
             onClick={onClose}
@@ -154,26 +167,32 @@ export function ProductFilterSidebar({
           {/* Product Name */}
           <div className="mb-6">
             <label className="block text-md font-sukar mb-2 text-[#5C5C5C] dark:text-gray-200">
-              Product Name
+              {t("filter_sidebar.product_name") || "Product Name"}
             </label>
             <input
               type="text"
               value={productName}
               onChange={(e) => setProductName(e.target.value)}
-              placeholder="Search for your favorite jewelry pieces"
+              placeholder={
+                t("filter_sidebar.product_name_placeholder") ||
+                "Search for your favorite jewelry pieces"
+              }
               className="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#232b2b] rounded-none px-3 py-3 text-md focus:outline-none focus:ring-2 focus:ring-primary-100 text-[#5C5C5C] dark:text-gray-100 placeholder:text-gray-400 dark:placeholder:text-gray-500"
             />
           </div>
           {/* Choose Karat */}
           <div className="mb-6">
             <label className="block text-md font-sukar mb-2 text-[#5C5C5C] dark:text-gray-200">
-              Choose Karat
+              {t("filter_sidebar.choose_karat") || "Choose Karat"}
             </label>
-            <div className="flex gap-4">
+            <div className={`flex ${getDirectionalClass("gap-4", "gap-4")}`}>
               {["24", "21", "18"].map((k) => (
                 <label
                   key={k}
-                  className="flex items-center gap-1 cursor-pointer text-[#5C5C5C] dark:text-gray-200"
+                  className={`flex items-center ${getDirectionalClass(
+                    "gap-1",
+                    "gap-1"
+                  )} cursor-pointer text-[#5C5C5C] dark:text-gray-200`}
                 >
                   <input
                     type="checkbox"
@@ -189,7 +208,7 @@ export function ProductFilterSidebar({
           {/* Set Your Budget */}
           <div className="mb-6">
             <label className="block text-md font-sukar mb-2 text-[#5C5C5C] dark:text-gray-200">
-              Set Your Budget
+              {t("filter_sidebar.set_budget") || "Set Your Budget"}
             </label>
             <div className="flex flex-col items-center gap-2 mb-2 px-1">
               <Slider
@@ -225,10 +244,14 @@ export function ProductFilterSidebar({
               />
             </div>
             <div
-              className="mt-2 flex items-center gap-1"
+              className={`mt-2 flex items-center ${getDirectionalClass(
+                "gap-1",
+                "gap-1"
+              )}`}
               style={{ color: "#5C5C5C", fontSize: 12 }}
             >
-              Prices: {values[0]} - {values[1]}
+              {t("filter_sidebar.prices") || "Prices"}: {values[0]} -{" "}
+              {values[1]}
               <svg
                 id="Layer_1"
                 className="inline-block fill-gray-400 customeSize"
@@ -252,9 +275,14 @@ export function ProductFilterSidebar({
           {/* Weight */}
           <div className="mb-6">
             <label className="block text-md font-sukar mb-2 text-[#5C5C5C] dark:text-gray-200">
-              Weight ( g.mg)
+              {t("filter_sidebar.weight") || "Weight ( g.mg)"}
             </label>
-            <div className="w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#232b2b] rounded-none flex items-center px-2 py-1">
+            <div
+              className={`w-full border border-gray-200 dark:border-gray-700 bg-white dark:bg-[#232b2b] rounded-none flex items-center ${getDirectionalClass(
+                "px-2",
+                "px-2"
+              )} py-1`}
+            >
               <button
                 type="button"
                 onClick={incrementWeight}
@@ -269,7 +297,13 @@ export function ProductFilterSidebar({
                 min={0}
                 value={weight.toFixed(2)}
                 onChange={handleWeightChange}
-                className="flex-1 text-center border-none outline-none bg-transparent text-[#5C5C5C] dark:text-gray-100 text-md font-sukar font-normal px-2"
+                className={`flex-1 ${getDirectionalClass(
+                  "text-center",
+                  "text-center"
+                )} border-none outline-none bg-transparent text-[#5C5C5C] dark:text-gray-100 text-md font-sukar font-normal ${getDirectionalClass(
+                  "px-2",
+                  "px-2"
+                )}`}
                 style={{ minWidth: 60 }}
               />
               <button
@@ -285,22 +319,38 @@ export function ProductFilterSidebar({
           {/* Select Metal */}
           <div className="mb-6">
             <label className="block text-md font-sukar mb-2 text-[#5C5C5C] dark:text-gray-200">
-              Select Metal
+              {t("filter_sidebar.select_metal") || "Select Metal"}
             </label>
             <div className="flex flex-col gap-1">
-              {["Gold", "Silver", "Platinum"].map((m) => (
+              {[
+                {
+                  key: "gold",
+                  label: t("filter_sidebar.metals.gold") || "Gold",
+                },
+                {
+                  key: "silver",
+                  label: t("filter_sidebar.metals.silver") || "Silver",
+                },
+                {
+                  key: "platinum",
+                  label: t("filter_sidebar.metals.platinum") || "Platinum",
+                },
+              ].map((m) => (
                 <label
-                  key={m}
+                  key={m.key}
                   className="cursor-pointer text-base font-sukar text-[#5C5C5C] dark:text-gray-200"
                 >
                   <input
                     type="radio"
                     name="metal"
-                    className="accent-[#607A76] mr-2"
-                    checked={selectedMetal === m}
-                    onChange={() => handleMetalChange(m)}
+                    className={`accent-[#607A76] ${getDirectionalClass(
+                      "mr-2",
+                      "ml-2"
+                    )}`}
+                    checked={selectedMetal === m.key}
+                    onChange={() => handleMetalChange(m.key)}
                   />
-                  {m}
+                  {m.label}
                 </label>
               ))}
             </div>
@@ -308,22 +358,34 @@ export function ProductFilterSidebar({
           {/* Select Gender */}
           <div className="mb-6">
             <label className="block text-md font-sukar mb-2 text-[#5C5C5C] dark:text-gray-200">
-              Select Gender
+              {t("filter_sidebar.select_gender") || "Select Gender"}
             </label>
             <div className="flex flex-col gap-1">
-              {["Woman", "Children"].map((g) => (
+              {[
+                {
+                  key: "Woman",
+                  label: t("filter_sidebar.genders.woman") || "Woman",
+                },
+                {
+                  key: "Children",
+                  label: t("filter_sidebar.genders.children") || "Children",
+                },
+              ].map((g) => (
                 <label
-                  key={g}
+                  key={g.key}
                   className="cursor-pointer text-base font-sukar text-[#5C5C5C] dark:text-gray-200"
                 >
                   <input
                     type="radio"
                     name="gender"
-                    className="accent-[#607A76] mr-2"
-                    checked={selectedGender === g}
-                    onChange={() => handleGenderChange(g)}
+                    className={`accent-[#607A76] ${getDirectionalClass(
+                      "mr-2",
+                      "ml-2"
+                    )}`}
+                    checked={selectedGender === g.key}
+                    onChange={() => handleGenderChange(g.key)}
                   />
-                  {g}
+                  {g.label}
                 </label>
               ))}
             </div>
@@ -331,45 +393,85 @@ export function ProductFilterSidebar({
           {/* Occasion */}
           <div className="mb-6">
             <label className="block text-md font-sukar mb-2 text-[#5C5C5C] dark:text-gray-200">
-              Occasion
+              {t("filter_sidebar.occasion") || "Occasion"}
             </label>
             <div className="flex flex-col gap-1">
-              {["Wedding", "Gift", "Graduation", "Newborn", "Other"].map(
-                (o) => (
-                  <label
-                    key={o}
-                    className="cursor-pointer text-base font-sukar text-[#5C5C5C] dark:text-gray-200"
-                  >
-                    <input
-                      type="radio"
-                      name="occasion"
-                      className="accent-[#607A76] mr-2"
-                      checked={selectedOccasion === o}
-                      onChange={() => handleOccasionChange(o)}
-                    />
-                    {o}
-                  </label>
-                )
-              )}
+              {[
+                {
+                  key: "Wedding",
+                  label: t("filter_sidebar.occasions.wedding") || "Wedding",
+                },
+                {
+                  key: "Gift",
+                  label: t("filter_sidebar.occasions.gift") || "Gift",
+                },
+                {
+                  key: "Graduation",
+                  label:
+                    t("filter_sidebar.occasions.graduation") || "Graduation",
+                },
+                {
+                  key: "Newborn",
+                  label: t("filter_sidebar.occasions.newborn") || "Newborn",
+                },
+                {
+                  key: "Other",
+                  label: t("filter_sidebar.occasions.other") || "Other",
+                },
+              ].map((o) => (
+                <label
+                  key={o.key}
+                  className="cursor-pointer text-base font-sukar text-[#5C5C5C] dark:text-gray-200"
+                >
+                  <input
+                    type="radio"
+                    name="occasion"
+                    className={`accent-[#607A76] ${getDirectionalClass(
+                      "mr-2",
+                      "ml-2"
+                    )}`}
+                    checked={selectedOccasion === o.key}
+                    onChange={() => handleOccasionChange(o.key)}
+                  />
+                  {o.label}
+                </label>
+              ))}
             </div>
           </div>
           {/* Stone Shape */}
           <div className="mb-6">
             <label className="block text-md font-sukar mb-2 text-[#5C5C5C] dark:text-gray-200">
-              Stone Shape
+              {t("filter_sidebar.stone_shape") || "Stone Shape"}
             </label>
             <div className="flex flex-col gap-1">
-              {["Oval", "Square", "No Stone"].map((s) => (
+              {[
+                {
+                  key: "Oval",
+                  label: t("filter_sidebar.stone_shapes.oval") || "Oval",
+                },
+                {
+                  key: "Square",
+                  label: t("filter_sidebar.stone_shapes.square") || "Square",
+                },
+                {
+                  key: "No Stone",
+                  label:
+                    t("filter_sidebar.stone_shapes.no_stone") || "No Stone",
+                },
+              ].map((s) => (
                 <label
-                  key={s}
+                  key={s.key}
                   className="cursor-pointer text-base font-sukar text-[#5C5C5C] dark:text-gray-200"
                 >
                   <input
                     type="radio"
                     name="stone"
-                    className="accent-[#607A76] mr-2"
+                    className={`accent-[#607A76] ${getDirectionalClass(
+                      "mr-2",
+                      "ml-2"
+                    )}`}
                   />
-                  {s}
+                  {s.label}
                 </label>
               ))}
             </div>
@@ -377,27 +479,54 @@ export function ProductFilterSidebar({
           {/* Pattern Style */}
           <div className="mb-6">
             <label className="block text-md font-sukar mb-2 text-[#5C5C5C] dark:text-gray-200">
-              Pattern Style
+              {t("filter_sidebar.pattern_style") || "Pattern Style"}
             </label>
             <div className="flex flex-col gap-1">
-              {["Classic", "Arabic", "Modern", "Italian"].map((p) => (
+              {[
+                {
+                  key: "Classic",
+                  label:
+                    t("filter_sidebar.pattern_styles.classic") || "Classic",
+                },
+                {
+                  key: "Arabic",
+                  label: t("filter_sidebar.pattern_styles.arabic") || "Arabic",
+                },
+                {
+                  key: "Modern",
+                  label: t("filter_sidebar.pattern_styles.modern") || "Modern",
+                },
+                {
+                  key: "Italian",
+                  label:
+                    t("filter_sidebar.pattern_styles.italian") || "Italian",
+                },
+              ].map((p) => (
                 <label
-                  key={p}
+                  key={p.key}
                   className="cursor-pointer text-base font-sukar text-[#5C5C5C] dark:text-gray-200"
                 >
                   <input
                     type="radio"
                     name="pattern"
-                    className="accent-[#607A76] mr-2"
+                    className={`accent-[#607A76] ${getDirectionalClass(
+                      "mr-2",
+                      "ml-2"
+                    )}`}
                   />
-                  {p}
+                  {p.label}
                 </label>
               ))}
             </div>
           </div>
         </div>
         {/* Footer */}
-        <div className="flex gap-2 border-t border-gray-100 dark:border-gray-800 p-4 bg-white dark:bg-[#232b2b]">
+        <div
+          className={`flex ${getDirectionalClass(
+            "gap-2",
+            "gap-2"
+          )} border-t border-gray-100 dark:border-gray-800 p-4 bg-white dark:bg-[#232b2b]`}
+        >
           <Button
             variant="ghost"
             className="text-md w-1/3 bg-[#F7F9F9] dark:bg-[#232b2b] text-[#607A76] dark:text-gray-200 font-sukar font-semibold rounded-none border border-gray-100 dark:border-gray-800"
@@ -406,7 +535,7 @@ export function ProductFilterSidebar({
               // لا نغلق السايد بار عند الضغط على Clear All
             }}
           >
-            Clear All
+            {t("filter_sidebar.clear_all") || "Clear All"}
           </Button>
           <Button
             variant="ghost"
@@ -424,13 +553,13 @@ export function ProductFilterSidebar({
               setValues([0, 100000]);
             }}
           >
-            Reset Fields
+            {t("filter_sidebar.reset_fields") || "Reset Fields"}
           </Button>
           <Button
             className="text-md w-1/3 bg-[#607A76] dark:bg-primary-700 text-white font-sukar font-semibold rounded-none"
             onClick={handleApply}
           >
-            Show Results
+            {t("filter_sidebar.show_results") || "Show Results"}
           </Button>
         </div>
       </aside>

@@ -69,7 +69,8 @@ export default function AllCategoriesPage() {
           <div className="container mx-auto px-4 sm:px-6 lg:px-0">
             <div className="text-center py-10">
               <p className="text-red-500 text-lg">
-                {t("error.loading_categories") || "Error loading categories"}
+                {t("error.error_loading_categories") ||
+                  "Error loading categories"}
               </p>
               <p className="text-gray-500 text-sm mt-2">{error.message}</p>
             </div>
@@ -92,12 +93,12 @@ export default function AllCategoriesPage() {
             href={`/${language}/store`}
             className="hover:text-primary-500 transition"
           >
-            {t("navigation.store")}
+            {t("navigation.store") || "Store"}
           </a>
 
           <span className="mx-2">&gt;</span>
           <span className="text-primary-600 font-semibold">
-            {t("all_categories")}
+            {t("all_categories") || "All Categories"}
           </span>
         </nav>
       </div>
@@ -107,7 +108,10 @@ export default function AllCategoriesPage() {
             {t("all_categories") || "All Categories"}
           </h1>
           <div className="mb-10 text-gray-500 text-lg font-sukar">
-            <span className="ml-1">{t("categories.description")}</span>
+            <span className="ml-1">
+              {t("categories.description") ||
+                "Discover our comprehensive collection of jewelry categories, from elegant rings to stunning necklaces."}
+            </span>
           </div>
 
           {categories.length > 0 ? (

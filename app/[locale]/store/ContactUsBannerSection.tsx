@@ -10,7 +10,7 @@ export function ContactUsBannerSection() {
       <div className="flex-1 flex items-center">
         <div className="container mx-auto px-4 sm:px-6 lg:px-0">
           <span className="fontMobile text-2xl md:text-3xl font-en font-normal text-[#607A76] dark:text-gray-100">
-            {t("contact_us_banner.text")}
+            {t("store.contact_banner.title")}
           </span>
         </div>
       </div>

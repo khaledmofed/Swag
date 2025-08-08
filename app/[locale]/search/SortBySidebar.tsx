@@ -1,30 +1,47 @@
 import React from "react";
+import { useTranslation } from "react-i18next";
 
-const sortOptions = [
-  { value: "default", label: "Default", order: "", orderby: "" },
-  { value: "newest", label: "Newest", order: "created_at", orderby: "desc" },
-  { value: "oldest", label: "Oldest", order: "created_at", orderby: "asc" },
+// سيتم تحديث هذا داخل المكون
+const getSortOptions = (t: any) => [
+  {
+    value: "default",
+    label: t("sort_sidebar.sort_options.default") || "Default",
+    order: "",
+    orderby: "",
+  },
+  {
+    value: "newest",
+    label: t("sort_sidebar.sort_options.newest") || "Newest",
+    order: "created_at",
+    orderby: "desc",
+  },
+  {
+    value: "oldest",
+    label: t("sort_sidebar.sort_options.oldest") || "Oldest",
+    order: "created_at",
+    orderby: "asc",
+  },
   {
     value: "highest_price",
-    label: "Highest Price",
+    label: t("sort_sidebar.sort_options.highest_price") || "Highest Price",
     order: "price",
     orderby: "desc",
   },
   {
     value: "lowest_price",
-    label: "Lowest Price",
+    label: t("sort_sidebar.sort_options.lowest_price") || "Lowest Price",
     order: "price",
     orderby: "asc",
   },
   // {
   //   value: "highest_rated",
-  //   label: "Highest Rated",
+  //   label: t("sort_sidebar.sort_options.highest_rated") || "Highest Rated",
   //   order: "rate",
   //   orderby: "desc",
   // },
   // {
   //   value: "lowest_rated",
-  //   label: "Lowest Rated",
+  //   label: t("sort_sidebar.sort_options.lowest_rated") || "Lowest Rated",
   //   order: "rate",
   //   orderby: "asc",
   // },
@@ -36,7 +53,12 @@ const orderByOptions = [
 ];
 
 // دالة مساعدة للحصول على معاملات الترتيب
-const getSortParams = (selectedValue: string, selectedOrderBy: string) => {
+const getSortParams = (
+  selectedValue: string,
+  selectedOrderBy: string,
+  t: any
+) => {
+  const sortOptions = getSortOptions(t);
   const option = sortOptions.find((opt) => opt.value === selectedValue);
   return {
     order: option?.order || "",
@@ -57,6 +79,13 @@ export function SortBySidebar({
   onSelect: (val: string) => void;
   onApply: () => void;
 }) {
+  const { t, i18n } = useTranslation();
+  const isRTL = i18n.language === "ar";
+
+  // دالة مساعدة لضبط الاتجاهات
+  const getDirectionalClass = (ltrClass: string, rtlClass: string) => {
+    return isRTL ? rtlClass : ltrClass;
+  };
   const [tempSelected, setTempSelected] = React.useState(selected);
   const [tempOrderBy, setTempOrderBy] = React.useState("desc");
 
@@ -65,6 +94,7 @@ export function SortBySidebar({
     try {
       const parsed = JSON.parse(selected);
       // البحث عن الخيار المناسب بناءً على order و orderby
+      const sortOptions = getSortOptions(t);
       const matchingOption = sortOptions.find(
         (opt) => opt.order === parsed.order && opt.orderby === parsed.orderby
       );
@@ -74,7 +104,7 @@ export function SortBySidebar({
       setTempSelected(selected);
       setTempOrderBy("desc");
     }
-  }, [selected]);
+  }, [selected, t]);
   if (!open) return null;
   return (
     <div className="fixed inset-0 z-40 flex font-sukar">
@@ -90,9 +120,14 @@ export function SortBySidebar({
         style={{ boxShadow: "0 0 32px 0 rgba(0,0,0,0.10)" }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 dark:border-gray-800">
+        <div
+          className={`flex items-center ${getDirectionalClass(
+            "justify-between",
+            "justify-between"
+          )} px-6 py-5 border-b border-gray-100 dark:border-gray-800`}
+        >
           <h2 className="text-xl font-sukar font-semibold text-[#5C5C5C] dark:text-gray-100">
-            Sort By
+            {t("sort_sidebar.title") || "Sort By"}
           </h2>
           <button
             onClick={onClose}
@@ -109,10 +144,13 @@ export function SortBySidebar({
               Sort By
             </h3> */}
             <ul className="flex flex-col gap-2">
-              {sortOptions.map((option) => (
+              {getSortOptions(t).map((option) => (
                 <li key={option.value}>
                   <button
-                    className={`w-full text-left py-3 px-4 text-md font-sukar transition rounded-none border ${
+                    className={`w-full ${getDirectionalClass(
+                      "text-left",
+                      "text-right"
+                    )} py-3 px-4 text-md font-sukar transition rounded-none border ${
                       tempSelected === option.value
                         ? "text-[#607A76] dark:text-primary-300 font-bold border-[#607A76] bg-[#F7F9F9] dark:bg-[#2d3535]"
                         : "text-[#5C5C5C] dark:text-gray-300 hover:text-[#607A76] dark:hover:text-primary-300 border-gray-200 dark:border-gray-700 hover:border-[#607A76]"
@@ -155,14 +193,14 @@ export function SortBySidebar({
             className="w-full py-3 text-md font-sukar font-semibold rounded-none bg-gradient-to-r from-[#607A76] to-[#d1d5db] dark:from-primary-700 dark:to-gray-700 text-[#222] dark:text-white hover:opacity-90 transition"
             onClick={() => {
               // إرسال القيم المحددة معاً
-              const sortParams = getSortParams(tempSelected, tempOrderBy);
+              const sortParams = getSortParams(tempSelected, tempOrderBy, t);
               console.log("Selected:", tempSelected, "OrderBy:", tempOrderBy);
               console.log("Sort Params:", sortParams);
               onSelect(JSON.stringify(sortParams));
               onApply();
             }}
           >
-            Apply
+            {t("sort_sidebar.apply") || "Apply"}
           </button>
         </div>
       </aside>

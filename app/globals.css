@@ -325,11 +325,13 @@ a {
 }
 
 /* Font utility classes for language-specific fonts */
-.font-en {
+html[lang="en"] .font-en {
   font-family: "Legquinne-Regular", system-ui, -apple-system, BlinkMacSystemFont,
     "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
 }
-
+html[lang="ar"] .font-en {
+  font-family: Sukar, Legquinne-light, system-ui, sans-serif !important;
+}
 .font-ar {
   font-family: "Sukar Black Font", "Legquinne-Regular", system-ui, -apple-system,
     BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans",

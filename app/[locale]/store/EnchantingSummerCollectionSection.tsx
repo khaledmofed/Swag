@@ -70,13 +70,13 @@ export function EnchantingSummerCollectionSection() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-10 gap-4">
           <h2 className="text-3xl md:text-5xl font-en font-light leading-tight">
-            {t("summer_collection.title")}
+            {t("store.enchanting_summer.title")}
           </h2>
           <Link
             href={`/${language}/all-categories`}
             className="flex items-center gap-2 text-base font-en text-gray-700 dark:text-gray-200 hover:text-primary-500 transition"
           >
-            {t("summer_collection.explore")}
+            {t("store.enchanting_summer.view_collection")}
             <Icon name="arrow-right" size={18} />
           </Link>
         </div>

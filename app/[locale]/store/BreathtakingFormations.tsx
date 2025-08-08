@@ -38,12 +38,12 @@ export function BreathtakingFormations() {
         <div className="text-center mb-12">
           {/* Section Title */}
           <p className="text-primary-500 text-lg capitalize tracking-wider mb-2">
-            {t("breathtaking_formations.caption")}
+            {t("store.breathtaking_formations.subtitle")}
           </p>
 
           {/* Main Title */}
           <h2 className="text-3xl md:text-6xl text-secondary-500 dark:text-white-500">
-            {t("breathtaking_formations.title")}
+            {t("store.breathtaking_formations.title")}
           </h2>
         </div>
 

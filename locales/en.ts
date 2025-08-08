@@ -99,6 +99,98 @@ export const en = {
     bracelet: "Bracelet",
     ring: "Ring",
   },
+  store: {
+    hero: {
+      title: "Discover Our Exquisite Jewelry Collection",
+      subtitle:
+        "Explore our stunning collection of handcrafted jewelry pieces, designed with precision and elegance for every occasion.",
+      explore_button: "Explore Collection",
+      view_all_button: "View All Products",
+    },
+    stunning_collections: {
+      title: "Stunning Collections",
+      desc: "Discover our carefully curated collections that showcase the finest craftsmanship and timeless elegance. Each piece tells a unique story of beauty and sophistication.",
+      button: "Explore Collections",
+      tabs: {
+        all: "All",
+      },
+      view_rings: "View Rings Collection",
+      sidebar_1: "Gold Collections",
+      sidebar_2: "Silver Collections",
+      sidebar_3: "Platinum Collections",
+    },
+    breathtaking_formations: {
+      title: "Breathtaking Formations",
+      subtitle:
+        "Discover our unique jewelry designs that combine traditional craftsmanship with modern aesthetics.",
+      description:
+        "Each piece is carefully crafted to perfection, ensuring both beauty and durability for generations to come.",
+      explore_button: "Explore Designs",
+    },
+    enchanting_summer: {
+      title: "Enchanting Summer Collection",
+      subtitle:
+        "Embrace the warmth of summer with our exclusive collection of light and elegant jewelry pieces.",
+      description:
+        "Perfect for those sunny days and warm evenings, our summer collection brings out the best in every occasion.",
+      view_collection: "View Collection",
+    },
+    why_choose_us: {
+      title: "Why Choose Us",
+      subtitle:
+        "We are committed to providing the highest quality jewelry and exceptional service.",
+      features: {
+        quality: {
+          title: "Premium Quality",
+          description:
+            "All our jewelry pieces are crafted from the finest materials, ensuring lasting beauty and value.",
+        },
+        craftsmanship: {
+          title: "Expert Craftsmanship",
+          description:
+            "Our skilled artisans bring decades of experience to create pieces of exceptional beauty.",
+        },
+        service: {
+          title: "Exceptional Service",
+          description:
+            "We provide personalized service to help you find the perfect piece for every occasion.",
+        },
+        guarantee: {
+          title: "Quality Guarantee",
+          description:
+            "Every piece comes with our comprehensive quality guarantee and lifetime support.",
+        },
+      },
+    },
+    contact_banner: {
+      title: "Need Help? Contact Us",
+      subtitle:
+        "Our expert team is here to assist you with any questions about our products or services.",
+      description:
+        "Get in touch with us for personalized recommendations, custom orders, or any other inquiries.",
+      contact_button: "Contact Us",
+      phone: "Call Us",
+      email: "Email Us",
+    },
+    crafted_by: "Crafted by {{author}}",
+    slider_items: {
+      enchanted_city_ring: {
+        title: "The Enchanted City Ring Collection",
+        author: "Elena Voss",
+        price: "$2035.00",
+      },
+      delicate_floral_earring: {
+        title: "Delicate Floral Gold Stud Earring",
+        author: "Marcus Lee",
+        price: "$2035.00",
+      },
+      modern_bracelet: {
+        title: "Modern Minimalist Bracelet",
+        author: "Sara Kim",
+        price: "$2035.00",
+      },
+    },
+  },
   discover: {
     title: "Discover the",
     highlight: "best",
@@ -190,11 +282,7 @@ export const en = {
     goldsounces: "Gold",
     silversounces: "Silver",
   },
-  blog_details: {
-    Articles: "Articles You May Find Interesting",
-    Explore:
-      " Explore carefully selected articles to help you gain a deeper understanding and practical application in the world of digital marketing",
-  },
+
   seo: {
     home: {
       title: "SWAG | Premium Bullion & Jewelry Services in Saudi Arabia",
@@ -226,65 +314,6 @@ export const en = {
       locale: "en_US",
       type: "website",
     },
-  },
-  store: {
-    hero_title: "Where Desire Meets Distinct Style",
-    hero_desc:
-      "Jewelry lovers around the world choose our unique pieces for their timeless elegance and exceptional distinction.",
-    hero_button: "See All Style",
-    slider_1: "The Enchanted City Ring Collection",
-    slider_2: "Delicate Floral Gold Stud Earring",
-    slider_3: "Modern Minimalist Bracelet",
-    crafted_by: "crafted by {{author}}",
-    why_title: "Why Choose to Shop with Us?",
-    why_1: "Lifetime Complimentary Care",
-    why_2: "30-Day Hassle-Free Exchanges",
-    why_3: "Free Insured Shipping",
-    why_4: "Track-In, Trade-Up, and Resale Options",
-    featured_products: "Featured Products",
-    products_title: "Products",
-  },
-  stunning_collections: {
-    title: "Stunning Collections",
-    desc: "Discover the splendor of jewelry that combines the fragrance of heritage with the elegance of the present, with designs tailored to reflect your luxurious taste.",
-    sidebar_1: "Exclusive Limited Edition",
-    sidebar_2: "Perfect for Special Occasions",
-    sidebar_3: "Current Discounts",
-    button: "Explore the Full Collection",
-    subtitle: "Discover our exclusive jewelry collections",
-    tabs: {
-      all: "All",
-      rings: "Rings",
-      bracelets: "Bracelets",
-      earrings: "Earrings",
-      necklaces: "Necklaces",
-      sets: "Sets",
-    },
-    view_rings: "View Rings Collection",
-  },
-  enchanting_summer: {
-    title: "Enchanting Summer Collection",
-    subtitle: "Discover our latest summer jewelry collection",
-  },
-  breathtaking_formations: {
-    caption: "Jewelry tells your story",
-    title: "Breathtaking formations",
-  },
-  summer_collection: {
-    title: "Enchanting Summer Jewelry Collection",
-    explore: "Explore the Entire Collection",
-    products: {
-      royal_emerald_ring: "Royal Emerald Ring",
-      eternal_charm_earrings: "Eternal Charm Earrings",
-      radiance_of_hope_necklace: "Radiance of Hope Necklace",
-    },
-    pagination: {
-      previous: "Previous",
-      next: "Next",
-    },
-  },
-  contact_us_banner: {
-    text: "Let's Create Your Story with Timeless Jewelry — Contact Us Today",
   },
   login: {
     welcome_title: "Welcome to SWAG.",
@@ -423,6 +452,28 @@ For questions about our privacy practices, please contact us.`,
     quantity: "Quantity",
     remove: "Remove",
     sar: "SAR",
+    continue_shopping: "Continue Shopping",
+    remove_item: "Remove Item",
+    update_cart: "Update Cart",
+    apply_coupon: "Apply Coupon",
+    coupon_code: "Coupon Code",
+    coupon_placeholder: "Enter coupon code",
+    apply: "Apply",
+    remove_coupon: "Remove Coupon",
+    shipping_address: "Shipping Address",
+    billing_address: "Billing Address",
+    payment_method: "Payment Method",
+    place_order: "Place Order",
+    order_confirmation: "Order Confirmation",
+    order_number: "Order Number",
+    order_date: "Order Date",
+    estimated_delivery: "Estimated Delivery",
+    thank_you: "Thank you!",
+    order_success: "Your order has been completed successfully",
+    order_success_desc:
+      "We'll send you an email confirmation with order details.",
+    track_order: "Track Order",
+    back_to_store: "Back to Store",
   },
   checkout: {
     title: "Checkout",
@@ -451,6 +502,7 @@ For questions about our privacy practices, please contact us.`,
   no_categories_found: "No categories found",
   error: {
     loading_categories: "Error loading categories",
+    error_loading_categories: "Error loading categories",
   },
   // Store (Updated)
   store_updated: {
@@ -522,6 +574,101 @@ For questions about our privacy practices, please contact us.`,
       "24k": "24K",
       gold: "Gold",
       price_range: "250 SAR - 5000 SAR",
+    },
+  },
+  filter_sidebar: {
+    title: "Refine Results",
+    product_name: "Product Name",
+    product_name_placeholder: "Search for your favorite jewelry pieces",
+    choose_karat: "Choose Karat",
+    set_budget: "Set Your Budget",
+    prices: "Prices",
+    weight: "Weight ( g.mg)",
+    select_metal: "Select Metal",
+    select_gender: "Select Gender",
+    occasion: "Occasion",
+    stone_shape: "Stone Shape",
+    pattern_style: "Pattern Style",
+    clear_all: "Clear All",
+    reset_fields: "Reset Fields",
+    show_results: "Show Results",
+    metals: {
+      gold: "Gold",
+      silver: "Silver",
+      platinum: "Platinum",
+    },
+    genders: {
+      woman: "Woman",
+      children: "Children",
+    },
+    occasions: {
+      wedding: "Wedding",
+      gift: "Gift",
+      graduation: "Graduation",
+      newborn: "Newborn",
+      other: "Other",
+    },
+    stone_shapes: {
+      oval: "Oval",
+      square: "Square",
+      no_stone: "No Stone",
+    },
+    pattern_styles: {
+      classic: "Classic",
+      arabic: "Arabic",
+      modern: "Modern",
+      italian: "Italian",
+    },
+  },
+  direction: {
+    text_align: "text-left",
+    margin_right: "mr-2",
+    margin_left: "ml-2",
+    padding_right: "pr-2",
+    padding_left: "pl-2",
+    flex_direction: "flex-row",
+    justify_content: "justify-start",
+  },
+  sort_sidebar: {
+    title: "Sort By",
+    apply: "Apply",
+    sort_options: {
+      default: "Default",
+      newest: "Newest",
+      oldest: "Oldest",
+      highest_price: "Highest Price",
+      lowest_price: "Lowest Price",
+    },
+    order_by: {
+      ascending: "Ascending (A-Z)",
+      descending: "Descending (Z-A)",
+    },
+  },
+  category: {
+    section_title: "Section",
+    products_found: "products",
+    matching_criteria: "matching your selected criteria were found.",
+    no_products_found: "No products found in this category.",
+    error_loading_category: "Error Loading Category",
+    category_not_found: "Category Not Found",
+    category_not_found_desc: "The category you're looking for doesn't exist.",
+    sort_options: {
+      default: "Default",
+      newest: "Newest",
+      oldest: "Oldest",
+      highest_price: "Highest Price",
+      lowest_price: "Lowest Price",
+      highest_rated: "Highest Rated",
+      lowest_rated: "Lowest Rated",
+    },
+    tabs: {
+      all: "All",
+      gold_18k: "18K Gold",
+      gold_21k: "21K Gold",
+      gold_22k: "22K Gold",
+      gold_24k: "24K Gold",
+      silver: "Silver",
+      platinum: "Platinum",
     },
   },
   // Auth
@@ -711,6 +858,55 @@ For questions about our privacy practices, please contact us.`,
     item_number: "Item Number",
     manufacturing_cost_per_gram: "Manufacturing Cost per Gram",
     final_price: "Final Price",
+  },
+
+  // Contact
+  contact: {
+    title: "Contact Us",
+    subtitle: "We're here to help you with any inquiries or requests",
+    get_in_touch: "Get in Touch",
+    contact_info: "Contact Information",
+    address: "Address",
+    phone: "Phone",
+    email: "Email",
+    working_hours: "Working Hours",
+    monday_friday: "Monday - Friday",
+    saturday: "Saturday",
+    sunday: "Sunday",
+    closed: "Closed",
+    send_message: "Send Message",
+    name: "Name",
+    name_placeholder: "Enter your full name",
+    email_placeholder: "Enter your email",
+    subject: "Subject",
+    subject_placeholder: "Enter message subject",
+    message: "Message",
+    message_placeholder: "Enter your message here...",
+    send: "Send",
+    sending: "Sending...",
+    message_sent: "Message sent successfully!",
+    message_sent_desc: "We'll get back to you as soon as possible.",
+    error_sending: "Error sending message",
+    error_sending_desc: "Please try again or contact us by phone.",
+    required_field: "Required field",
+    invalid_email: "Invalid email",
+    message_too_short: "Message too short",
+    message_too_long: "Message too long",
+    faq: "Frequently Asked Questions",
+    faq_title: "Frequently Asked Questions",
+    faq_subtitle: "Answers to the most common questions",
+    faq_question_1: "How can I track my order?",
+    faq_answer_1:
+      "You can track your order through your account orders page or contact customer service.",
+    faq_question_2: "What is your return policy?",
+    faq_answer_2: "We offer a 30-day money-back guarantee on all products.",
+    faq_question_3: "Do you offer free shipping?",
+    faq_answer_3: "Yes, we offer free shipping on orders over 500 SAR.",
+    faq_question_4: "How can I change or cancel my order?",
+    faq_answer_4:
+      "You can change or cancel your order within 24 hours of placing it.",
+    faq_question_5: "Are your products authentic?",
+    faq_answer_5: "Yes, all our products are authentic and quality guaranteed.",
   },
   // Pricing
   pricing: {

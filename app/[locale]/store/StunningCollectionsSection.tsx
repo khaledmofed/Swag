@@ -28,13 +28,13 @@ export function StunningCollectionsHeaderSection() {
         {/* Left: Title & Description */}
         <div className="flex-1 min-w-0">
           <h2 className="text-4xl md:text-5xl font-light mb-4 leading-tight font-en">
-            {t("stunning_collections.title")}
+            {t("store.stunning_collections.title")}
           </h2>
           <p
             className="text-lg mb-8 max-w-2xl font-sukar text-gray-700 dark:text-gray-200"
             style={{ letterSpacing: "0.5px" }}
           >
-            {t("stunning_collections.desc")}
+            {t("store.stunning_collections.desc")}
           </p>
         </div>
         {/* Right: Sidebar Links & Button */}
@@ -49,7 +49,7 @@ export function StunningCollectionsHeaderSection() {
                 href={link.href}
                 className="text-base font-en  dark:text-gray-200 hover:text-primary-500 transition flex items-center gap-2"
               >
-                {t(`stunning_collections.${link.label}`)}
+                {t(`store.stunning_collections.${link.label}`)}
                 <span className="text-lg iconeBehind">
                   <Icon name={isRTL ? "arrow-left" : "arrow-right"} size={16} />
                 </span>
@@ -63,7 +63,7 @@ export function StunningCollectionsHeaderSection() {
               className="  font-sukar px-5 py-3 text-md font-semibold transition-colors duration-200 flex items-center gap-2"
               onClick={() => router.push("/all-categories")}
             >
-              {t("stunning_collections.button")}
+              {t("store.stunning_collections.button")}
               <Icon name={isRTL ? "arrow-left" : "arrow-right"} size={16} />
             </Button>
           </div>
@@ -205,7 +205,9 @@ export function StunningCollectionsGridSection() {
               } bg-transparent outline-none`}
               onClick={() => setActiveTab(idx)}
             >
-              {tab.id === "all" ? t("stunning_collections.tabs.all") : tab.name}
+              {tab.id === "all"
+                ? t("store.stunning_collections.tabs.all")
+                : tab.name}
             </button>
           ))}
         </div>
@@ -260,12 +262,15 @@ export function StunningCollectionsGridSection() {
                             d="M1085.73,895.8c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.33v-135.2l292.27-62.11c20.06-44.47,33.32-92.75,38.4-143.37l-330.68,70.27V66.13c-50.67,28.45-95.67,66.32-132.25,110.99v403.35l-132.25,28.11V0c-50.67,28.44-95.67,66.32-132.25,110.99v525.69l-295.91,62.88c-20.06,44.47-33.33,92.75-38.42,143.37l334.33-71.05v170.26l-358.3,76.14c-20.06,44.47-33.32,92.75-38.4,143.37l375.04-79.7c30.53-6.35,56.77-24.4,73.83-49.24l68.78-101.97v-.02c7.14-10.55,11.3-23.27,11.3-36.97v-149.98l132.25-28.11v270.4l424.53-90.28Z"
                           ></path>
                         </svg>
-                        {calculateLivePrice(product) !==
-                          `${product.price} ${product.currency}` && (
-                          <span className="text-xs text-green-600 ml-1 font-bold">
-                            LIVE
-                          </span>
-                        )}
+                        {
+                          calculateLivePrice(product) !==
+                            `${product.price} ${product.currency}`
+                          //   && (
+                          //   <span className="text-xs text-green-600 ml-1 font-bold">
+                          //     LIVE
+                          //   </span>
+                          // )
+                        }
                       </div>
                     </div>
                     <span
@@ -302,7 +307,7 @@ export function StunningCollectionsGridSection() {
                   fontSize: "40px",
                 }}
               >
-                {t("stunning_collections.view_rings")}
+                {t("store.stunning_collections.view_rings")}
               </span>
             </div>
           </div>

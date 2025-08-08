@@ -24,16 +24,28 @@ const features = [
 export function WhyChooseUsSection() {
   const { t } = useTranslation();
   const features = [
-    { icon: "/images/shop-features/icon1.png", label: t("store.why_1") },
-    { icon: "/images/shop-features/icon2.png", label: t("store.why_2") },
-    { icon: "/images/shop-features/icon3.png", label: t("store.why_3") },
-    { icon: "/images/shop-features/icon4.png", label: t("store.why_4") },
+    {
+      icon: "/images/shop-features/icon1.png",
+      label: t("store.why_choose_us.features.quality.title"),
+    },
+    {
+      icon: "/images/shop-features/icon2.png",
+      label: t("store.why_choose_us.features.craftsmanship.title"),
+    },
+    {
+      icon: "/images/shop-features/icon3.png",
+      label: t("store.why_choose_us.features.service.title"),
+    },
+    {
+      icon: "/images/shop-features/icon4.png",
+      label: t("store.why_choose_us.features.guarantee.title"),
+    },
   ];
   return (
     <section className="w-full py-16">
       <div className="container mx-auto px-4 sm:px-6 lg:px-0">
         <h2 className="text-3xl md:text-5xl font-en font-light text-center mb-12">
-          {t("store.why_title")}
+          {t("store.why_choose_us.title")}
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-0 items-start justify-items-center">
           {features.map((feature, idx) => (
