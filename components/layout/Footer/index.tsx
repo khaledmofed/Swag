@@ -2,9 +2,10 @@
 
 import { useTranslation } from "react-i18next";
 import { Icon } from "@/components/common/Icon";
-import Logo from "@/components/common/logo";
+// import Logo from "@/components/common/logo";
 import { useFooterWithStore } from "@/hooks";
 import { useLanguageStore } from "@/stores/languageStore";
+import LogoFooter from "@/components/common/logoFooter";
 
 export function Footer() {
   const { t } = useTranslation();
@@ -38,7 +39,7 @@ export function Footer() {
           <div className="lg:col-span-5">
             {/* Logo */}
             <div className="mb-6">
-              <Logo
+              <LogoFooter
                 // logo={footer?.logo}
                 width={140}
                 height={45}
