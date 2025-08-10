@@ -237,19 +237,24 @@ export function SideMenuBar() {
               active={isActive(`/${language}/all-categories`)}
             />
             <MenuItem
+              label={t("footer.products")}
+              href={`/${language}/search`}
+              active={isActive(`/${language}/search`)}
+            />
+            <MenuItem
               label={t("navigation.about_us")}
               href={`/${language}/about`}
               active={isActive(`/${language}/about`)}
             />
 
-            {(footer?.quick_links?.links || []).map((link, index) => (
+            {/* {(footer?.quick_links?.links || []).map((link, index) => (
               <MenuItem
                 key={index}
                 label={link.label}
                 href={link.url}
                 active={isActive(link.url)}
               />
-            ))}
+            ))} */}
 
             {/* Separator line */}
             <div className="my-4 border-t border-gray-200 dark:border-slate-700" />
@@ -263,14 +268,14 @@ export function SideMenuBar() {
               href={`/${language}/privacy`}
               active={isActive(`/${language}/privacy`)}
             />
-            {(footer?.legal_links?.links || []).map((link, index) => (
+            {/* {(footer?.legal_links?.links || []).map((link, index) => (
               <MenuItem
                 key={index}
                 label={link.label}
                 href={link.url}
                 active={isActive(link.url)}
               />
-            ))}
+            ))} */}
           </nav>
         </div>
 

@@ -783,4 +783,21 @@ export const ar = {
     faq_question_5: "هل منتجاتكم أصلية؟",
     faq_answer_5: "نعم، جميع منتجاتنا أصلية ومضمونة الجودة.",
   },
+  footer: {
+    company_description:
+      "SWAG هو اسم موثوق في المعادن الثمينة، يقدم خدمات فاخرة في تداول السبائك والخدمات اللوجستية والمجوهرات المخصصة. مبني على الإرث والدقة والنزاهة.",
+    quick_links: "روابط سريعة",
+    legal: "قانوني",
+    about_us: "من نحن",
+    products: "المنتجات",
+    services: "الخدمات",
+    market_insights: "رؤى السوق",
+    blog: "المدونة",
+    contact: "اتصل بنا",
+    terms_of_use: "شروط الاستخدام",
+    privacy_policy: "سياسة الخصوصية",
+    security_policy: "سياسة الأمان",
+    cookie_settings: "إعدادات ملفات تعريف الارتباط",
+    copyright: "© جميع الحقوق محفوظة 2025 SWAG",
+  },
 };
