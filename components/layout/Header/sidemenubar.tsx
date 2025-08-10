@@ -263,14 +263,14 @@ export function SideMenuBar() {
               href={`/${language}/privacy`}
               active={isActive(`/${language}/privacy`)}
             />
-            {/* {(footer?.legal_links?.links || []).map((link, index) => (
+            {(footer?.legal_links?.links || []).map((link, index) => (
               <MenuItem
                 key={index}
                 label={link.label}
                 href={link.url}
                 active={isActive(link.url)}
               />
-            ))} */}
+            ))}
           </nav>
         </div>
 

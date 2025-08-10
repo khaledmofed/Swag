@@ -58,6 +58,13 @@ export const en = {
     try_demo: "Try Demo",
     view_more: "View More",
     view_details: "View Details",
+    explore_collection: "Explore the Entire Collection",
+  },
+  related_products: {
+    title: "You May Also Like",
+    subtitle: "Make every day special with alluring, high-quality jewelry.",
+    no_products: "No related products found at the moment.",
+    explore_collection: "Explore the Entire Collection",
   },
   messages: {
     theme_demo_title: "Try the Theme Toggle",

@@ -372,14 +372,14 @@ export default function ProductDetailsPage() {
             href={`/${language}/store`}
             className="hover:text-primary-500 transition"
           >
-            Store
+            {t("navigation.store")}
           </a>
           <span className="mx-2">&gt;</span>
           <a
             href={`/${language}/all-categories`}
             className="hover:text-primary-500 transition"
           >
-            Categories
+            {t("navigation.all_categories")}
           </a>
           <span className="mx-2">&gt;</span>
           <a

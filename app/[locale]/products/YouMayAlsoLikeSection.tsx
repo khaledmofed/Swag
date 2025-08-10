@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Icon } from "@/components/common/Icon";
 import Link from "next/link";
@@ -39,6 +40,7 @@ interface YouMayAlsoLikeSectionProps {
 export function YouMayAlsoLikeSection({
   relatedProducts = [],
 }: YouMayAlsoLikeSectionProps) {
+  const { t } = useTranslation();
   const { language } = useLanguageStore();
   const [hovered, setHovered] = useState<number | null>(null);
   const [page, setPage] = useState(1);
@@ -50,10 +52,10 @@ export function YouMayAlsoLikeSection({
         <div className="container mx-auto px-4 sm:px-6 lg:px-0">
           <div className="text-center py-10">
             <h2 className="text-3xl font-en font-bold mb-2">
-              You may also like
+              {t("related_products.title")}
             </h2>
             <p className="text-gray-500 text-lg">
-              No related products found at the moment.
+              {t("related_products.no_products")}
             </p>
           </div>
         </div>
@@ -76,17 +78,17 @@ export function YouMayAlsoLikeSection({
           <div className="text-start mb-0">
             {" "}
             <h2 className="text-3xl font-en font-bold mb-2">
-              You may also like
+              {t("related_products.title")}
             </h2>
             <p className="text-lg mb-0 max-w-lg font-sukar">
-              Make every day special with alluring, high-quality jewelry.
+              {t("related_products.subtitle")}
             </p>
           </div>
           <Link
             href={`/${language}/all-categories`}
             className="flex items-center gap-2 text-base font-en text-gray-700 dark:text-gray-200 hover:text-primary-500 transition"
           >
-            Explore the Entire Collection
+            {t("related_products.explore_collection")}
             <Icon name="arrow-right" size={18} />
           </Link>
         </div>

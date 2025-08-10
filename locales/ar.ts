@@ -58,6 +58,13 @@ export const ar = {
     try_demo: "جرب التجريبي",
     view_more: "عرض المزيد",
     view_details: "عرض التفاصيل",
+    explore_collection: "استكشف المجموعة بأكملها",
+  },
+  related_products: {
+    title: "قد يعجبك أيضاً",
+    subtitle: "اجعل كل يوم مميزاً مع مجوهرات جذابة وعالية الجودة.",
+    no_products: "لم يتم العثور على منتجات ذات صلة في الوقت الحالي.",
+    explore_collection: "استكشف المجموعة بأكملها",
   },
   messages: {
     theme_demo_title: "جرب تبديل المظهر",

@@ -33,12 +33,6 @@ const demoTabs = [
     karat: "21",
   },
   {
-    id: "22k-gold",
-    label: "category.tabs.gold_22k",
-    metal: "gold",
-    karat: "22",
-  },
-  {
     id: "24k-gold",
     label: "category.tabs.gold_24k",
     metal: "gold",
