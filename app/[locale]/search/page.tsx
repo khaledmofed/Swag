@@ -88,12 +88,37 @@ function SearchContent() {
 
   // Tabs configuration for search page
   const demoTabs = [
-    { id: "all", label: "All", metal: null, karat: null },
-    { id: "18k-gold", label: "18K Gold", metal: "gold", karat: "18" },
-    { id: "21k-gold", label: "21K Gold", metal: "gold", karat: "21" },
-    { id: "24k-gold", label: "24K Gold", metal: "gold", karat: "24" },
-    { id: "silver", label: "Silver", metal: "silver", karat: null },
-    { id: "platinum", label: "Platinum", metal: "platinum", karat: null },
+    { id: "all", label: t("category.tabs.all"), metal: null, karat: null },
+    {
+      id: "18k-gold",
+      label: t("category.tabs.gold_18k"),
+      metal: "gold",
+      karat: "18",
+    },
+    {
+      id: "21k-gold",
+      label: t("category.tabs.gold_21k"),
+      metal: "gold",
+      karat: "21",
+    },
+    {
+      id: "24k-gold",
+      label: t("category.tabs.gold_24k"),
+      metal: "gold",
+      karat: "24",
+    },
+    {
+      id: "silver",
+      label: t("filter_sidebar.metals.silver"),
+      metal: "silver",
+      karat: null,
+    },
+    {
+      id: "platinum",
+      label: t("filter_sidebar.metals.platinum"),
+      metal: "platinum",
+      karat: null,
+    },
   ];
 
   // Update page in search params
@@ -145,18 +170,33 @@ function SearchContent() {
 
   // Get sort options
   const getSortOptions = () => [
-    { value: "default", label: "Default", order: "", orderby: "" },
-    { value: "newest", label: "Newest", order: "created_at", orderby: "desc" },
-    { value: "oldest", label: "Oldest", order: "created_at", orderby: "asc" },
+    {
+      value: "default",
+      label: t("sort_sidebar.sort_options.default"),
+      order: "",
+      orderby: "",
+    },
+    {
+      value: "newest",
+      label: t("sort_sidebar.sort_options.newest"),
+      order: "created_at",
+      orderby: "desc",
+    },
+    {
+      value: "oldest",
+      label: t("sort_sidebar.sort_options.oldest"),
+      order: "created_at",
+      orderby: "asc",
+    },
     {
       value: "highest_price",
-      label: "Highest Price",
+      label: t("sort_sidebar.sort_options.highest_price"),
       order: "price",
       orderby: "desc",
     },
     {
       value: "lowest_price",
-      label: "Lowest Price",
+      label: t("sort_sidebar.sort_options.lowest_price"),
       order: "price",
       orderby: "asc",
     },
@@ -165,7 +205,7 @@ function SearchContent() {
   // Get current sort label
   const getCurrentSortLabel = () => {
     if (!searchParamsState.order || !searchParamsState.orderby)
-      return "Sort By";
+      return t("sort_sidebar.title");
 
     const sortOptions = getSortOptions();
     const found = sortOptions.find(
@@ -174,11 +214,9 @@ function SearchContent() {
         opt.orderby === searchParamsState.orderby
     );
 
-    if (!found) return "Sort By";
+    if (!found) return t("sort_sidebar.title");
 
-    const orderByText =
-      searchParamsState.orderby === "asc" ? " (A-Z)" : " (Z-A)";
-    return found.label + orderByText;
+    return found.label;
   };
 
   // Get current sort value

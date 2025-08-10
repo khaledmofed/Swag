@@ -57,6 +57,7 @@ export const ar = {
     learn_more: "اعرف المزيد",
     try_demo: "جرب التجريبي",
     view_more: "عرض المزيد",
+    view_details: "عرض التفاصيل",
   },
   messages: {
     theme_demo_title: "جرب تبديل المظهر",
@@ -89,6 +90,16 @@ export const ar = {
   },
   promo: {
     text: "انغمس في جمال مجوهراتنا الرائعة، المصممة بمواد استثنائية. اغتنم الفرصة مع خصمنا الحصري 30%!",
+    list: [
+      "شحن مؤمن مجاني على جميع الطلبات",
+      "استبدال بدون تعقيدات خلال 30 يوماً",
+      "جودة مضمونة وفاخرة",
+    ],
+  },
+  banner: {
+    overline: "عناق من أجل الخير العالمي",
+    title: "تعزيز استدامة المياه",
+    description: "بينما نحتفي بجمال العالم",
   },
   collections: {
     section_title: "مجوهرات جذابة",
@@ -353,7 +364,7 @@ export const ar = {
     no_phone: "لا يوجد رقم هاتف",
     manage_account: "إدارة الحساب",
     orders: "الطلبات",
-    view_saved_products: "عرض المنتجات المحفوظة",
+    view_saved_products: "المنتجات المحفوظة",
     shopping_cart: "سلة التسوق",
     addresses: "العناوين",
     change_password: "تغيير كلمة المرور",
@@ -380,7 +391,7 @@ export const ar = {
       "استكشف الميزات الجديدة أو استمر في التسوق لشراء العناصر المفضلة لديك.",
     sidebar: {
       profile: "الملف الشخصي",
-      view_saved_products: "عرض المنتجات المحفوظة",
+      view_saved_products: "المنتجات المحفوظة",
       orders: "الطلبات",
       logout: "تسجيل الخروج",
     },

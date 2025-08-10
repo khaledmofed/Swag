@@ -57,6 +57,7 @@ export const en = {
     learn_more: "Learn More",
     try_demo: "Try Demo",
     view_more: "View More",
+    view_details: "View Details",
   },
   messages: {
     theme_demo_title: "Try the Theme Toggle",
@@ -89,6 +90,11 @@ export const en = {
   },
   promo: {
     text: "Immerse yourself in the beauty of our exquisite jewelry, designed with exceptional materials. Seize the opportunity with our exclusive 30% off sale!",
+    list: [
+      "Free insured shipping on all orders",
+      "30-day hassle-free exchanges",
+      "Premium quality guaranteed",
+    ],
   },
   collections: {
     section_title: "Attractive Jewellery",
@@ -249,9 +255,9 @@ export const en = {
     },
   },
   banner: {
-    title: "Elegant Pure Jewelry With Quality Materials",
-    description:
-      "When an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged.",
+    overline: "HUG FOR UNIVERSAL GOODNESS CREAM",
+    title: "Fostering Water Sustainability",
+    description: "While Celebrating Global Beauty.",
   },
   chart: {
     time: "Time",

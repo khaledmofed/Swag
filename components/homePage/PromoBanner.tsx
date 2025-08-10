@@ -3,9 +3,9 @@
 import { useTranslation } from "react-i18next";
 import { useLanguageStore } from "@/stores/languageStore";
 import { Icon } from "@/components/common/Icon";
-import { useSystemSettingsStore } from "@/stores";
 import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
+import { useSystemSettingsWithStore } from "@/hooks";
 
 interface PromoBannerProps {
   speed?: "slow" | "normal" | "fast" | "very-fast";
@@ -13,16 +13,26 @@ interface PromoBannerProps {
 
 export function PromoBanner({ speed = "normal" }: PromoBannerProps) {
   const { t } = useTranslation();
-  const { isRTL } = useLanguageStore();
-  const { getSettingByKey } = useSystemSettingsStore();
+  const { isRTL, language } = useLanguageStore();
+  const { getSettingByKey, data: settingsData } = useSystemSettingsWithStore({
+    enabled: typeof window !== "undefined",
+  });
   const [isClient, setIsClient] = useState(false);
-  const [listText, setListText] = useState<any[]>([]);
+  const [listText, setListText] = useState<string[]>([]);
 
   useEffect(() => {
     setIsClient(true);
-    const text = getSettingByKey("PROMOTION_BANNER_LIST_TEXT")?.value || [];
-    setListText(Array.isArray(text) ? text : []);
-  }, [getSettingByKey]);
+
+    const settingValue = getSettingByKey("PROMOTION_BANNER_LIST_TEXT")?.value;
+    let nextList: unknown = Array.isArray(settingValue) ? settingValue : [];
+
+    if (!Array.isArray(nextList) || nextList.length === 0) {
+      const translated = t("promo.list", { returnObjects: true }) as unknown;
+      nextList = Array.isArray(translated) ? translated : [];
+    }
+
+    setListText((nextList as string[]) || []);
+  }, [getSettingByKey, settingsData, language, t]);
 
   // Don't render during SSR to prevent hydration mismatch
   if (!isClient || !listText || listText.length === 0) {
@@ -58,13 +68,17 @@ export function PromoBanner({ speed = "normal" }: PromoBannerProps) {
             )}
           >
             {/* Repeat the content multiple times for seamless infinite loop */}
-            {listText.map((item: any, index: any) => (
+            {listText.map((item: string, index: number) => (
               <div key={`promo-${index}`} className="flex items-center">
                 <span
                   className="font-sukar text-black font-medium text-sm sm:text-base flex items-center gap-1 sm:gap-2"
                   style={{ color: "#000" }}
                 >
-                  <Icon name="check" size={16} className="sm:w-5 sm:h-5 mr-1" />
+                  <Icon
+                    name="check"
+                    size={16}
+                    className={cn("sm:w-5 sm:h-5", isRTL ? "ml-1" : "mr-1")}
+                  />
                   {item}
                 </span>
 
