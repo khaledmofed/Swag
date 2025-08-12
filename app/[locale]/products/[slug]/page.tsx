@@ -395,15 +395,15 @@ export default function ProductDetailsPage() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-0 py-10">
         <div className="flex flex-col lg:flex-row gap-10">
           {/* Gallery */}
-          <div className="flex-1 flex flex-col gap-2 max-w-xl">
+          <div className="flex-1 flex flex-col gap-0 max-w-xl">
             {/* Thumbnail Images */}
-            <div className="grid grid-cols-2 gap-2 mb-2">
+            <div className="grid grid-cols-4 gap-2 mb-2">
               {/* Main Image Thumbnail */}
               <div
-                className={`aspect-square bg-gray-50 flex items-center justify-center cursor-pointer border-2 ${
+                className={`aspect-square bg-gray-50 flex items-center justify-center cursor-pointer border rounded-none transition-all duration-200 hover:scale-105 ${
                   selectedImage === 0
-                    ? "border-primary-500"
-                    : "border-transparent"
+                    ? "border-primary-500 shadow-lg"
+                    : "border-gray-200 hover:border-primary-300"
                 }`}
                 onClick={() => setSelectedImage(0)}
               >
@@ -419,10 +419,10 @@ export default function ProductDetailsPage() {
                 product.images.map((image: any, index: number) => (
                   <div
                     key={image.id}
-                    className={`aspect-square bg-gray-50 flex items-center justify-center cursor-pointer border-2 ${
+                    className={`aspect-square bg-gray-50 flex items-center justify-center cursor-pointer border rounded-none transition-all duration-200 hover:scale-105 ${
                       selectedImage === index + 1
-                        ? "border-primary-500"
-                        : "border-transparent"
+                        ? "border-primary-500 shadow-lg"
+                        : "border-gray-200 hover:border-primary-300"
                     }`}
                     onClick={() => setSelectedImage(index + 1)}
                   >

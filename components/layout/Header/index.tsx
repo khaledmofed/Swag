@@ -95,7 +95,7 @@ export function Header({
     pathname === "/profile" ||
     pathname === "/ar/profile" ||
     pathname === "/en/profile" ||
-    pathname === "/en/saved-products" ||
+    pathname === "/saved-products" ||
     pathname === "/ar/saved-products" ||
     pathname === "/en/saved-products" ||
     pathname === "/orders" ||
