@@ -521,7 +521,7 @@ export function ProductCard(props: ProductCardProps) {
             <>
               {calculatedPrice.toLocaleString("en-US", {
                 maximumFractionDigits: 2,
-              })}
+              })}{" "}
               <svg
                 id="Layer_1"
                 className="inline-block fill-primary-607a76 customeSize"
